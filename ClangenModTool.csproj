@@ -6,14 +6,27 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<Title>Clangen Modding Tool</Title>
 		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="icon.ico" />
+    <None Remove="Resources\example_patrols.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\example_patrols.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\icon.ico" />
+		<Content Include="Resources\patrolPreview.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
   </ItemGroup>
 
   <ItemGroup>

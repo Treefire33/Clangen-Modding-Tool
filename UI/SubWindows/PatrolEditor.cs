@@ -81,7 +81,7 @@ namespace ClangenModTool.UI.SubWindows
 			ImGui.SetNextWindowSize(new Vector2(615, 600), ImGuiCond.Once);
 			if(ImGui.Begin("Patrol Preview", ImGuiWindowFlags.NoCollapse))
 			{
-				patrolPreviewImg = new Texture(GL, "E:\\ClangenModTool\\patrolPreview.png");
+				patrolPreviewImg = new Texture(GL, "./Resources/patrolPreview.png");
 				patrolPreviewImg.Bind(TextureUnit.Texture0);
 				ImGui.Image(new IntPtr(patrolPreviewImg._handle), new(600, 500));
 				ImGui.SetCursorPos(new(293, 150));
