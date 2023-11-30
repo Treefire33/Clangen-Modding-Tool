@@ -9,7 +9,6 @@
 		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<Title>Clangen Modding Tool</Title>
-		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
