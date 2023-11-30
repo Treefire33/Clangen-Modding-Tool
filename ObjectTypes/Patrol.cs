@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClanGenModTool
+namespace ClanGenModTool.ObjectTypes
 {
 	#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	public class AntagFailOutcome
@@ -120,6 +120,8 @@ namespace ClanGenModTool
 			decline_text = string.Empty;
 			success_outcomes = [new SuccessOutcome { text="successful_patrol", exp=0, weight=0 }];
 			fail_outcomes = [new FailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
+			antag_success_outcomes = [new AntagSuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 }];
+			antag_fail_outcomes = [new AntagFailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
 		}
 	}
 

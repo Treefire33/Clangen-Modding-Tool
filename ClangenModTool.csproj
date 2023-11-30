@@ -12,6 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\example_thoughts.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\example_thoughts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\icon.ico" />
 		<Content Include="Resources\patrolPreview.png">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
