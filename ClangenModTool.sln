@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClangenModTool", "ClangenModTool.csproj", "{AFB7A06D-7A2E-4684-83B3-F0D13F1C158F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClanGenModTool", "ClanGenModTool.csproj", "{AFB7A06D-7A2E-4684-83B3-F0D13F1C158F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

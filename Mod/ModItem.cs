@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClangenModTool.Mod
+namespace ClanGenModTool.Mod
 {
 	public class ModItem
 	{

@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 using StbImageSharp;
 using Silk.NET.SDL;
 using System.IO;
-using ClangenModTool.UI;
+using ClanGenModTool.UI;
 
 
-namespace ClangenModTool.Mod
+namespace ClanGenModTool.Mod
 {
 	public class ModMenus
 	{

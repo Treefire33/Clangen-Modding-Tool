@@ -10,7 +10,7 @@ using ImGuiNET;
 using System.Numerics;
 using System.Diagnostics;
 using ClanGenModTool.UI.SubWindows;
-using ClangenModTool.Mod;
+using ClanGenModTool.Mod;
 using Silk.NET.SDL;
 
 namespace ClanGenModTool.UI
