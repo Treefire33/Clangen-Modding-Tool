@@ -3,7 +3,7 @@ using System;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace ClangenModTool.Textures
+namespace ClanGenModTool.Textures
 {
 	public class Texture : IDisposable
 	{

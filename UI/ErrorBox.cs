@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 
-namespace ClangenModTool.UI
+namespace ClanGenModTool.UI
 {
 	public class ErrorBox
 	{

@@ -11,7 +11,7 @@ using StbImageSharp;
 using Silk.NET.SDL;
 using System.IO;
 
-namespace ClangenModTool
+namespace ClanGenModTool
 {
 	public class Theme
 	{

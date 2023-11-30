@@ -9,7 +9,7 @@ using Silk.NET.Windowing;
 using Silk.NET.Windowing.Glfw;
 using ClangenModTool.Util;
 
-namespace ClangenModTool.UI
+namespace ClanGenModTool.UI
 {
 	internal static class WindowManager
 	{

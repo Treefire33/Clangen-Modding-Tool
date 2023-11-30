@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 using StbImageSharp;
 using Silk.NET.SDL;
 using System.IO;
-using ClangenModTool.Textures;
-using Texture = ClangenModTool.Textures.Texture;
+using ClanGenModTool.Textures;
+using Texture = ClanGenModTool.Textures.Texture;
 
-namespace ClangenModTool.UI.SubWindows
+namespace ClanGenModTool.UI.SubWindows
 {
 	public class PatrolEditor
 	{

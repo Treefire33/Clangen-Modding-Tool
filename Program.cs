@@ -1,4 +1,4 @@
-﻿using ClangenModTool.UI;
+﻿using ClanGenModTool.UI;
 using Silk.NET.Windowing;
 
 StartWindow window = new StartWindow();

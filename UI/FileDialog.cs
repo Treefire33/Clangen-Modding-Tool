@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using NativeFileDialogSharp;
 using System.IO;
 
-namespace ClangenModTool.UI
+namespace ClanGenModTool.UI
 {
 	public class FileDialog
 	{

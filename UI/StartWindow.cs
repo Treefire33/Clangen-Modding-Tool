@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using ImGuiNET;
 using System.Numerics;
 using System.Diagnostics;
-using ClangenModTool.UI.SubWindows;
+using ClanGenModTool.UI.SubWindows;
 using ClangenModTool.Mod;
 using Silk.NET.SDL;
 
-namespace ClangenModTool.UI
+namespace ClanGenModTool.UI
 {
 	public class StartWindow
 	{
