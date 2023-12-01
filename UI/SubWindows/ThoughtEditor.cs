@@ -62,6 +62,7 @@ namespace ClanGenModTool.UI.SubWindows
 			if(continueDraw)
 			{
 				DrawSelectThought();
+				DrawAttributesWindow();
 			}
 		}
 
@@ -84,8 +85,8 @@ namespace ClanGenModTool.UI.SubWindows
 						{
 							thoughts.RemoveAt(i);
 						}
-					}catch(Exception e) {
-						ErrorBox.Draw("Not a though json!"+e);
+					} catch(Exception e) {
+						ErrorBox.Draw("Not a though json!" + e);
 					}
 				}
 				/*if(ImGui.Button("Add Thought"))
@@ -98,16 +99,105 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 		}
 
+		string selectedThoughtText = "";
+		int currentSelected = 0;
+
 		private void DrawAttributesWindow()
 		{
 			ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
-			if(ImGui.Begin("Thought Attributes Editor", ImGuiWindowFlags.NoCollapse))
+			if(ImGui.Begin("Thought List Attributes Editor", ImGuiWindowFlags.NoCollapse))
 			{
+				ImGui.TextColored(new(255,0,0,255), "this editor is not complete!");
 				if(loadedThought != null)
 				{
-
+					ImGui.InputInt("Select thought.", ref currentSelected);
+					ThoughtTextEditor();
+					if(loadedThought.random_status_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_status_constraint)));
+					}
+					if(loadedThought.random_living_status != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_living_status)));
+					}
+					if(loadedThought.relationship_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.relationship_constraint)));
+					}
+					if(loadedThought.random_age_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_age_constraint)));
+					}
+					if(loadedThought.main_trait_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_trait_constraint)));
+					}
+					if(loadedThought.main_backstory_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_backstory_constraint)));
+					}
+					if(loadedThought.main_status_constraint != null)
+					{
+						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_status_constraint)));
+					}
 				}
 			}
+		}
+
+		//string displayedThoughtText = "";
+
+		private void ThoughtTextEditor()
+		{
+			selectedThoughtText = loadedThought.thoughts[currentSelected];
+			//displayedThoughtText = CreateWrapping(selectedThoughtText, 15);
+			if(currentThought > loadedThought.thoughts.Count - 1)
+				currentThought = loadedThought.thoughts.Count;
+			else if(currentThought < 0)
+				currentThought = 0;
+			ImGui.InputTextMultiline("Thought Text", ref selectedThoughtText, 2500, new Vector2(350, 200));
+			if(ImGui.Button("Add Thought"))
+			{
+				loadedThought.thoughts.Add("Thinking about placeholder values");
+				currentSelected = loadedThought.thoughts.Count - 1;
+			}
+			ImGui.SameLine();
+			if(ImGui.Button("Remove Thought"))
+			{
+				loadedThought.thoughts.RemoveAt(currentSelected);
+				if(currentSelected > 0)
+					currentSelected--;
+				else
+					currentSelected = 0;
+			}
+		}
+
+		private string CreateWrapping(string wrappedText, int charsToIgnore)
+		{
+			string rendered = "";
+			for(int i = 0; i < wrappedText.Length; i++)
+			{
+				rendered+= wrappedText[i];
+				if(i % charsToIgnore == 0)
+				{
+					rendered.Insert(i, "\n");
+				}
+			}
+			return rendered;
+		}
+		private string RemoveWrapping(string wrappedText)
+		{
+			string rendered = "";
+			for(int i = 0; i < wrappedText.Length; i++)
+			{
+				if(wrappedText[i] == '\n')
+				{
+					wrappedText.Remove(i);
+					continue;
+				}
+				rendered += wrappedText[i];
+				
+			}
+			return rendered;
 		}
 
 		public void Save()

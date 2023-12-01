@@ -11,7 +11,7 @@ using System.Numerics;
 using System.Diagnostics;
 using ClanGenModTool.UI.SubWindows;
 using ClanGenModTool.Mod;
-using Silk.NET.SDL;
+using Texture = ClanGenModTool.Textures.Texture;
 
 namespace ClanGenModTool.UI
 {
