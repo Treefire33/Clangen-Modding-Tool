@@ -1,0 +1,34 @@
+name: Build ClanGen Modding Tool
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: 'macos-12'
+            os-target: 'osx-x64'
+          - runner: 'windows-2022'
+            os-target: 'win-x64'
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8'
+
+      - name: Build project for publishing
+        run: dotnet publish ClangenModTool.csproj -r ${{ matrix.os-target }} -c Release -o bin/${{ matrix.os-target }}
+
+      - name: Bundle project
+        run: tar -czvf ClangenModTool-${{ matrix.os-target }}.tar.gz bin/${{ matrix.os-target }}
+
+      - name: Upload to release
+        run: gh release upload ${{ github.event.release.tag_name }} ClangenModTool-${{ matrix.os-target }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
