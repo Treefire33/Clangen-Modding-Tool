@@ -6,27 +6,47 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+		<ApplicationIcon>Resources\Images\icon.ico</ApplicationIcon>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<Title>Clangen Modding Tool</Title>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\example_thoughts.json" />
-  </ItemGroup>
+	<ItemGroup>
+	  <None Remove="Resources\ExampleJSONs\example_patrols.json" />
+	  <None Remove="Resources\ExampleJSONs\example_thoughts.json" />
+	  <None Remove="Resources\ExampleJSONs\names.json" />
+	  <None Remove="Resources\Fonts\NotoSans-Regular.ttf" />
+	  <None Remove="Resources\Images\icon.ico" />
+	  <None Remove="Resources\Images\patrolPreview.png" />
+	  <None Remove="Resources\Images\thoughtPreview.png" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Resources\example_thoughts.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icon.ico" />
-		<Content Include="Resources\patrolPreview.png">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Resources\example_patrols.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-  </ItemGroup>
+	<ItemGroup>
+	  <Content Include="Resources\ExampleJSONs\names.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Images\thoughtPreview.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\ExampleJSONs\example_patrols.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\ExampleJSONs\example_thoughts.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Fonts\NotoSans-Regular.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Images\icon.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Images\patrolPreview.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
@@ -37,6 +57,10 @@
     <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.19.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".github\workflows\" />
   </ItemGroup>
 
 </Project>

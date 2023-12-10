@@ -23,6 +23,9 @@ namespace ClanGenModTool.UI.SubWindows
 		Thought? loadedThought = null;
 		int currentThought;
 
+		GL GL;
+		Texture thoughtPreviewImg;
+
 		public void LoadEditor()
 		{
 			try
@@ -38,6 +41,16 @@ namespace ClanGenModTool.UI.SubWindows
 		public void AssignToLoadedThought()
 		{
 			loadedThought = thoughts[currentThought];
+		}
+
+		public void BeforeDrawEditor(GL gl)
+		{
+			if(GL == null)
+			{
+				GL = gl;
+				thoughtPreviewImg = new Texture(GL, "./Resources/Images/thoughtPreview.png");
+				thoughtPreviewImg.Bind(TextureUnit.Texture1);
+			}
 		}
 
 		public void Draw(ref bool continueDraw)
@@ -63,6 +76,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				DrawSelectThought();
 				DrawAttributesWindow();
+				DrawPreviewWindow();
 			}
 		}
 
@@ -99,6 +113,23 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 		}
 
+		string previewedText = "";
+		private void DrawPreviewWindow()
+		{
+			ImGui.SetNextWindowSize(new Vector2(615, 600), ImGuiCond.Once);
+			if(ImGui.Begin("Thought Preview", ImGuiWindowFlags.NoCollapse))
+			{
+				if(loadedThought != null)
+				{
+					previewedText = loadedThought.thoughts[currentSelected];
+				}
+				ImGui.Image(new IntPtr(thoughtPreviewImg._handle), new(600, 500));
+				ImGui.SetCursorPos(new(215, 155));
+				ImGui.TextColored(new(0, 0, 0, 255), previewedText);
+				ImGui.End();
+			}
+		}
+
 		string selectedThoughtText = "";
 		int currentSelected = 0;
 
@@ -112,35 +143,40 @@ namespace ClanGenModTool.UI.SubWindows
 				{
 					ImGui.InputInt("Select thought.", ref currentSelected);
 					ThoughtTextEditor();
-					if(loadedThought.random_status_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_status_constraint)));
-					}
-					if(loadedThought.random_living_status != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_living_status)));
-					}
-					if(loadedThought.relationship_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.relationship_constraint)));
-					}
-					if(loadedThought.random_age_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_age_constraint)));
-					}
-					if(loadedThought.main_trait_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_trait_constraint)));
-					}
-					if(loadedThought.main_backstory_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_backstory_constraint)));
-					}
-					if(loadedThought.main_status_constraint != null)
-					{
-						ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.main_status_constraint)));
-					}
+					LoadConstraintEditor();
 				}
+			}
+		}
+
+		private void LoadConstraintEditor()
+		{
+			if(loadedThought.random_status_constraint != null)
+			{
+				ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_status_constraint)));
+			}
+			if(loadedThought.random_living_status != null)
+			{
+				ImGui.Text(string.Format("Random Living Constraints:\n{0}", string.Join(", ", loadedThought.random_living_status)));
+			}
+			if(loadedThought.relationship_constraint != null)
+			{
+				ImGui.Text(string.Format("Relationship Constraints:\n{0}", string.Join(", ", loadedThought.relationship_constraint)));
+			}
+			if(loadedThought.random_age_constraint != null)
+			{
+				ImGui.Text(string.Format("Random Status Constraints:\n{0}", string.Join(", ", loadedThought.random_age_constraint)));
+			}
+			if(loadedThought.main_trait_constraint != null)
+			{
+				ImGui.Text(string.Format("Main Trait Constraints:\n{0}", string.Join(", ", loadedThought.main_trait_constraint)));
+			}
+			if(loadedThought.main_backstory_constraint != null)
+			{
+				ImGui.Text(string.Format("Main Backstory Constraints:\n{0}", string.Join(", ", loadedThought.main_backstory_constraint)));
+			}
+			if(loadedThought.main_status_constraint != null)
+			{
+				ImGui.Text(string.Format("Main Status Constraints:\n{0}", string.Join(", ", loadedThought.main_status_constraint)));
 			}
 		}
 

@@ -19,14 +19,24 @@ namespace ClanGenModTool.UI
 	{
 		readonly IWindow mWindow;
 		bool mPatrolEditorActive = false, mModCreationMenuActive = false, mImplementException = false;
-		bool mThoughtEditorActive = false;
+		bool mThoughtEditorActive = false, mNameEditorActive = false;
 
 		public StartWindow()
 		{
-			WindowManager.CreateWindow(out mWindow, new(1600, 900));
+			WindowManager.CreateWindow(out mWindow, new(1600, 900), 
+				onConfigIO: () =>
+				{
+					unsafe
+					{
+						ImGui.GetIO().Fonts.AddFontFromFileTTF(Path.Combine("Resources", "Fonts", "NotoSans-Regular.ttf"), 15.0f/*, null, ImGui.GetIO().Fonts.GetGlyphRangesDefault()*/);
+						ImGui.GetIO().Fonts.Build();
+					}
+				}
+			);
 			mWindow.Load += () => WindowManager.RegisterRenderDelegate(mWindow, Render);
 			mWindow.Run();
 			mWindow.Dispose();
+			
 		}
 		
 		void DrawMainMenu()
@@ -69,6 +79,7 @@ namespace ClanGenModTool.UI
 							Editor.Load(ref mPatrolEditorActive);
 							mModCreationMenuActive = false;
 							mThoughtEditorActive = false;
+							mNameEditorActive = false;
 							patrolEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
 						}
@@ -81,8 +92,22 @@ namespace ClanGenModTool.UI
 							Editor.Load(ref mThoughtEditorActive);
 							mModCreationMenuActive = false;
 							mPatrolEditorActive = false;
+							mNameEditorActive = false;
 							thoughtEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
+						}
+						ImGui.EndMenu();
+					}
+					if(ImGui.BeginMenu("Names"))
+					{
+						if(ImGui.MenuItem("Select Names File"))
+						{
+							Editor.Load(ref mNameEditorActive);
+							mModCreationMenuActive = false;
+							mPatrolEditorActive = false;
+							mThoughtEditorActive = false;
+							nameEdit.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
 						}
 						ImGui.EndMenu();
 					}
@@ -94,11 +119,14 @@ namespace ClanGenModTool.UI
 					{
 						thoughtEdit.Save();
 					}
+					if(mNameEditorActive && ImGui.MenuItem("Save Name File"))
+					{
+						nameEdit.Save();
+					}
 					if(ImGui.MenuItem("Close"))
 					{
 						mWindow.Close();
 					}
-
 					ImGui.EndMenu();
 				}
 				ImGui.EndMenuBar();
@@ -107,6 +135,7 @@ namespace ClanGenModTool.UI
 
 		PatrolEditor patrolEdit = new PatrolEditor();
 		ThoughtEditor thoughtEdit = new ThoughtEditor();
+		NameEditor nameEdit = new NameEditor();
 
 		public void Render(GL gl, double delta, ImGuiController controller)
 		{
@@ -124,12 +153,17 @@ namespace ClanGenModTool.UI
 
 			if(mPatrolEditorActive)
 			{
-				patrolEdit.GL = gl;
+				patrolEdit.BeforeDrawEditor(gl);
 				patrolEdit.Draw(ref mPatrolEditorActive);
 			}
 			if(mThoughtEditorActive)
 			{
+				thoughtEdit.BeforeDrawEditor(gl);
 				thoughtEdit.Draw(ref mThoughtEditorActive);
+			}
+			if(mNameEditorActive)
+			{
+				nameEdit.Draw(ref mNameEditorActive);
 			}
 			if(mImplementException)
 			{

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ClanGenModTool.ObjectTypes
 {
 	#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-	public class AntagFailOutcome
+	public class Outcome
 	{
 		public string text;
 		public int exp;
@@ -16,30 +16,30 @@ namespace ClanGenModTool.ObjectTypes
 		public int outsider_rep;
 		public int other_clan_rep;
 	}
-
-	public class AntagSuccessOutcome
+	
+	public class SuccessOutcome : Outcome
 	{
-		public string text;
-		public int exp;
-		public int weight;
-		public int outsider_rep;
-		public int other_clan_rep;
+		public List<Relationship> relationships;
+		public List<string> stat_skill;
+		public List<string> stat_trait;
+		public List<List<string>> new_cat;
+		public List<Injury> injury;
+		public List<string> can_have_stat;
 	}
 
-	public class FailOutcome
+	public class FailOutcome : Outcome
 	{
-		public string text;
-		public int exp;
-		public int weight;
 		public List<string> dead_cats;
 		public HistoryText history_text;
 		public List<Relationship> relationships;
 		public List<Injury> injury;
 		public List<string> stat_trait;
-		public int outsider_rep;
-		public int other_clan_rep;
 		public List<string> stat_skill;
 	}
+	
+	public class AntagFailOutcome : Outcome { }
+
+	public class AntagSuccessOutcome : Outcome { }
 
 	public class HistoryText
 	{
@@ -123,20 +123,5 @@ namespace ClanGenModTool.ObjectTypes
 			antag_success_outcomes = [new AntagSuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 }];
 			antag_fail_outcomes = [new AntagFailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
 		}
-	}
-
-	public class SuccessOutcome
-	{
-		public string text;
-		public int exp;
-		public int weight;
-		public List<Relationship> relationships;
-		public List<string> stat_skill;
-		public List<string> stat_trait;
-		public List<List<string>> new_cat;
-		public int outsider_rep;
-		public List<Injury> injury;
-		public int other_clan_rep;
-		public List<string> can_have_stat;
 	}
 }

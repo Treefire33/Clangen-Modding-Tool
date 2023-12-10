@@ -9,6 +9,7 @@ namespace ClanGenModTool.ObjectTypes
 {
 	public class Thought
 	{
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 		public string id;
 		public List<string> thoughts;
 		public List<string> random_status_constraint;

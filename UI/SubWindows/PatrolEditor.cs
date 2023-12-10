@@ -22,8 +22,6 @@ namespace ClanGenModTool.UI.SubWindows
 		Patrol? loadedPatrol;
 		List<Patrol> patrols = new List<Patrol>();
 		int currentPatrol = 0;
-		bool outcomeToggle = true;
-		bool antagToggle = false;
 		int currentSCOutcome = 0;
 		int currentFCOutcome = 0;
 
@@ -47,6 +45,16 @@ namespace ClanGenModTool.UI.SubWindows
 			loadedPatrol = patrols[currentPatrol];
 		}
 
+		public void BeforeDrawEditor(GL gl)
+		{
+			if(GL == null)
+			{
+				GL = gl;
+				patrolPreviewImg = new Texture(GL, "./Resources/Images/patrolPreview.png");
+				patrolPreviewImg.Bind(TextureUnit.Texture0);
+			}
+		}
+
 		public void Draw(ref bool continueDraw)
 		{
 			if(loadedJson == null)
@@ -66,10 +74,8 @@ namespace ClanGenModTool.UI.SubWindows
 				return;
 			}
 
-
 			if (continueDraw) 
 			{
-				
 				DrawAttributesWindow();
 				DrawPreviewWindow();
 				DrawSelectWindow(patrols);
@@ -82,45 +88,49 @@ namespace ClanGenModTool.UI.SubWindows
 			ImGui.SetNextWindowSize(new Vector2(615, 600), ImGuiCond.Once);
 			if(ImGui.Begin("Patrol Preview", ImGuiWindowFlags.NoCollapse))
 			{
-				patrolPreviewImg = new Texture(GL, "./Resources/patrolPreview.png");
-				patrolPreviewImg.Bind(TextureUnit.Texture0);
 				ImGui.Image(new IntPtr(patrolPreviewImg._handle), new(600, 500));
-				ImGui.SetCursorPos(new(293, 150));
-				ImGui.PushTextWrapPos(350);
+				ImGui.SetCursorPos(new(300, 155));
+				ImGui.BeginChildFrame(3, new(250, 160), ImGuiWindowFlags.NoBackground);
+				ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int)ImGuiCol.NavHighlight]);
+				ImGui.PushTextWrapPos(225);
 				ImGui.TextWrapped(previewedText);
 				ImGui.PopTextWrapPos();
+				ImGui.PopStyleColor();
+				ImGui.EndChildFrame();
+				ImGui.End();
+			}
+			ImGui.SetNextWindowSize(new(250, 300));
+			if(ImGui.Begin("Preview Control", ImGuiWindowFlags.None))
+			{
 				if(loadedPatrol != null)
 				{
-					ImGui.SetCursorPos(new(0, 550));
 					if(ImGui.Button("Start Patrol"))
 					{
 						previewedText = loadedPatrol.intro_text;
 					}
-					ImGui.SameLine();
-					if(ImGui.Button("Advance Patrol (Success)"))
-					{
-						previewedText = loadedPatrol.success_outcomes[currentSCOutcome].text;
-					}
-					ImGui.SameLine();
-					if(ImGui.Button("Advance Patrol (Fail)"))
-					{
-						previewedText = loadedPatrol.fail_outcomes[currentFCOutcome].text;
-					}
-					ImGui.SameLine();
 					if(ImGui.Button("Decline Patrol"))
 					{
 						previewedText = loadedPatrol.decline_text;
 					}
-					if(ImGui.Button("Antagonize Patrol (Success)") && loadedPatrol.antag_success_outcomes != null)
+					ImGui.SeparatorText("Advance Patrol (Default)");
+					if(loadedPatrol.success_outcomes[currentSCOutcome] != null && ImGui.Button("Advance Patrol (Success)"))
+					{
+						previewedText = loadedPatrol.success_outcomes[currentSCOutcome].text;
+					}
+					if(loadedPatrol.fail_outcomes[currentFCOutcome] != null && ImGui.Button("Advance Patrol (Fail)"))
+					{
+						previewedText = loadedPatrol.fail_outcomes[currentFCOutcome].text;
+					}
+					ImGui.SeparatorText("Advance Patrol (Antagonize)");
+					if(loadedPatrol.antag_success_outcomes != null && ImGui.Button("Antagonize Patrol (Success)"))
 					{
 						previewedText = loadedPatrol.antag_success_outcomes[currentSCOutcome].text; ;
 					}
-					if(ImGui.Button("Antagonize Patrol (Fail)") && loadedPatrol.antag_fail_outcomes != null)
+					if(loadedPatrol.antag_fail_outcomes != null && ImGui.Button("Antagonize Patrol (Fail)"))
 					{
 						previewedText = loadedPatrol.antag_fail_outcomes[currentFCOutcome].text;
 					}
 				}
-				ImGui.End();
 			}
 		}
 
@@ -169,7 +179,7 @@ namespace ClanGenModTool.UI.SubWindows
 							ImGui.Selectable(s, ref selected);
 							if(selected)
 								loadedPatrol.biome[0] = s;
-								ImGui.SetItemDefaultFocus();
+							ImGui.SetItemDefaultFocus();
 						}
 						ImGui.EndCombo();
 					}
@@ -229,123 +239,98 @@ namespace ClanGenModTool.UI.SubWindows
 							loadedPatrol.tags.Add("patrol_rel");
 						}
 					}
-					ImGui.InputText("Patrol Art", ref loadedPatrol.patrol_art, 400);
-					ImGui.InputInt("Minimum Cats in Patrol", ref loadedPatrol.min_cats, 1);
-					ImGui.InputInt("Maximum Cats in Patrol", ref loadedPatrol.max_cats, 1);
-					ImGui.InputInt("Patrol Weight", ref loadedPatrol.weight, 1);
-					ImGui.InputTextMultiline("Intro Text", ref loadedPatrol.intro_text, 2400, new(350, 150));
-					ImGui.InputTextMultiline("Decline Text", ref loadedPatrol.decline_text, 2400, new(350, 150));
-					ImGui.InputInt("Chance of Success", ref loadedPatrol.chance_of_success, 1);
-					if(loadedPatrol.min_max_status != null)
-					{
-						ImGui.Text("Min Max Status editing is currently not supported!");
-					}
+					if(ImGui.InputText("Patrol Art", ref loadedPatrol.patrol_art, 400)) { }
+					if(ImGui.InputInt("Minimum Cats in Patrol", ref loadedPatrol.min_cats, 1)) { }
+					if(ImGui.InputInt("Maximum Cats in Patrol", ref loadedPatrol.max_cats, 1)) { }
+					if(ImGui.InputInt("Patrol Weight", ref loadedPatrol.weight, 1)) { }
+					if(ImGui.InputTextMultiline("Intro Text", ref loadedPatrol.intro_text, 2400, new(350, 150))) { }
+					if(ImGui.InputTextMultiline("Decline Text", ref loadedPatrol.decline_text, 2400, new(350, 150))) { }
+					if(ImGui.InputInt("Chance of Success", ref loadedPatrol.chance_of_success, 1)) { }
+					if(loadedPatrol.min_max_status != null) { LoadMinMaxStatusEditor(); }
 					ImGui.SeparatorText("Outcome Editing");
-					ImGui.Checkbox("Editing Success Outcomes?", ref outcomeToggle);
-					ImGui.Checkbox("Editing Antag Outcomes?", ref antagToggle);
-					DrawOutcomesEditor(antagToggle);
-					if(!antagToggle)
-					{
-						if(ImGui.Button("Add Success Outcome"))
-						{
-							loadedPatrol.success_outcomes.Add(new SuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 });
-							currentSCOutcome = loadedPatrol.success_outcomes.Count - 1;
-							outcomeToggle = true;
-						}
-						if(ImGui.Button("Add Fail Outcome"))
-						{
-							loadedPatrol.fail_outcomes.Add(new FailOutcome { text = "failed_patrol", exp = 0, weight = 0 });
-							currentFCOutcome = loadedPatrol.fail_outcomes.Count - 1;
-							outcomeToggle = false;
-						}
-					}
-					if(antagToggle)
-					{
-						if(loadedPatrol.antag_success_outcomes == null)
-						{
-							loadedPatrol.antag_success_outcomes = new List<AntagSuccessOutcome>();
-							loadedPatrol.antag_fail_outcomes = new List<AntagFailOutcome>();
-						}
-						if(ImGui.Button("Add Antag Success Outcome"))
-						{
-							loadedPatrol.antag_success_outcomes.Add(new AntagSuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 });
-							currentSCOutcome = loadedPatrol.antag_success_outcomes.Count - 1;
-							outcomeToggle = true;
-						}
-						if(ImGui.Button("Add Antag Fail Outcome"))
-						{
-							loadedPatrol.antag_fail_outcomes.Add(new AntagFailOutcome { text = "failed_patrol", exp = 0, weight = 0 });
-							currentFCOutcome = loadedPatrol.antag_fail_outcomes.Count - 1;
-							outcomeToggle = false;
-						}
-					}
+					DrawOutcomeEditor();
+					ImGui.End();
 				}
-
-				ImGui.End();
 			}
 		}
 
-		private void DrawOutcomesEditor(bool antag)
+		private void LoadMinMaxStatusEditor()
 		{
-			if(!antag)
+			if(loadedPatrol != null)
 			{
-				if(outcomeToggle)
+				ImGui.Text("Min Max Status:");
+				if(ImGui.BeginChildFrame(2, new(600, 80)))
 				{
-					ImGui.Text("Select Success Outcome:");
-					ImGui.SameLine();
-					ImGui.InputInt("", ref currentSCOutcome, 1);
-
-					if(currentSCOutcome < 0)
-						currentSCOutcome = 0;
-					else if(currentSCOutcome > loadedPatrol!.success_outcomes.Count - 1)
-						currentSCOutcome = loadedPatrol.success_outcomes.Count - 1;
-
-					SuccessOutcome sc = loadedPatrol!.success_outcomes[currentSCOutcome];
-
-					ImGui.Text($"Success Outcome {currentSCOutcome}:");
-					ImGui.Indent();
-					ImGui.InputText("Success Text", ref sc.text, 2400);
-					ImGui.InputInt("Experience Gained", ref sc.exp, 1);
-					ImGui.InputInt("Weight", ref sc.weight, 1);
-					ImGui.Unindent();
-				}
-				else if(!outcomeToggle)
-				{
-					ImGui.Text("Select Fail Outcome:");
-					ImGui.SameLine();
-					ImGui.InputInt("", ref currentFCOutcome, 1);
-
-					if(currentFCOutcome < 0)
-						currentFCOutcome = 0;
-					else if(currentFCOutcome > loadedPatrol!.fail_outcomes.Count - 1)
-						currentFCOutcome = loadedPatrol.fail_outcomes.Count - 1;
-
-					FailOutcome fc = loadedPatrol!.fail_outcomes[currentFCOutcome];
-
-					ImGui.Text($"Fail Outcome {currentFCOutcome}:");
-					ImGui.Indent();
-					ImGui.InputText("Fail Text", ref fc.text, 2400);
-					ImGui.InputInt("Experience Gained", ref fc.exp, 1);
-					ImGui.InputInt("Weight", ref fc.weight, 1);
-					ImGui.Unindent();
+					if(ImGui.BeginTabBar("MinMaxTabs"))
+					{
+						if(loadedPatrol.min_max_status.normaladult != null)
+						{
+							if(ImGui.BeginTabItem("Adult Status"))
+							{
+								int min = loadedPatrol.min_max_status.normaladult[0];
+								ImGui.InputInt("Min: ", ref min);
+								int max = loadedPatrol.min_max_status.normaladult[1];
+								ImGui.InputInt("Max: ", ref max);
+								ImGui.EndTabItem();
+							}
+						}
+						if(loadedPatrol.min_max_status.leader != null)
+						{
+							if(ImGui.BeginTabItem("Leader Status"))
+							{
+								int min = loadedPatrol.min_max_status.leader[0];
+								ImGui.InputInt("Min: ", ref min);
+								int max = loadedPatrol.min_max_status.leader[1];
+								ImGui.InputInt("Max: ", ref max);
+								ImGui.EndTabItem();
+							}
+						}
+						if(loadedPatrol.min_max_status.apprentice != null)
+						{
+							if(ImGui.BeginTabItem("Apprentice Status"))
+							{
+								int min = loadedPatrol.min_max_status.apprentice[0];
+								ImGui.InputInt("Min: ", ref min);
+								int max = loadedPatrol.min_max_status.apprentice[1];
+								ImGui.InputInt("Max: ", ref max);
+								ImGui.EndTabItem();
+							}
+						}
+						if(loadedPatrol.min_max_status.allapprentices != null)
+						{
+							if(ImGui.BeginTabItem("All Apprentices Status"))
+							{
+								int min = loadedPatrol.min_max_status.allapprentices[0];
+								ImGui.InputInt("Min: ", ref min);
+								int max = loadedPatrol.min_max_status.allapprentices[1];
+								ImGui.InputInt("Max: ", ref max);
+								ImGui.EndTabItem();
+							}
+						}
+						ImGui.EndChildFrame();
+					}
 				}
 			}
-			else
+		}
+
+		private void DrawOutcomeEditor()
+		{
+			if(ImGui.BeginChildFrame(1, new(600, 250)))
 			{
-				if(loadedPatrol.antag_success_outcomes != null && loadedPatrol.antag_success_outcomes.Count > 0)
+				if(ImGui.BeginTabBar("OutcomeEditorTabs"))
 				{
-					if(outcomeToggle)
+					if(ImGui.BeginTabItem("Success"))
 					{
-						ImGui.Text("Select Antag Success Outcome:");
+						ImGui.Text("Select Success Outcome:");
 						ImGui.SameLine();
 						ImGui.InputInt("", ref currentSCOutcome, 1);
 
 						if(currentSCOutcome < 0)
 							currentSCOutcome = 0;
-						else if(currentSCOutcome > loadedPatrol!.antag_success_outcomes.Count - 1)
-							currentSCOutcome = loadedPatrol.antag_success_outcomes.Count - 1;
+						else if(currentSCOutcome > loadedPatrol!.success_outcomes.Count - 1)
+							currentSCOutcome = loadedPatrol.success_outcomes.Count - 1;
 
-						AntagSuccessOutcome sc = loadedPatrol!.antag_success_outcomes[currentSCOutcome];
+						SuccessOutcome sc = loadedPatrol!.success_outcomes[currentSCOutcome];
 
 						ImGui.Text($"Success Outcome {currentSCOutcome}:");
 						ImGui.Indent();
@@ -353,19 +338,25 @@ namespace ClanGenModTool.UI.SubWindows
 						ImGui.InputInt("Experience Gained", ref sc.exp, 1);
 						ImGui.InputInt("Weight", ref sc.weight, 1);
 						ImGui.Unindent();
+						if(ImGui.Button("Add Success Outcome"))
+						{
+							loadedPatrol.success_outcomes.Add(new SuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 });
+							currentSCOutcome = loadedPatrol.success_outcomes.Count - 1;
+						}
+						ImGui.EndTabItem();
 					}
-					else if(!outcomeToggle)
+					if(ImGui.BeginTabItem("Fail"))
 					{
-						ImGui.Text("Select Antag Fail Outcome:");
+						ImGui.Text("Select Fail Outcome:");
 						ImGui.SameLine();
 						ImGui.InputInt("", ref currentFCOutcome, 1);
 
 						if(currentFCOutcome < 0)
 							currentFCOutcome = 0;
-						else if(currentFCOutcome > loadedPatrol!.antag_fail_outcomes.Count - 1)
-							currentFCOutcome = loadedPatrol.antag_fail_outcomes.Count - 1;
+						else if(currentFCOutcome > loadedPatrol!.fail_outcomes.Count - 1)
+							currentFCOutcome = loadedPatrol.fail_outcomes.Count - 1;
 
-						AntagFailOutcome fc = loadedPatrol!.antag_fail_outcomes[currentFCOutcome];
+						FailOutcome fc = loadedPatrol!.fail_outcomes[currentFCOutcome];
 
 						ImGui.Text($"Fail Outcome {currentFCOutcome}:");
 						ImGui.Indent();
@@ -373,11 +364,82 @@ namespace ClanGenModTool.UI.SubWindows
 						ImGui.InputInt("Experience Gained", ref fc.exp, 1);
 						ImGui.InputInt("Weight", ref fc.weight, 1);
 						ImGui.Unindent();
+						if(ImGui.Button("Add Fail Outcome"))
+						{
+							loadedPatrol.fail_outcomes.Add(new FailOutcome { text = "failed_patrol", exp = 0, weight = 0 });
+							currentFCOutcome = loadedPatrol.fail_outcomes.Count - 1;
+
+						}
+						ImGui.EndTabItem();
 					}
-				}
-				else
-				{
-					ImGui.TextColored(new(255, 0, 0, 255), "Add an antag event first!");
+					if(ImGui.BeginTabItem("Antag Success"))
+					{
+						if(loadedPatrol.antag_success_outcomes != null && loadedPatrol.antag_success_outcomes.Count > 0)
+						{
+							ImGui.Text("Select Antag Success Outcome:");
+							ImGui.SameLine();
+							ImGui.InputInt("", ref currentSCOutcome, 1);
+
+							if(currentSCOutcome < 0)
+								currentSCOutcome = 0;
+							else if(currentSCOutcome > loadedPatrol!.antag_success_outcomes.Count - 1)
+								currentSCOutcome = loadedPatrol.antag_success_outcomes.Count - 1;
+
+							AntagSuccessOutcome sc = loadedPatrol!.antag_success_outcomes[currentSCOutcome];
+
+							ImGui.Text($"Success Outcome {currentSCOutcome}:");
+							ImGui.Indent();
+							ImGui.InputText("Success Text", ref sc.text, 2400);
+							ImGui.InputInt("Experience Gained", ref sc.exp, 1);
+							ImGui.InputInt("Weight", ref sc.weight, 1);
+							ImGui.Unindent();
+						}
+						else
+						{
+							ImGui.TextColored(new(255, 0, 0, 255), "Add antag success event first!");
+							loadedPatrol.antag_success_outcomes = new List<AntagSuccessOutcome>();
+						}
+						if(ImGui.Button("Add Antag Success Outcome"))
+						{
+							loadedPatrol.antag_success_outcomes.Add(new AntagSuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 });
+							currentSCOutcome = loadedPatrol.antag_success_outcomes.Count - 1;
+						}
+						ImGui.EndTabItem();
+					}
+					if(ImGui.BeginTabItem("Antag Fail"))
+					{
+						if(loadedPatrol.antag_fail_outcomes != null && loadedPatrol.antag_fail_outcomes.Count > 0)
+						{
+							ImGui.Text("Select Antag Fail Outcome:");
+							ImGui.SameLine();
+							ImGui.InputInt("", ref currentFCOutcome, 1);
+
+							if(currentFCOutcome < 0)
+								currentFCOutcome = 0;
+							else if(currentFCOutcome > loadedPatrol!.antag_fail_outcomes.Count - 1)
+								currentFCOutcome = loadedPatrol.antag_fail_outcomes.Count - 1;
+
+							AntagFailOutcome fc = loadedPatrol!.antag_fail_outcomes[currentFCOutcome];
+
+							ImGui.Text($"Fail Outcome {currentFCOutcome}:");
+							ImGui.Indent();
+							ImGui.InputText("Fail Text", ref fc.text, 2400);
+							ImGui.InputInt("Experience Gained", ref fc.exp, 1);
+							ImGui.InputInt("Weight", ref fc.weight, 1);
+							ImGui.Unindent();
+						}
+						else
+						{
+							ImGui.TextColored(new(255, 0, 0, 255), "Add antag fail event first!");
+							loadedPatrol.antag_fail_outcomes = new List<AntagFailOutcome>();
+						}
+						if(ImGui.Button("Add Antag Fail Outcome"))
+						{
+							loadedPatrol.antag_fail_outcomes.Add(new AntagFailOutcome { text = "failed_patrol", exp = 0, weight = 0 });
+							currentFCOutcome = loadedPatrol.antag_fail_outcomes.Count - 1;
+						}
+					}
+					ImGui.EndChildFrame();
 				}
 			}
 		}

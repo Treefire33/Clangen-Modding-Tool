@@ -24,7 +24,7 @@ namespace ClanGenModTool.UI
 		private static readonly List<IWindow> s_pendingInits = [];
 		private static readonly List<(IWindow window, WindowResources res)> s_windows = [];
 
-		public static void CreateWindow(out IWindow window, Vector2D<int>? initialWindowSize = null)
+		public static void CreateWindow(out IWindow window, Vector2D<int>? initialWindowSize = null, Action? onConfigIO = null)
 		{
 			var options = WindowOptions.Default;
 			options.API = new GraphicsAPI(
@@ -55,7 +55,7 @@ namespace ClanGenModTool.UI
 					WindowsDarkmodeUtil.SetDarkmodeAware(_window.Native.Win32.Value.Hwnd);
 
 				var input = _window.CreateInput();
-				var imguiController = new ImGuiController(s_gl, _window, input);
+				var imguiController = new ImGuiController(s_gl, _window, input, onConfigIO);
 
 				//update
 				_window.Update += ds => imguiController.Update((float)ds);
