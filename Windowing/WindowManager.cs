@@ -7,7 +7,7 @@ using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using Silk.NET.Windowing.Glfw;
-using ClangenModTool.Util;
+using ClanGenModTool.Util;
 
 namespace ClanGenModTool.UI
 {

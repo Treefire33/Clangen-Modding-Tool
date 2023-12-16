@@ -60,7 +60,8 @@ namespace ClanGenModTool.UI.SubWindows
 			}	
 		}
 
-		string selectedSuffix = "fur", selectedPeltSuffix = "fur", selectedTortieSuffix = "fur", selectedAnimalSuffix = "fur";
+		string selectedSuffix = "fur";
+		List<string> selectedPeltSuffix = new List<string> { "fur" }, selectedTortieSuffix = new List<string> { "fur" }, selectedAnimalSuffix = new List<string> { "fur" };
 		int previewIndex = 0;
 		private void DrawSuffixEditor()
 		{
@@ -122,19 +123,19 @@ namespace ClanGenModTool.UI.SubWindows
 											ImGui.Selectable(s, ref selected);
 											if(selected)
 											{
-												selectedPeltSuffix = s;
+												selectedPeltSuffix[selectedPeltSuffix.IndexOf(s)] = s;
 												previewIndex = l.IndexOf(s);
 											}
 											ImGui.SetItemDefaultFocus();
 										}
 										ImGui.EndCombo();
 									}
-									ImGui.InputText("Edit Suffix", ref selectedPeltSuffix, 400);
+									//ImGui.InputText("Edit Suffix", ref selectedPeltSuffix, 400);
 									if(ImGui.Button("Add Suffix"))
 									{
 										l.Add("suffix");
 										previewIndex = l.Count - 1;
-										selectedPeltSuffix = l[previewIndex];
+										//selectedPeltSuffix = l[previewIndex];
 									}
 									if(ImGui.Button("Remove Selected Suffix"))
 									{
@@ -142,9 +143,9 @@ namespace ClanGenModTool.UI.SubWindows
 										previewIndex--;
 										if(previewIndex < 0)
 											previewIndex = 0;
-										selectedPeltSuffix = l[previewIndex];
+										//selectedPeltSuffix = l[previewIndex];
 									}
-									l[previewIndex] = selectedPeltSuffix;
+									//l[previewIndex] = selectedPeltSuffix;
 									ImGui.EndTabItem();
 								}
 							}

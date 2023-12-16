@@ -12,17 +12,25 @@
   </PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\ExampleJSONs\example_clan.json" />
 	  <None Remove="Resources\ExampleJSONs\example_patrols.json" />
 	  <None Remove="Resources\ExampleJSONs\example_thoughts.json" />
 	  <None Remove="Resources\ExampleJSONs\names.json" />
 	  <None Remove="Resources\Fonts\NotoSans-Regular.ttf" />
+	  <None Remove="Resources\Images\Bliss.jpg" />
 	  <None Remove="Resources\Images\icon.ico" />
 	  <None Remove="Resources\Images\patrolPreview.png" />
 	  <None Remove="Resources\Images\thoughtPreview.png" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Include="Resources\ExampleJSONs\example_clan.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="Resources\ExampleJSONs\names.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Images\Bliss.jpg">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Resources\Images\thoughtPreview.png">

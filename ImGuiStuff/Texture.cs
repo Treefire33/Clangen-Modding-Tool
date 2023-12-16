@@ -9,6 +9,7 @@ namespace ClanGenModTool.Textures
 	{
 		public uint _handle;
 		private GL _gl;
+		public int width, height;
 
 		public unsafe Texture(GL gl, string path)
 		{
@@ -20,6 +21,7 @@ namespace ClanGenModTool.Textures
 			//Loading an image using imagesharp.
 			using(var img = Image.Load<Rgba32>(path))
 			{
+				width = img.Width; height = img.Height;
 				//Reserve enough memory from the gpu for the whole image
 				gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
 

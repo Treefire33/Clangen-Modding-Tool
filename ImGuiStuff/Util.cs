@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClangenModTool.Util
+namespace ClanGenModTool.Util
 {
 	public static class NullableExtensions
 	{
