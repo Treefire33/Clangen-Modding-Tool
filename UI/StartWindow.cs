@@ -34,7 +34,7 @@ namespace ClanGenModTool.UI
 				{
 					unsafe
 					{
-						ImGui.GetIO().Fonts.AddFontFromFileTTF(Path.Combine("Resources", "Fonts", "NotoSans-Regular.ttf"), 15.0f/*, null, ImGui.GetIO().Fonts.GetGlyphRangesDefault()*/);
+						ImGui.GetIO().Fonts.AddFontFromFileTTF(Path.Combine("Resources", "Fonts", "clangen.ttf"), 15.0f/*, null, ImGui.GetIO().Fonts.GetGlyphRangesDefault()*/);
 						ImGui.GetIO().Fonts.Build();
 					}
 				}
@@ -55,108 +55,108 @@ namespace ClanGenModTool.UI
 			{
 				if(ImGui.BeginMenu("File"))
 				{
-					if(ImGui.BeginMenu("Sprite"))
-					{
-						if(ImGui.BeginMenu("Pelt"))
-						{
-							if(ImGui.MenuItem("Select Pelt"))
-							{
-								Console.WriteLine("This feature has not been implemented");
-								mImplementException = true;
-							}
-							if(ImGui.MenuItem("New Pelt Pattern"))
-							{
-								Console.WriteLine("This feature has not been implemented");
-								mImplementException = true;
-							}
-							ImGui.EndMenu();
-						}
-						if(ImGui.BeginMenu("Lineart"))
-						{
-							if(ImGui.MenuItem("Select Lines"))
-							{
-								Console.WriteLine("This feature has not been implemented");
-								mImplementException = true;
-							}
-							ImGui.EndMenu();
-						}
-						ImGui.EndMenu();
-					}
-					if(ImGui.BeginMenu("Patrol"))
-					{
-						if(ImGui.MenuItem("Select Patrols"))
-						{
-							Editor.Load(ref mPatrolEditorActive);
-							mModCreationMenuActive = false;
-							mThoughtEditorActive = false;
-							mNameEditorActive = false;
-							mClanEditorActive = false;
-							patrolEdit.LoadEditor();
-							mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
-						}
-						ImGui.EndMenu();
-					}
-					if(ImGui.BeginMenu("Thoughts"))
-					{
-						if(ImGui.MenuItem("Select Thoughts"))
-						{
-							Editor.Load(ref mThoughtEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mNameEditorActive = false;
-							mClanEditorActive = false;
-							thoughtEdit.LoadEditor();
-							mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
-						}
-						ImGui.EndMenu();
-					}
-					if(ImGui.BeginMenu("Names"))
-					{
-						if(ImGui.MenuItem("Select Names File"))
-						{
-							Editor.Load(ref mNameEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mThoughtEditorActive = false;
-							mClanEditorActive = false;
-							nameEdit.LoadEditor();
-							mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
-						}
-						ImGui.EndMenu();
-					}
-					if(ImGui.BeginMenu("Clan"))
-					{
-						if(ImGui.MenuItem("Select Clan File"))
-						{
-							Editor.Load(ref mClanEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mThoughtEditorActive = false;
-							mNameEditorActive = false;
-							clanEdit.LoadEditor();
-							mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
-						}
-						ImGui.EndMenu();
-					}
-					if(mPatrolEditorActive && ImGui.MenuItem("Save Patrol File"))
+					if(mPatrolEditorActive && ImGui.MenuItem("Save"))
 					{
 						patrolEdit.Save();
 					}
-					if(mThoughtEditorActive && ImGui.MenuItem("Save Thought File"))
+					if(mThoughtEditorActive && ImGui.MenuItem("Save"))
 					{
 						thoughtEdit.Save();
 					}
-					if(mNameEditorActive && ImGui.MenuItem("Save Name File"))
+					if(mNameEditorActive && ImGui.MenuItem("Save"))
 					{
 						nameEdit.Save();
 					}
-					if(mClanEditorActive && ImGui.MenuItem("Save Clan File"))
+					if(mClanEditorActive && ImGui.MenuItem("Save"))
 					{
 						clanEdit.Save();
 					}
 					if(ImGui.MenuItem("Close"))
 					{
 						mWindow.Close();
+					}
+					ImGui.EndMenu();
+				}
+				/*if(ImGui.BeginMenu("Sprite"))
+				{
+					if(ImGui.BeginMenu("Pelt"))
+					{
+						if(ImGui.MenuItem("Select Pelt"))
+						{
+							Console.WriteLine("This feature has not been implemented");
+							mImplementException = true;
+						}
+						if(ImGui.MenuItem("New Pelt Pattern"))
+						{
+							Console.WriteLine("This feature has not been implemented");
+							mImplementException = true;
+						}
+						ImGui.EndMenu();
+					}
+					if(ImGui.BeginMenu("Lineart"))
+					{
+						if(ImGui.MenuItem("Select Lines"))
+						{
+							Console.WriteLine("This feature has not been implemented");
+							mImplementException = true;
+						}
+						ImGui.EndMenu();
+					}
+					ImGui.EndMenu();
+				}*/
+				if(ImGui.BeginMenu("Patrol"))
+				{
+					if(ImGui.MenuItem("Select Patrols"))
+					{
+						Editor.Load(ref mPatrolEditorActive);
+						mModCreationMenuActive = false;
+						mThoughtEditorActive = false;
+						mNameEditorActive = false;
+						mClanEditorActive = false;
+						patrolEdit.LoadEditor();
+						mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
+					}
+					ImGui.EndMenu();
+				}
+				if(ImGui.BeginMenu("Thoughts"))
+				{
+					if(ImGui.MenuItem("Select Thoughts"))
+					{
+						Editor.Load(ref mThoughtEditorActive);
+						mModCreationMenuActive = false;
+						mPatrolEditorActive = false;
+						mNameEditorActive = false;
+						mClanEditorActive = false;
+						thoughtEdit.LoadEditor();
+						mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
+					}
+					ImGui.EndMenu();
+				}
+				if(ImGui.BeginMenu("Names"))
+				{
+					if(ImGui.MenuItem("Select Names File"))
+					{
+						Editor.Load(ref mNameEditorActive);
+						mModCreationMenuActive = false;
+						mPatrolEditorActive = false;
+						mThoughtEditorActive = false;
+						mClanEditorActive = false;
+						nameEdit.LoadEditor();
+						mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
+					}
+					ImGui.EndMenu();
+				}
+				if(ImGui.BeginMenu("Clan"))
+				{
+					if(ImGui.MenuItem("Select Clan File"))
+					{
+						Editor.Load(ref mClanEditorActive);
+						mModCreationMenuActive = false;
+						mPatrolEditorActive = false;
+						mThoughtEditorActive = false;
+						mNameEditorActive = false;
+						clanEdit.LoadEditor();
+						mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
 					}
 					ImGui.EndMenu();
 				}

@@ -11,6 +11,12 @@
 		<Title>Clangen Modding Tool</Title>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Resources\Paint.net Files\**" />
+    <EmbeddedResource Remove="Resources\Paint.net Files\**" />
+    <None Remove="Resources\Paint.net Files\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 	  <None Remove="Resources\ExampleJSONs\example_clan.json" />
 	  <None Remove="Resources\ExampleJSONs\example_patrols.json" />
@@ -59,11 +65,11 @@
   <ItemGroup>
     <PackageReference Include="NativeFileDialogSharp" Version="0.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Silk.NET.Core" Version="2.19.0" />
-    <PackageReference Include="Silk.NET.GLFW" Version="2.19.0" />
-    <PackageReference Include="Silk.NET.Input" Version="2.19.0" />
-    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.19.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+    <PackageReference Include="Silk.NET.Core" Version="2.20.0" />
+    <PackageReference Include="Silk.NET.GLFW" Version="2.20.0" />
+    <PackageReference Include="Silk.NET.Input" Version="2.20.0" />
+    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.20.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
 

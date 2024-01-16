@@ -13,6 +13,7 @@ using System.IO;
 using ClanGenModTool.Textures;
 using Texture = ClanGenModTool.Textures.Texture;
 using ClanGenModTool.ObjectTypes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ClanGenModTool.UI.SubWindows
 {
@@ -31,6 +32,8 @@ namespace ClanGenModTool.UI.SubWindows
 			try
 			{
 				thoughts = JsonConvert.DeserializeObject<List<Thought>>(loadedJson!)!;
+				loadedThought = thoughts[0];
+				currentThought = 0;
 			}
 			catch(Exception ex)
 			{
@@ -116,15 +119,24 @@ namespace ClanGenModTool.UI.SubWindows
 		string previewedText = "";
 		private void DrawPreviewWindow()
 		{
-			ImGui.SetNextWindowSize(new Vector2(615, 600), ImGuiCond.Once);
-			if(ImGui.Begin("Thought Preview", ImGuiWindowFlags.NoCollapse))
+			ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
+			if(ImGui.Begin("Thought Preview", ImGuiWindowFlags.NoResize))
 			{
 				if(loadedThought != null)
 				{
 					previewedText = loadedThought.thoughts[currentSelected];
 				}
 				ImGui.Image(new IntPtr(thoughtPreviewImg._handle), new(600, 500));
-				ImGui.SetCursorPos(new(215, 155));
+				ImGui.SetCursorPosY(155);
+				float xPos = 0;
+				if(previewedText != null || previewedText != "")
+				{
+					float windowWidth = ImGui.GetWindowSize().X;
+					float textWidth = ImGui.CalcTextSize(previewedText).X;
+
+					xPos = (windowWidth - textWidth) * 0.5f;
+				}
+				ImGui.SetCursorPosX(xPos);
 				ImGui.TextColored(new(0, 0, 0, 255), previewedText);
 				ImGui.End();
 			}

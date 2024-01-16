@@ -14,6 +14,7 @@ namespace ClanGenModTool.UI.SubWindows
 	public class ClanEditor : Editor
 	{
 		Clan loadedClan = null;
+		bool catEditorOpened = false;
 		public void LoadEditor()
 		{
 			try
@@ -26,10 +27,12 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 		}
 
-		public void BeforeDrawEditor(GL gl)
+		public void BeforeDrawEditor()
 		{
-			throw new NotImplementedException();
+			
 		}
+
+		CatEditor catEditor = new CatEditor();
 
 		public void Draw(ref bool continueDraw)
 		{
@@ -54,6 +57,15 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				//DrawSelectThought();
 				DrawAttributesWindow();
+			}
+			if(catEditorOpened && catEditor.loadedCats != null)
+			{
+				catEditor.Draw(ref catEditorOpened);
+			}
+			else if(catEditorOpened)
+			{
+				CatEditor.Load();
+				catEditor.LoadEditor();
 			}
 		}
 
@@ -87,10 +99,7 @@ namespace ClanGenModTool.UI.SubWindows
 						ImGui.InputText("Temperament: ", ref loadedClan.temperament, 32);
 					}
 				}
-				if(ImGui.Button("Open Cat Editor"))
-				{
-
-				}
+				if(ImGui.Checkbox("Toggle Cat Editor", ref catEditorOpened)) {}
 				ImGui.End();
 			}
 		}
@@ -102,6 +111,7 @@ namespace ClanGenModTool.UI.SubWindows
 				string newJson = JsonConvert.SerializeObject(loadedClan, Formatting.Indented);
 				File.WriteAllText(loadedPath, newJson);
 			}
+			catEditor.Save();
 		}
 	}
 }

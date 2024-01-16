@@ -147,10 +147,12 @@ namespace ClanGenModTool.UI.SubWindows
 						AssignToLoadedPatrol();
 					}
 					ImGui.SameLine();
+					ImGui.PushID(i);
 					if(ImGui.Button("Del"))
 					{
 						patrols.RemoveAt(i);
 					}
+					ImGui.PopID();
 				}
 				if(ImGui.Button("Add Patrol"))
 				{
