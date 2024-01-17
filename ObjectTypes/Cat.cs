@@ -77,3 +77,67 @@ namespace ClanGenModTool.ObjectTypes
 
 
 }
+
+namespace ClanGenModTool
+{
+	public static class Background
+	{
+		public static string[] backgrounds = { 
+						"clan_founder",
+						"clanborn",
+						"halfborn1", "halfborn2",
+						"outsider_roots1",
+						"outsider_roots2",
+						"loner1",
+						"loner2",
+						"loner3",
+						"loner4",
+						"kittypet1",
+						"kittypet2",
+						"kittypet3",
+						"kittypet4",
+						"rogue1",
+						"rogue2",
+						"rogue3",
+						"abandoned1",
+						"abandoned2",
+						"abandoned3",
+						"abandoned4",
+						"otherclan1",
+						"otherclan2",
+						"otherclan3",
+						"otherclan4",
+						"disgraced1",
+						"disgraced2",
+						"disgraced3",
+						"retired_leader",
+						"medicine_cat",
+						"ostracized_warrior",
+						"refugee1",
+						"refugee2",
+						"refugee3",
+						"refugee4",
+						"refugee5",
+						"refugee6",
+						"tragedy_survivor1",
+						"tragedy_survivor2",
+						"tragedy_survivor3",
+						"tragedy_survivor4",
+						"wandering_healer1",
+						"wandering_healer2",
+						"guided1",
+						"guided2",
+						"guided3",
+						"guided4",
+						"orphaned1",
+						"orphaned2",
+						"orphaned3",
+						"orphaned4",
+						"orphaned5",
+						"orphaned6",
+						"outsider1",
+						"outsider2",
+						"outsider3"
+		};
+	}
+}

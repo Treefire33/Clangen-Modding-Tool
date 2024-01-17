@@ -201,10 +201,10 @@ namespace ClanGenModTool.UI.SubWindows
 					{
 						foreach(string s in new string[] { "border", "hunting", "herb-gathering", "training" })
 						{
-							bool selected = loadedPatrol.season[0].Equals(s);
+							bool selected = loadedPatrol.types[0].Equals(s);
 							ImGui.Selectable(s, ref selected);
 							if(selected)
-								loadedPatrol.season[0] = s;
+								loadedPatrol.types[0] = s;
 							ImGui.SetItemDefaultFocus();
 						}
 						ImGui.EndCombo();

@@ -128,16 +128,7 @@ namespace ClanGenModTool.UI.SubWindows
 				}
 				ImGui.Image(new IntPtr(thoughtPreviewImg._handle), new(600, 500));
 				ImGui.SetCursorPosY(155);
-				float xPos = 0;
-				if(previewedText != null || previewedText != "")
-				{
-					float windowWidth = ImGui.GetWindowSize().X;
-					float textWidth = ImGui.CalcTextSize(previewedText).X;
-
-					xPos = (windowWidth - textWidth) * 0.5f;
-				}
-				ImGui.SetCursorPosX(xPos);
-				ImGui.TextColored(new(0, 0, 0, 255), previewedText);
+				ImGUI.CenteredColoredText(new(0,0,0,255), previewedText);
 				ImGui.End();
 			}
 		}
@@ -196,7 +187,7 @@ namespace ClanGenModTool.UI.SubWindows
 
 		private void ThoughtTextEditor()
 		{
-			selectedThoughtText = loadedThought.thoughts[currentSelected];
+			selectedThoughtText = loadedThought!.thoughts[currentSelected];
 			//displayedThoughtText = CreateWrapping(selectedThoughtText, 15);
 			if(currentThought > loadedThought.thoughts.Count - 1)
 				currentThought = loadedThought.thoughts.Count;

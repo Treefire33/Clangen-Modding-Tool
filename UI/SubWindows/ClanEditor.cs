@@ -32,7 +32,7 @@ namespace ClanGenModTool.UI.SubWindows
 			
 		}
 
-		CatEditor catEditor = new CatEditor();
+		public CatEditor catEditor = new CatEditor();
 
 		public void Draw(ref bool continueDraw)
 		{

@@ -21,7 +21,8 @@ namespace ClanGenModTool.UI
 	{
 		readonly IWindow mWindow;
 		bool mPatrolEditorActive = false, mModCreationMenuActive = false, mImplementException = false;
-		bool mThoughtEditorActive = false, mNameEditorActive = false, mClanEditorActive;
+		bool mThoughtEditorActive = false, mNameEditorActive = false, mClanEditorActive = false;
+		bool mCatEditorActive = false;
 		public static EditorConfig editorConfig = new EditorConfig();
 		public static string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Treefire33\\ClanGenModTool", "editor.config");
 		public Texture Background = null;
@@ -112,7 +113,8 @@ namespace ClanGenModTool.UI
 						mModCreationMenuActive = false;
 						mThoughtEditorActive = false;
 						mNameEditorActive = false;
-						mClanEditorActive = false;
+						mClanEditorActive = false; 
+						mCatEditorActive = false;
 						patrolEdit.LoadEditor();
 						mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
 					}
@@ -126,7 +128,8 @@ namespace ClanGenModTool.UI
 						mModCreationMenuActive = false;
 						mPatrolEditorActive = false;
 						mNameEditorActive = false;
-						mClanEditorActive = false;
+						mClanEditorActive = false; 
+						mCatEditorActive = false;
 						thoughtEdit.LoadEditor();
 						mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
 					}
@@ -141,6 +144,7 @@ namespace ClanGenModTool.UI
 						mPatrolEditorActive = false;
 						mThoughtEditorActive = false;
 						mClanEditorActive = false;
+						mCatEditorActive = false;
 						nameEdit.LoadEditor();
 						mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
 					}
@@ -155,8 +159,19 @@ namespace ClanGenModTool.UI
 						mPatrolEditorActive = false;
 						mThoughtEditorActive = false;
 						mNameEditorActive = false;
+						mCatEditorActive = false;
 						clanEdit.LoadEditor();
 						mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
+					}
+					if(ImGui.MenuItem("Select Clan Cats File"))
+					{
+						CatEditor.Load(ref mCatEditorActive);
+						mModCreationMenuActive = false;
+						mPatrolEditorActive = false;
+						mThoughtEditorActive = false;
+						mNameEditorActive = false;
+						clanEdit.catEditor.LoadEditor();
+						mWindow.Title = "ClanGen Modding Tool   -   Cat Editing";
 					}
 					ImGui.EndMenu();
 				}
@@ -175,35 +190,39 @@ namespace ClanGenModTool.UI
 					if(ImGui.BeginTabItem("Editor Config Editor"))
 					{
 						ImGui.Text(editorConfig.patrolPath + "\n(Patrol JSONs Path)");
-						if(ImGui.Button("Select Path"))
+						ImGui.PushID(110);if(ImGui.Button("Select Path"))
 						{
 							fd.ShowFolderDialog();
 							editorConfig.patrolPath = fd.SelectedPath;
 						}
+						ImGui.PopID();
 						ImGui.Text(editorConfig.thoughtPath + "\n(Thought JSONs Path)");
-						if(ImGui.Button(" Select Path "))
+						ImGui.PushID(111);if(ImGui.Button("Select Path"))
 						{
 							fd.ShowFolderDialog();
 							editorConfig.thoughtPath = fd.SelectedPath;
-						}
+						}ImGui.PopID();
 						ImGui.Text(editorConfig.clanPath + "\n(Clan JSON Path)");
-						if(ImGui.Button("  Select Path  "))
+						ImGui.PushID(112);if(ImGui.Button("Select Path"))
 						{
 							fd.ShowFolderDialog();
 							editorConfig.clanPath = fd.SelectedPath;
 						}
+						ImGui.PopID();
 						ImGui.Text(editorConfig.gameConfigPath + "\n(Game Config Path)");
-						if(ImGui.Button("    Select Path   "))
+						ImGui.PushID(113);if(ImGui.Button("Select Path"))
 						{
 							fd.ShowFolderDialog();
 							editorConfig.gameConfigPath = fd.SelectedPath;
 						}
+						ImGui.PopID();
 						ImGui.Text(editorConfig.settingsPath + "\n(Settings JSON Path)");
-						if(ImGui.Button("    Select Path    "))
+						ImGui.PushID(114);if(ImGui.Button("Select Path"))
 						{
 							fd.ShowFolderDialog();
 							editorConfig.settingsPath = fd.SelectedPath;
 						}
+						ImGui.PopID();
 						//if(ImGui.Checkbox("Background Enabled", ref editorConfig.backgroundEnabled)) { }
 						if(ImGui.Button("Apply Changes"))
 						{
@@ -265,6 +284,10 @@ namespace ClanGenModTool.UI
 			if(mClanEditorActive)
 			{
 				clanEdit.Draw(ref mClanEditorActive);
+			}
+			if(mCatEditorActive)
+			{
+				clanEdit.catEditor.Draw(ref mCatEditorActive);
 			}
 			if(mImplementException)
 			{
