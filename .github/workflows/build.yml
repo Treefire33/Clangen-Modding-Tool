@@ -13,8 +13,6 @@ jobs:
             os-target: 'osx-x64'
           - runner: 'windows-latest'
             os-target: 'win-x64'
-          - runner: 'ubuntu-latest'
-            os-target: 'ubuntu-linux'
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v3
