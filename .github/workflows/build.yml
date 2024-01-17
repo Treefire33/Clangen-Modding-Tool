@@ -23,7 +23,7 @@ jobs:
           dotnet-version: '8'
 
       - name: Build project
-        run: dotnet publish ClanGenModTool.csproj -r ${{ matrix.os-target }} -c Release -o bin/${{ matrix.os-target }}
+        run: dotnet publish ClanGenModTool.sln -r ${{ matrix.os-target }} -c Release -o bin/${{ matrix.os-target }}
 
       - name: Bundle project
         run: tar -czvf ClanGenModTool-${{ matrix.os-target }}.tar.gz bin/${{ matrix.os-target }}
