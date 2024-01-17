@@ -16,50 +16,11 @@
     <EmbeddedResource Remove="Resources\Paint.net Files\**" />
     <None Remove="Resources\Paint.net Files\**" />
   </ItemGroup>
-
+	
 	<ItemGroup>
-	  <None Remove="Resources\ExampleJSONs\example_clan.json" />
-	  <None Remove="Resources\ExampleJSONs\example_patrols.json" />
-	  <None Remove="Resources\ExampleJSONs\example_thoughts.json" />
-	  <None Remove="Resources\ExampleJSONs\names.json" />
-	  <None Remove="Resources\Fonts\NotoSans-Regular.ttf" />
-	  <None Remove="Resources\Images\Bliss.jpg" />
-	  <None Remove="Resources\Images\icon.ico" />
-	  <None Remove="Resources\Images\patrolPreview.png" />
-	  <None Remove="Resources\Images\thoughtPreview.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Resources\ExampleJSONs\example_clan.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\ExampleJSONs\names.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Images\Bliss.jpg">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Images\thoughtPreview.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Resources\ExampleJSONs\example_patrols.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\ExampleJSONs\example_thoughts.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Fonts\NotoSans-Regular.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Images\icon.ico">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Images\patrolPreview.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<None Update="Resources\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
   <ItemGroup>
