@@ -13,33 +13,20 @@ namespace ClanGenModTool.ObjectTypes
 		public string text;
 		public int exp;
 		public int weight;
+		public List<string> stat_skill;
+		public List<string> stat_trait;
+		public List<string> can_have_stat;
+		public List<string> lost_cats;
+		public List<string> dead_cats;
 		public int outsider_rep;
 		public int other_clan_rep;
-	}
-	
-	public class SuccessOutcome : Outcome
-	{
-		public List<Relationship> relationships;
-		public List<string> stat_skill;
-		public List<string> stat_trait;
-		public List<List<string>> new_cat;
 		public List<Injury> injury;
-		public List<string> can_have_stat;
-	}
-
-	public class FailOutcome : Outcome
-	{
-		public List<string> dead_cats;
 		public HistoryText history_text;
 		public List<Relationship> relationships;
-		public List<Injury> injury;
-		public List<string> stat_trait;
-		public List<string> stat_skill;
+		public List<List<string>> new_cat;
+		public string art;
+		public string art_clean;
 	}
-	
-	public class AntagFailOutcome : Outcome { }
-
-	public class AntagSuccessOutcome : Outcome { }
 
 	public class HistoryText
 	{
@@ -56,17 +43,6 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> scars;
 	}
 
-	public class MinMaxStatus
-	{
-		[JsonProperty("normal adult")]
-		public List<int> normaladult;
-		public List<int> leader;
-		public List<int> apprentice;
-
-		[JsonProperty("all apprentices")]
-		public List<int> allapprentices;
-	}
-
 	public class Relationship
 	{
 		public List<string> cats_to;
@@ -74,6 +50,24 @@ namespace ClanGenModTool.ObjectTypes
 		public bool mutual;
 		public List<string> values;
 		public int amount;
+	}
+
+	public class MinMaxStatus
+	{
+		public List<int> apprentice;
+		[JsonProperty("medicine cat apprentice")]
+		public List<int> medicine_cat_apprentice;
+		[JsonProperty("medicine cat")]
+		public List<int> medicine_cat;
+		public List<int> deputy;
+		public List<int> warrior;
+		public List<int> leader;
+		[JsonProperty("healer cats")]
+		public List<int> healer_cats;
+		[JsonProperty("normal adult")]
+		public List<int> normal_adult;
+		[JsonProperty("all apprentices")]
+		public List<int> all_apprentices;
 	}
 
 	public class Patrol
@@ -84,17 +78,26 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> types;
 		public List<string> tags;
 		public string patrol_art;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public string patrol_art_clean;
 		public int min_cats;
 		public int max_cats;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public MinMaxStatus min_max_status;
 		public int weight;
+		public int chance_of_success;
 		public string intro_text;
 		public string decline_text;
-		public int chance_of_success;
-		public List<SuccessOutcome> success_outcomes;
-		public List<FailOutcome> fail_outcomes;
-		public List<AntagFailOutcome> antag_fail_outcomes;
-		public List<AntagSuccessOutcome> antag_success_outcomes;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public List<string> relationship_constraint;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public List<string> pl_skill_constraint;
+		public List<Outcome> success_outcomes;
+		public List<Outcome> fail_outcomes;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public List<Outcome> antag_fail_outcomes;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+		public List<Outcome> antag_success_outcomes;
 
 		public Patrol()
 		{
@@ -110,18 +113,17 @@ namespace ClanGenModTool.ObjectTypes
 			patrol_id = "default_patrol_obj";
 			biome = ["Any"];
 			season = ["Any"];
-			types = ["Any"];
+			types = ["hunting"];
 			tags = [];
 			patrol_art = "gen_bord_intro";
-			min_cats = 0;
-			max_cats = 0;
-			weight = 0;
-			intro_text = string.Empty;
-			decline_text = string.Empty;
+			min_cats = 1;
+			max_cats = 6;
+			weight = 20;
+			chance_of_success = 50;
+			intro_text = "The patrol stumbles upon some placeholder text";
+			decline_text = "The patrol ignores it and continues on with their day.";
 			success_outcomes = [new SuccessOutcome { text="successful_patrol", exp=0, weight=0 }];
 			fail_outcomes = [new FailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
-			antag_success_outcomes = [new AntagSuccessOutcome { text = "successful_patrol", exp = 0, weight = 0 }];
-			antag_fail_outcomes = [new AntagFailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
 		}
 	}
 }

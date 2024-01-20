@@ -1,0 +1,68 @@
+[
+  {
+    "patrol_id": "gen_bord_mod",
+    "biome": [
+      "Any"
+    ],
+    "season": [
+      "Any"
+    ],
+    "types": [
+      "border"
+    ],
+    "tags": [],
+    "patrol_art": "gen_bord_intro",
+    "patrol_art_clean": null,
+    "min_cats": 1,
+    "max_cats": 6,
+    "min_max_status": null,
+    "weight": 20,
+    "intro_text": "The patrol stumbles upon some placeholder text",
+    "decline_text": "The patrol ignores it and continues on with their day.",
+    "chance_of_success": 50,
+    "relationship_constraint": null,
+    "pl_skill_constraint": null,
+    "success_outcomes": [
+      {
+        "text": "successful_patrol",
+        "exp": 0,
+        "weight": 0,
+        "stat_skill": null,
+        "stat_trait": null,
+        "can_have_stat": null,
+        "lost_cats": null,
+        "dead_cats": null,
+        "outsider_rep": 0,
+        "other_clan_rep": 0,
+        "injury": null,
+        "history_text": null,
+        "relationships": null,
+        "new_cat": null,
+        "art": null,
+        "art_clean": null
+      }
+    ],
+    "fail_outcomes": [
+      {
+        "text": "failed_patrol",
+        "exp": 0,
+        "weight": 0,
+        "stat_skill": null,
+        "stat_trait": null,
+        "can_have_stat": null,
+        "lost_cats": null,
+        "dead_cats": null,
+        "outsider_rep": 0,
+        "other_clan_rep": 0,
+        "injury": null,
+        "history_text": null,
+        "relationships": null,
+        "new_cat": null,
+        "art": null,
+        "art_clean": null
+      }
+    ],
+    "antag_fail_outcomes": null,
+    "antag_success_outcomes": null
+  }
+]
