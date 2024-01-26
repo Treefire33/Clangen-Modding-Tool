@@ -122,8 +122,8 @@ namespace ClanGenModTool.ObjectTypes
 			chance_of_success = 50;
 			intro_text = "The patrol stumbles upon some placeholder text";
 			decline_text = "The patrol ignores it and continues on with their day.";
-			success_outcomes = [new SuccessOutcome { text="successful_patrol", exp=0, weight=0 }];
-			fail_outcomes = [new FailOutcome { text = "failed_patrol", exp = 0, weight = 0 }];
+			success_outcomes = [new Outcome { text="successful_patrol", exp=0, weight=0 }];
+			fail_outcomes = [new Outcome { text = "failed_patrol", exp = 0, weight = 0 }];
 		}
 	}
 }

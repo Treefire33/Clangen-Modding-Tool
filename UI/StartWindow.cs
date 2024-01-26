@@ -49,7 +49,7 @@ namespace ClanGenModTool.UI
 			mWindow.Dispose();
 		}
 
-		FileDialog fd = new FileDialog();
+		//FileDialog fd = new FileDialog();
 		void DrawMainMenu()
 		{
 			if(ImGui.BeginMainMenuBar())
@@ -105,80 +105,88 @@ namespace ClanGenModTool.UI
 					}
 					ImGui.EndMenu();
 				}*/
-				if(ImGui.BeginMenu("Patrol"))
+				if(ImGui.BeginMenu("Resource Editing"))
 				{
-					if(ImGui.MenuItem("Select Patrols"))
+					if(ImGui.BeginMenu("Patrol"))
 					{
-						Editor.Load(ref mPatrolEditorActive);
-						mModCreationMenuActive = false;
-						mThoughtEditorActive = false;
-						mNameEditorActive = false;
-						mClanEditorActive = false; 
-						mCatEditorActive = false;
-						patrolEdit.LoadEditor();
-						mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
+						if(ImGui.MenuItem("Select Patrols"))
+						{
+							Editor.Load(ref mPatrolEditorActive);
+							mModCreationMenuActive = false;
+							mThoughtEditorActive = false;
+							mNameEditorActive = false;
+							mClanEditorActive = false;
+							mCatEditorActive = false;
+							patrolEdit.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
+						}
+						ImGui.EndMenu();
+					}
+					if(ImGui.BeginMenu("Thoughts"))
+					{
+						if(ImGui.MenuItem("Select Thoughts"))
+						{
+							Editor.Load(ref mThoughtEditorActive);
+							mModCreationMenuActive = false;
+							mPatrolEditorActive = false;
+							mNameEditorActive = false;
+							mClanEditorActive = false;
+							mCatEditorActive = false;
+							thoughtEdit.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
+						}
+						ImGui.EndMenu();
+					}
+					if(ImGui.BeginMenu("Names"))
+					{
+						if(ImGui.MenuItem("Select Names File"))
+						{
+							Editor.Load(ref mNameEditorActive);
+							mModCreationMenuActive = false;
+							mPatrolEditorActive = false;
+							mThoughtEditorActive = false;
+							mClanEditorActive = false;
+							mCatEditorActive = false;
+							nameEdit.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
+						}
+						ImGui.EndMenu();
 					}
 					ImGui.EndMenu();
 				}
-				if(ImGui.BeginMenu("Thoughts"))
+				if(ImGui.BeginMenu("Save Editing"))
 				{
-					if(ImGui.MenuItem("Select Thoughts"))
+					if(ImGui.BeginMenu("Clan"))
 					{
-						Editor.Load(ref mThoughtEditorActive);
-						mModCreationMenuActive = false;
-						mPatrolEditorActive = false;
-						mNameEditorActive = false;
-						mClanEditorActive = false; 
-						mCatEditorActive = false;
-						thoughtEdit.LoadEditor();
-						mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
-					}
-					ImGui.EndMenu();
-				}
-				if(ImGui.BeginMenu("Names"))
-				{
-					if(ImGui.MenuItem("Select Names File"))
-					{
-						Editor.Load(ref mNameEditorActive);
-						mModCreationMenuActive = false;
-						mPatrolEditorActive = false;
-						mThoughtEditorActive = false;
-						mClanEditorActive = false;
-						mCatEditorActive = false;
-						nameEdit.LoadEditor();
-						mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
-					}
-					ImGui.EndMenu();
-				}
-				if(ImGui.BeginMenu("Clan"))
-				{
-					if(ImGui.MenuItem("Select Clan File"))
-					{
-						Editor.Load(ref mClanEditorActive);
-						mModCreationMenuActive = false;
-						mPatrolEditorActive = false;
-						mThoughtEditorActive = false;
-						mNameEditorActive = false;
-						mCatEditorActive = false;
-						clanEdit.LoadEditor();
-						mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
-					}
-					if(ImGui.MenuItem("Select Clan Cats File"))
-					{
-						CatEditor.Load(ref mCatEditorActive);
-						mModCreationMenuActive = false;
-						mPatrolEditorActive = false;
-						mThoughtEditorActive = false;
-						mNameEditorActive = false;
-						clanEdit.catEditor.LoadEditor();
-						mWindow.Title = "ClanGen Modding Tool   -   Cat Editing";
+						if(ImGui.MenuItem("Select Clan File"))
+						{
+							Editor.Load(ref mClanEditorActive);
+							mModCreationMenuActive = false;
+							mPatrolEditorActive = false;
+							mThoughtEditorActive = false;
+							mNameEditorActive = false;
+							mCatEditorActive = false;
+							clanEdit.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
+						}
+						if(ImGui.MenuItem("Select Clan Cats File"))
+						{
+							CatEditor.Load(ref mCatEditorActive);
+							mModCreationMenuActive = false;
+							mPatrolEditorActive = false;
+							mThoughtEditorActive = false;
+							mNameEditorActive = false;
+							clanEdit.catEditor.LoadEditor();
+							mWindow.Title = "ClanGen Modding Tool   -   Cat Editing";
+						}
+						ImGui.EndMenu();
 					}
 					ImGui.EndMenu();
 				}
 				ImGui.EndMenuBar();
 			}
-			ImGui.SetNextWindowSize(new(350, 350));
-			if(ImGui.Begin("Config/Settings Editor", ImGuiWindowFlags.MenuBar))
+			//ImGui.SetNextWindowSize(new(350, 350));
+			/*if(ImGui.Begin("Config/Settings Editor", ImGuiWindowFlags.MenuBar))
 			{
 				if(ImGui.BeginTabBar("editorGeneral"))
 				{
@@ -234,7 +242,7 @@ namespace ClanGenModTool.UI
 					ImGui.EndTabBar();
 				}
 				ImGui.End();
-			}
+			}*/
 		}
 
 		PatrolEditor patrolEdit = new PatrolEditor();
