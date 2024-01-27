@@ -13,6 +13,7 @@ using System.IO;
 using ClanGenModTool.Textures;
 using ClanGenModTool.ObjectTypes;
 using Texture = ClanGenModTool.Textures.Texture;
+using System.Linq.Expressions;
 
 namespace ClanGenModTool.UI.SubWindows
 {
@@ -110,24 +111,37 @@ namespace ClanGenModTool.UI.SubWindows
 					{
 						previewedText = loadedPatrol.decline_text;
 					}
+					if(ImGui.InputInt("Select Outcome", ref selectedOutcome)) { if(selectedOutcome < 0) { selectedOutcome = 0;  } }
 					ImGui.SeparatorText("Advance Patrol (Default)");
-					if(loadedPatrol.success_outcomes[selectedOutcome] != null && ImGui.Button("Advance Patrol (Success)"))
+					try
 					{
-						previewedText = loadedPatrol.success_outcomes[selectedOutcome].text;
+						if(loadedPatrol.success_outcomes[selectedOutcome] != null && ImGui.Button("Advance Patrol (Success)"))
+						{
+							previewedText = loadedPatrol.success_outcomes[selectedOutcome].text;
+						}
 					}
-					if(loadedPatrol.fail_outcomes[selectedOutcome] != null && ImGui.Button("Advance Patrol (Fail)"))
+					catch { }
+					try
 					{
-						previewedText = loadedPatrol.fail_outcomes[selectedOutcome].text;
+						if(loadedPatrol.fail_outcomes[selectedOutcome] != null && ImGui.Button("Advance Patrol (Fail)"))
+						{
+							previewedText = loadedPatrol.fail_outcomes[selectedOutcome].text;
+						}
 					}
+					catch { }
 					ImGui.SeparatorText("Advance Patrol (Antagonize)");
-					if(loadedPatrol.antag_success_outcomes != null && ImGui.Button("Antagonize Patrol (Success)"))
+					try
 					{
-						previewedText = loadedPatrol.antag_success_outcomes[selectedOutcome].text; ;
+						if(loadedPatrol.antag_success_outcomes != null && ImGui.Button("Antagonize Patrol (Success)"))
+						{
+							previewedText = loadedPatrol.antag_success_outcomes[selectedOutcome].text; ;
+						}
+						if(loadedPatrol.antag_fail_outcomes != null && ImGui.Button("Antagonize Patrol (Fail)"))
+						{
+							previewedText = loadedPatrol.antag_fail_outcomes[selectedOutcome].text;
+						}
 					}
-					if(loadedPatrol.antag_fail_outcomes != null && ImGui.Button("Antagonize Patrol (Fail)"))
-					{
-						previewedText = loadedPatrol.antag_fail_outcomes[selectedOutcome].text;
-					}
+					catch { }
 				}
 			}
 		}
@@ -167,7 +181,7 @@ namespace ClanGenModTool.UI.SubWindows
 		string tempSkillConstraint = "";
 		private void DrawAttributesWindow()
 		{
-			ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
+			ImGui.SetNextWindowSize(new Vector2(650, 800), ImGuiCond.Once);
 			if(ImGui.Begin("Patrol Attributes Editor", ImGuiWindowFlags.NoCollapse))
 			{
 				if(loadedPatrol != null)
@@ -222,7 +236,6 @@ namespace ClanGenModTool.UI.SubWindows
 					LoadRelationshipConstraintEditor();
 					if(ImGui.InputTextMultiline("Intro Text", ref loadedPatrol.intro_text, 2400, new(350, 150))) { }
 					if(ImGui.InputTextMultiline("Decline Text", ref loadedPatrol.decline_text, 2400, new(350, 150))) { }
-					ImGui.SeparatorText("Outcome Editing");
 					DrawOutcomeEditor();
 					ImGui.End();
 				}
@@ -231,223 +244,233 @@ namespace ClanGenModTool.UI.SubWindows
 
 		private void LoadTagEditor()
 		{
-			if(loadedPatrol.tags.Count > 0)
+			if(ImGui.CollapsingHeader("Tag Editing"))
 			{
-				if(ImGui.InputInt("Selected Tag", ref selectedTag, 1, 1, ImGuiInputTextFlags.None))
+				if(loadedPatrol.tags.Count > 0)
 				{
-					if(selectedTag >= loadedPatrol.tags.Count)
-						selectedTag = loadedPatrol.tags.Count - 1;
-					else if(selectedTag < 0)
-						selectedTag = 0;
-				}
-				if(ImGui.BeginCombo("Tags", loadedPatrol.tags[0]))
-				{
-					foreach(string s in new string[] { "romance", "rom_two_apps", "disaster", "new_cat", "halloween", "april_fools", "new_years" })
+					if(ImGui.InputInt("Selected Tag", ref selectedTag, 1, 1, ImGuiInputTextFlags.None))
 					{
-						bool selected = loadedPatrol.tags[0].Equals(s);
-						ImGui.Selectable(s, ref selected);
-						if(selected)
-							loadedPatrol.tags[0] = s;
-						ImGui.SetItemDefaultFocus();
+						if(selectedTag >= loadedPatrol.tags.Count)
+							selectedTag = loadedPatrol.tags.Count - 1;
+						else if(selectedTag < 0)
+							selectedTag = 0;
 					}
-					ImGui.EndCombo();
+					if(ImGui.BeginCombo("Tags", loadedPatrol.tags[0]))
+					{
+						foreach(string s in new string[] { "romance", "rom_two_apps", "disaster", "new_cat", "halloween", "april_fools", "new_years" })
+						{
+							bool selected = loadedPatrol.tags[0].Equals(s);
+							ImGui.Selectable(s, ref selected);
+							if(selected)
+								loadedPatrol.tags[0] = s;
+							ImGui.SetItemDefaultFocus();
+						}
+						ImGui.EndCombo();
+					}
+					if(ImGui.Button("Add Tag"))
+					{
+						loadedPatrol.tags.Add("new_cat");
+					}
+					ImGui.SameLine();
+					if(ImGui.Button("Remove Tag"))
+					{
+						loadedPatrol.tags.RemoveAt(selectedTag);
+					}
 				}
-				if(ImGui.Button("Add Tag"))
+				else
 				{
-					loadedPatrol.tags.Add("new_cat");
-				}
-				ImGui.SameLine();
-				if(ImGui.Button("Remove Tag"))
-				{
-					loadedPatrol.tags.RemoveAt(selectedTag);
-				}
-			}
-			else
-			{
-				if(ImGui.Button("Add Tag"))
-				{
-					loadedPatrol.tags.Add("new_cat");
+					if(ImGui.Button("Add Tag"))
+					{
+						loadedPatrol.tags.Add("new_cat");
+					}
 				}
 			}
 		}
 		private void LoadMinMaxStatusEditor()
 		{
-			if(loadedPatrol != null)
+			if(ImGui.CollapsingHeader("Mix Max Status Editing"))
 			{
-				ImGui.Text("Min Max Status:");
-				if(ImGui.BeginChildFrame(2, new(600, 80)))
+				if(loadedPatrol != null)
 				{
-					if(ImGui.BeginTabBar("MinMaxTabs"))
+					if(ImGui.BeginChildFrame(2, new(600, 80)))
 					{
-						if(loadedPatrol.min_max_status.apprentice != null)
+						if(ImGui.BeginTabBar("MinMaxTabs"))
 						{
-							if(ImGui.BeginTabItem("Apprentice"))
+							if(loadedPatrol.min_max_status.apprentice != null)
 							{
-								int min = loadedPatrol.min_max_status.apprentice[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.apprentice[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Apprentice"))
+								{
+									int min = loadedPatrol.min_max_status.apprentice[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.apprentice[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.medicine_cat_apprentice != null)
-						{
-							if(ImGui.BeginTabItem("Med Cat Apprentice"))
+							if(loadedPatrol.min_max_status.medicine_cat_apprentice != null)
 							{
-								int min = loadedPatrol.min_max_status.medicine_cat_apprentice[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.medicine_cat_apprentice[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Med Cat Apprentice"))
+								{
+									int min = loadedPatrol.min_max_status.medicine_cat_apprentice[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.medicine_cat_apprentice[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.medicine_cat != null)
-						{
-							if(ImGui.BeginTabItem("Med Cat"))
+							if(loadedPatrol.min_max_status.medicine_cat != null)
 							{
-								int min = loadedPatrol.min_max_status.medicine_cat[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.medicine_cat[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Med Cat"))
+								{
+									int min = loadedPatrol.min_max_status.medicine_cat[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.medicine_cat[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.deputy != null)
-						{
-							if(ImGui.BeginTabItem("Deputy"))
+							if(loadedPatrol.min_max_status.deputy != null)
 							{
-								int min = loadedPatrol.min_max_status.deputy[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.deputy[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Deputy"))
+								{
+									int min = loadedPatrol.min_max_status.deputy[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.deputy[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.warrior != null)
-						{
-							if(ImGui.BeginTabItem("Warrior"))
+							if(loadedPatrol.min_max_status.warrior != null)
 							{
-								int min = loadedPatrol.min_max_status.warrior[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.warrior[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Warrior"))
+								{
+									int min = loadedPatrol.min_max_status.warrior[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.warrior[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.warrior != null)
-						{
-							if(ImGui.BeginTabItem("Warrior"))
+							if(loadedPatrol.min_max_status.warrior != null)
 							{
-								int min = loadedPatrol.min_max_status.warrior[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.warrior[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Warrior"))
+								{
+									int min = loadedPatrol.min_max_status.warrior[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.warrior[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.leader != null)
-						{
-							if(ImGui.BeginTabItem("Leader"))
+							if(loadedPatrol.min_max_status.leader != null)
 							{
-								int min = loadedPatrol.min_max_status.leader[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.leader[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Leader"))
+								{
+									int min = loadedPatrol.min_max_status.leader[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.leader[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.healer_cats != null)
-						{
-							if(ImGui.BeginTabItem("Healers"))
+							if(loadedPatrol.min_max_status.healer_cats != null)
 							{
-								int min = loadedPatrol.min_max_status.healer_cats[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.healer_cats[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Healers"))
+								{
+									int min = loadedPatrol.min_max_status.healer_cats[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.healer_cats[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.normal_adult != null)
-						{
-							if(ImGui.BeginTabItem("Normal Adult"))
+							if(loadedPatrol.min_max_status.normal_adult != null)
 							{
-								int min = loadedPatrol.min_max_status.normal_adult[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.normal_adult[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("Normal Adult"))
+								{
+									int min = loadedPatrol.min_max_status.normal_adult[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.normal_adult[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
-						}
-						if(loadedPatrol.min_max_status.all_apprentices != null)
-						{
-							if(ImGui.BeginTabItem("All Apprentices Status"))
+							if(loadedPatrol.min_max_status.all_apprentices != null)
 							{
-								int min = loadedPatrol.min_max_status.all_apprentices[0];
-								ImGui.InputInt("Min: ", ref min);
-								int max = loadedPatrol.min_max_status.all_apprentices[1];
-								ImGui.InputInt("Max: ", ref max);
-								ImGui.EndTabItem();
+								if(ImGui.BeginTabItem("All Apprentices Status"))
+								{
+									int min = loadedPatrol.min_max_status.all_apprentices[0];
+									ImGui.InputInt("Min: ", ref min);
+									int max = loadedPatrol.min_max_status.all_apprentices[1];
+									ImGui.InputInt("Max: ", ref max);
+									ImGui.EndTabItem();
+								}
 							}
+							ImGui.EndChildFrame();
 						}
-						ImGui.EndChildFrame();
 					}
 				}
 			}
 		}
 		private void LoadRelationshipConstraintEditor()
 		{
-			ImGui.SeparatorText("Relation Constraints");
-			if(loadedPatrol.relationship_constraint != null && loadedPatrol.relationship_constraint.Count > 0)
+			//ImGui.SeparatorText("Relation Constraints");
+			if(ImGui.CollapsingHeader("Relation Constraints"))
 			{
-				if(ImGui.BeginCombo("Constraints", tempRelConstraint))
+				if(loadedPatrol.relationship_constraint != null && loadedPatrol.relationship_constraint.Count > 0)
 				{
-					foreach(string s in new string[] { "siblings", "mates", "mates_with_pl", "parent/child", "child/parent", "romantic_val", "platonic_val", "dislike_val", "comfortable_val", "jealousy_val", "trust_val" })
+					if(ImGui.BeginCombo("Constraints", tempRelConstraint))
 					{
-						bool selected = tempRelConstraint.Equals(s);
-						ImGui.Selectable(s, ref selected);
-						if(selected)
-							tempRelConstraint = s;
-						ImGui.SetItemDefaultFocus();
+						foreach(string s in new string[] { "siblings", "mates", "mates_with_pl", "parent/child", "child/parent", "romantic_val", "platonic_val", "dislike_val", "comfortable_val", "jealousy_val", "trust_val" })
+						{
+							bool selected = tempRelConstraint.Equals(s);
+							ImGui.Selectable(s, ref selected);
+							if(selected)
+								tempRelConstraint = s;
+							ImGui.SetItemDefaultFocus();
+						}
+						ImGui.EndCombo();
 					}
-					ImGui.EndCombo();
-				}
-				if(tempRelConstraint.Contains("val"))
-				{
-					if(ImGui.InputInt("Value of constraint", ref tempRelVal, 1, 5, ImGuiInputTextFlags.None))
+					if(tempRelConstraint.Contains("val"))
 					{
-						if(tempRelVal > 100)
-							tempRelVal = 100;
-						else if(tempRelVal < 0)
-							tempRelVal = 0;
-						tempRelConstraint.Replace("val", tempRelVal.ToString());
+						if(ImGui.InputInt("Value of constraint", ref tempRelVal, 1, 5, ImGuiInputTextFlags.None))
+						{
+							if(tempRelVal > 100)
+								tempRelVal = 100;
+							else if(tempRelVal < 0)
+								tempRelVal = 0;
+							tempRelConstraint.Replace("val", tempRelVal.ToString());
+						}
+					}
+					if(ImGui.Button("Add Selected Constraint"))
+					{
+						loadedPatrol.relationship_constraint.Add(tempRelConstraint);
+						tempRelConstraint = "";
+						tempRelVal = 0;
 					}
 				}
-				if(ImGui.Button("Add Selected Constraint"))
+				else
 				{
-					loadedPatrol.relationship_constraint.Add(tempRelConstraint);
-					tempRelConstraint = "";
-					tempRelVal = 0;
-				}
-			}
-			else
-			{
-				if(ImGui.Button("Add Relationship Constraint"))
-				{
-					tempRelConstraint = "siblings";
-					tempRelVal = 0;
-					loadedPatrol.relationship_constraint.Add(tempRelConstraint);
-					tempRelConstraint = "";
-					tempRelVal = 0;
+					if(ImGui.Button("Add Relationship Constraint"))
+					{
+						tempRelConstraint = "siblings";
+						tempRelVal = 0;
+						loadedPatrol.relationship_constraint.Add(tempRelConstraint);
+						tempRelConstraint = "";
+						tempRelVal = 0;
+					}
 				}
 			}
 		}
-		string outcomeType = "success", tempSkill = "", tempTrait = "";
+
+		string outcomeType = "success", tempSkill = "", tempTrait = "", tempCanHave = "p_l";
 		int selectedOutcome = 0;
 		Outcome currentOutcome;
 		List<Outcome> outcomesToSearch = new List<Outcome>();
 		private void DrawOutcomeEditor()
 		{
-			if(ImGui.BeginChildFrame(1, new(600, 250)))
+			ImGui.SetNextWindowSize(new(600, 250));
+			if(ImGui.Begin("Outcome Editor", ImGuiWindowFlags.None))
 			{
 				if(ImGui.BeginCombo("Select Outcome Type", outcomeType))
 				{
@@ -495,21 +518,66 @@ namespace ClanGenModTool.UI.SubWindows
 					}
 					ImGui.EndCombo();
 				}
-				if(ImGui.Button($"Add {outcomeType} Outcome"))
+				if(ImGui.Button($"Add {outcomeType[0].ToString().ToUpper() + outcomeType[1..]} Outcome"))
 				{
 					if(outcomesToSearch == null)
 					{
-						outcomesToSearch = new List<Outcome>();
+						outcomesToSearch = [new Outcome { text = "outcome", exp = 0, weight = 0 }];
 					}
-					outcomesToSearch.Add(new Outcome { text = "outcome", exp = 0, weight = 0});
+					else
+					{
+						outcomesToSearch.Add(new Outcome { text = "outcome", exp = 0, weight = 0 });
+					}
+					Console.WriteLine(outcomesToSearch.ToString() + " " + outcomeType + " Wrote to list\n" + outcomesToSearch[0]);
 				}
 				ImGui.SeparatorText("Outcome Value Editor");
 				if(currentOutcome != null)
 				{
-					selectedOutcome = outcomesToSearch!.IndexOf(currentOutcome);
-					if(ImGui.InputText("Outcome Text", ref currentOutcome.text, 2600)) { }
+					//selectedOutcome = outcomesToSearch!.IndexOf(currentOutcome);
+					if(currentOutcome.text != null && ImGui.InputText("Outcome Text", ref currentOutcome.text, 2600)) { }
 					if(ImGui.InputInt("Experience Gained", ref currentOutcome.exp)) { }
 					if(ImGui.InputInt("Weight", ref currentOutcome.weight)) { }
+					if(ImGui.BeginChildFrame(55, new(ImGui.GetWindowSize().X, 80)))
+					{
+						#region Can Have Stat Editing
+						ImGui.Text("Stat Cat Candidates:");
+						if(currentOutcome.can_have_stat != null)
+						{
+							foreach(string cats in currentOutcome.can_have_stat)
+							{
+								ImGui.Text(cats);
+							}
+						}
+						if(ImGui.BeginCombo("Cats", tempCanHave))
+						{
+							foreach(string c in new string[] { "p_l", "r_c", "app1", "app2", "not_pl_rc", "any", "adult", "app", "healer" })
+							{
+								bool selected = outcomeType.Equals(c);
+								ImGui.Selectable(c, ref selected);
+								if(selected)
+									tempCanHave = c;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
+						}
+						if(ImGui.Button("Add")) 
+						{
+							if(currentOutcome.can_have_stat != null)
+								currentOutcome.can_have_stat.Add(tempCanHave);
+							else
+							{
+								currentOutcome.can_have_stat = [tempCanHave];
+							}
+						}
+						ImGui.SameLine();
+						if(currentOutcome.can_have_stat != null && ImGui.Button("Remove")) { currentOutcome.can_have_stat.Remove(tempCanHave); }
+						#endregion
+						ImGui.EndChildFrame();
+					}
+					if(ImGui.InputInt("Outsider Reputation Effect", ref currentOutcome.outsider_rep)) { }
+					if(ImGui.InputInt("Other Clan Reputation Effect", ref currentOutcome.other_clan_rep)) { }
+					if(currentOutcome.art != null) { if(ImGui.InputText("Art", ref currentOutcome.art, 2600)) { } } else { }
+					if(currentOutcome.art_clean != null) if(ImGui.InputText("Art Clean", ref currentOutcome.art_clean, 2600)) { }
 				}
 				ImGui.EndChildFrame();
 			}

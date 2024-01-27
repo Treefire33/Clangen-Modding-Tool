@@ -12,19 +12,33 @@ namespace ClanGenModTool.ObjectTypes
 	{
 		public string text;
 		public int exp;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public int weight;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> stat_skill;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> stat_trait;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> can_have_stat;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> lost_cats;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> dead_cats;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public int outsider_rep;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public int other_clan_rep;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<Injury> injury;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public HistoryText history_text;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<Relationship> relationships;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<List<string>> new_cat;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public string art;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public string art_clean;
 	}
 
@@ -54,19 +68,23 @@ namespace ClanGenModTool.ObjectTypes
 
 	public class MinMaxStatus
 	{
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> apprentice;
-		[JsonProperty("medicine cat apprentice")]
+		[JsonProperty("medicine cat apprentice", NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> medicine_cat_apprentice;
-		[JsonProperty("medicine cat")]
+		[JsonProperty("medicine cat", NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> medicine_cat;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> deputy;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> warrior;
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> leader;
-		[JsonProperty("healer cats")]
+		[JsonProperty("healer cats", NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> healer_cats;
-		[JsonProperty("normal adult")]
+		[JsonProperty("normal adult", NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> normal_adult;
-		[JsonProperty("all apprentices")]
+		[JsonProperty("all apprentices", NullValueHandling = NullValueHandling.Ignore)]
 		public List<int> all_apprentices;
 	}
 
