@@ -59,7 +59,7 @@ namespace ClanGenModTool.UI.SubWindows
 			if(loadedJson == null)
 			{
 				ImGui.SetNextWindowSize(new Vector2(500, 350), ImGuiCond.Once);
-				ImGui.SetNextWindowPos(new Vector2(0,19));
+				ImGui.SetNextWindowPos(new Vector2(0, 19));
 				if(ImGui.Begin("Select Patrol First!", ImGuiWindowFlags.Popup))
 				{
 					if(ImGui.Button("Select"))
@@ -73,11 +73,13 @@ namespace ClanGenModTool.UI.SubWindows
 				return;
 			}
 
-			if (continueDraw) 
+			if(continueDraw)
 			{
 				DrawAttributesWindow();
 				DrawPreviewWindow();
 				DrawSelectWindow(patrols);
+				if(ableToLoadOutcomes)
+					DrawOutcomeEditor();
 			}
 		}
 
@@ -111,7 +113,7 @@ namespace ClanGenModTool.UI.SubWindows
 					{
 						previewedText = loadedPatrol.decline_text;
 					}
-					if(ImGui.InputInt("Select Outcome", ref selectedOutcome)) { if(selectedOutcome < 0) { selectedOutcome = 0;  } }
+					if(ImGui.InputInt("Select Outcome", ref selectedOutcome)) { if(selectedOutcome < 0) { selectedOutcome = 0; } }
 					ImGui.SeparatorText("Advance Patrol (Default)");
 					try
 					{
@@ -182,11 +184,11 @@ namespace ClanGenModTool.UI.SubWindows
 		private void DrawAttributesWindow()
 		{
 			ImGui.SetNextWindowSize(new Vector2(650, 800), ImGuiCond.Once);
-			if(ImGui.Begin("Patrol Attributes Editor", ImGuiWindowFlags.NoCollapse))
+			if(ImGui.Begin("Patrol Attributes Editor"))
 			{
 				if(loadedPatrol != null)
 				{
-					ImGui.TextColored(new(255, 0, 0, 255), "This editor is not complete!");
+					ableToLoadOutcomes = true;
 					ImGui.InputText("Patrol ID", ref loadedPatrol.patrol_id, 400);
 					if(ImGui.BeginCombo("Biome", loadedPatrol.biome[0]))
 					{
@@ -236,7 +238,6 @@ namespace ClanGenModTool.UI.SubWindows
 					LoadRelationshipConstraintEditor();
 					if(ImGui.InputTextMultiline("Intro Text", ref loadedPatrol.intro_text, 2400, new(350, 150))) { }
 					if(ImGui.InputTextMultiline("Decline Text", ref loadedPatrol.decline_text, 2400, new(350, 150))) { }
-					DrawOutcomeEditor();
 					ImGui.End();
 				}
 			}
@@ -463,14 +464,14 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 		}
 
-		string outcomeType = "success", tempSkill = "", tempTrait = "", tempCanHave = "p_l";
+		string outcomeType = "success", tempSkill = "", tempTrait = "", tempCanHave = "p_l", tempLostCat = "p_l", tempDeadCat = "p_l";
 		int selectedOutcome = 0;
 		Outcome currentOutcome;
 		List<Outcome> outcomesToSearch = new List<Outcome>();
 		private void DrawOutcomeEditor()
 		{
-			ImGui.SetNextWindowSize(new(600, 250));
-			if(ImGui.Begin("Outcome Editor", ImGuiWindowFlags.None))
+			ImGui.SetNextWindowSize(new(600, 250), ImGuiCond.Once);
+			if(ImGui.Begin("Outcome Editor"))
 			{
 				if(ImGui.BeginCombo("Select Outcome Type", outcomeType))
 				{
@@ -484,28 +485,56 @@ namespace ClanGenModTool.UI.SubWindows
 					}
 					ImGui.EndCombo();
 				}
-				if(ImGui.BeginCombo("Select Outcomes", currentOutcome != null ? currentOutcome.text : ""))
+				if(ImGui.Button($"Add {outcomeType[0].ToString().ToUpper() + outcomeType[1..]} Outcome"))
+				{
+					if(outcomesToSearch == null)
+					{
+						switch(outcomeType)
+						{
+							case "success":
+							loadedPatrol.success_outcomes = new List<Outcome>();
+							outcomesToSearch = loadedPatrol.success_outcomes;
+							break;
+							case "fail":
+							loadedPatrol.fail_outcomes = new List<Outcome>();
+							outcomesToSearch = loadedPatrol.fail_outcomes;
+							break;
+							case "antag_success":
+							loadedPatrol.antag_success_outcomes = new List<Outcome>();
+							outcomesToSearch = loadedPatrol.antag_success_outcomes;
+							break;
+							case "antag_fail":
+							loadedPatrol.antag_fail_outcomes = new List<Outcome>();
+							outcomesToSearch = loadedPatrol.antag_fail_outcomes;
+							break;
+						}
+					}
+					outcomesToSearch!.Add(new Outcome { text = "outcome", exp = 0, weight = 0 });
+				}
+				ImGui.SameLine();
+				ImGui.PushID(70);
+				if(ImGui.BeginCombo("", currentOutcome != null ? currentOutcome.text : ""))
 				{
 					switch(outcomeType)
 					{
 						case "success":
-							outcomesToSearch = loadedPatrol.success_outcomes;
+						outcomesToSearch = loadedPatrol.success_outcomes;
 						break;
 						case "fail":
-							outcomesToSearch = loadedPatrol.fail_outcomes;
+						outcomesToSearch = loadedPatrol.fail_outcomes;
 						break;
 						case "antag_success":
-							outcomesToSearch = loadedPatrol.antag_success_outcomes;
+						outcomesToSearch = loadedPatrol.antag_success_outcomes;
 						break;
 						case "antag_fail":
-							outcomesToSearch = loadedPatrol.antag_fail_outcomes;
+						outcomesToSearch = loadedPatrol.antag_fail_outcomes;
 						break;
 					}
 					if(outcomesToSearch != null)
 					{
 						foreach(Outcome o in outcomesToSearch)
 						{
-							bool selected = outcomeType.Equals(o);
+							bool selected = currentOutcome != null ? currentOutcome.Equals(o) : outcomeType.Equals(o);
 							ImGui.Selectable(o.text, ref selected);
 							if(selected)
 								currentOutcome = o;
@@ -518,18 +547,7 @@ namespace ClanGenModTool.UI.SubWindows
 					}
 					ImGui.EndCombo();
 				}
-				if(ImGui.Button($"Add {outcomeType[0].ToString().ToUpper() + outcomeType[1..]} Outcome"))
-				{
-					if(outcomesToSearch == null)
-					{
-						outcomesToSearch = [new Outcome { text = "outcome", exp = 0, weight = 0 }];
-					}
-					else
-					{
-						outcomesToSearch.Add(new Outcome { text = "outcome", exp = 0, weight = 0 });
-					}
-					Console.WriteLine(outcomesToSearch.ToString() + " " + outcomeType + " Wrote to list\n" + outcomesToSearch[0]);
-				}
+				ImGui.PopID();
 				ImGui.SeparatorText("Outcome Value Editor");
 				if(currentOutcome != null)
 				{
@@ -552,7 +570,7 @@ namespace ClanGenModTool.UI.SubWindows
 						{
 							foreach(string c in new string[] { "p_l", "r_c", "app1", "app2", "not_pl_rc", "any", "adult", "app", "healer" })
 							{
-								bool selected = outcomeType.Equals(c);
+								bool selected = tempCanHave.Equals(c);
 								ImGui.Selectable(c, ref selected);
 								if(selected)
 									tempCanHave = c;
@@ -560,7 +578,7 @@ namespace ClanGenModTool.UI.SubWindows
 							}
 							ImGui.EndCombo();
 						}
-						if(ImGui.Button("Add")) 
+						if(ImGui.Button("Add"))
 						{
 							if(currentOutcome.can_have_stat != null)
 								currentOutcome.can_have_stat.Add(tempCanHave);
@@ -574,12 +592,253 @@ namespace ClanGenModTool.UI.SubWindows
 						#endregion
 						ImGui.EndChildFrame();
 					}
+					if(ImGui.BeginChildFrame(56, new(ImGui.GetWindowSize().X, 80)))
+					{
+						#region Lost Cats Editing
+						ImGui.Text("Lost Cats:");
+						if(currentOutcome.lost_cats != null)
+						{
+							foreach(string cats in currentOutcome.lost_cats)
+							{
+								ImGui.Text(cats);
+							}
+						}
+						ImGui.PushID(71);
+						if(ImGui.BeginCombo("Cats", tempLostCat))
+						{
+							foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+							{
+								bool selected = tempLostCat.Equals(c);
+								ImGui.Selectable(c, ref selected);
+								if(selected)
+									tempLostCat = c;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
+						}
+						ImGui.PopID();
+						ImGui.PushID(72);
+						if(ImGui.Button("Add"))
+						{
+							if(currentOutcome.lost_cats != null)
+								currentOutcome.lost_cats.Add(tempLostCat);
+							else
+							{
+								currentOutcome.lost_cats = [tempLostCat];
+							}
+						}
+						ImGui.PopID();
+						ImGui.SameLine();
+						ImGui.PushID(73);
+						if(currentOutcome.lost_cats != null && ImGui.Button("Remove")) { currentOutcome.lost_cats.Remove(tempLostCat); }
+						ImGui.PopID();
+						#endregion
+						ImGui.EndChildFrame();
+					}
+					if(ImGui.BeginChildFrame(57, new(ImGui.GetWindowSize().X, 80)))
+					{
+						#region Dead Cats Editing
+						ImGui.Text("Dead Cats:");
+						if(currentOutcome.dead_cats != null)
+						{
+							foreach(string cats in currentOutcome.dead_cats)
+							{
+								ImGui.Text(cats);
+							}
+						}
+						ImGui.PushID(74);
+						if(ImGui.BeginCombo("Cats", tempDeadCat))
+						{
+							foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+							{
+								bool selected = tempDeadCat.Equals(c);
+								ImGui.Selectable(c, ref selected);
+								if(selected)
+									tempDeadCat = c;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
+						}
+						ImGui.PopID();
+						ImGui.PushID(75);
+						if(ImGui.Button("Add"))
+						{
+							if(currentOutcome.dead_cats != null)
+								currentOutcome.dead_cats.Add(tempDeadCat);
+							else
+							{
+								currentOutcome.dead_cats = [tempDeadCat];
+							}
+						}
+						ImGui.PopID();
+						ImGui.SameLine();
+						ImGui.PushID(76);
+						if(currentOutcome.dead_cats != null && ImGui.Button("Remove")) { currentOutcome.dead_cats.Remove(tempDeadCat); }
+						ImGui.PopID();
+						#endregion
+						ImGui.EndChildFrame();
+					}
+					LoadInjuryEditor();
 					if(ImGui.InputInt("Outsider Reputation Effect", ref currentOutcome.outsider_rep)) { }
 					if(ImGui.InputInt("Other Clan Reputation Effect", ref currentOutcome.other_clan_rep)) { }
 					if(currentOutcome.art != null) { if(ImGui.InputText("Art", ref currentOutcome.art, 2600)) { } } else { }
 					if(currentOutcome.art_clean != null) if(ImGui.InputText("Art Clean", ref currentOutcome.art_clean, 2600)) { }
 				}
 				ImGui.EndChildFrame();
+			}
+		}
+
+		string tempAffectedCat = "p_l", tempInjury = "battle_injury", tempScar = "";
+		string tempCustom = "";
+		private bool ableToLoadOutcomes;
+
+		public void LoadInjuryEditor()
+		{
+			ImGui.SeparatorText("Injury Editor:");
+			if(currentOutcome.injury != null)
+			{
+				if(ImGui.BeginTabBar("InjuryBar"))
+				{
+					for(int i = 0; i < currentOutcome.injury.Count; i++)
+					{
+						if(ImGui.BeginTabItem("Injury " + i))
+						{
+							#region Cats Affected
+							ImGui.SeparatorText("Possible Injured:");
+							if(currentOutcome.injury[i].cats != null)
+							{
+								foreach(string cats in currentOutcome.injury[i].cats)
+								{
+									ImGui.Text(cats);
+								}
+							}
+							ImGui.PushID(475);
+							if(ImGui.BeginCombo("Cats", tempAffectedCat))
+							{
+								foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi", "some_clan" })
+								{
+									bool selected = tempAffectedCat.Equals(c);
+									ImGui.Selectable(c, ref selected);
+									if(selected)
+										tempAffectedCat = c;
+									ImGui.SetItemDefaultFocus();
+								}
+								ImGui.EndCombo();
+							}
+							ImGui.PopID();
+							ImGui.PushID(466);
+							if(ImGui.Button("Add"))
+							{
+								if(currentOutcome.injury[i].cats != null)
+									currentOutcome.injury[i].cats.Add(tempAffectedCat);
+								else
+								{
+									currentOutcome.injury[i].cats = [tempAffectedCat];
+								}
+							}
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.PushID(467);
+							if(currentOutcome.injury[i].cats != null && ImGui.Button("Remove")) { currentOutcome.injury[i].cats.Remove(tempAffectedCat); }
+							ImGui.PopID();
+							#endregion
+							#region Possible Injuries
+							ImGui.SeparatorText("Possible Injuries:");
+							if(currentOutcome.injury[i].injuries != null)
+							{
+								foreach(string cats in currentOutcome.injury[i].injuries)
+								{
+									ImGui.Text(cats);
+								}
+							}
+							ImGui.PushID(478);
+							if(ImGui.BeginCombo("Injuries", tempInjury))
+							{
+								foreach(string c in new string[] { "battle_injury", "minor_injury", "blunt_force_injury", "hot_injury", "cold_injury", "big_bite_injury", "small_bite_injury", "beak_bite", "rat_bite", "sickness", "(condition)" })
+								{
+									bool selected = tempInjury.Equals(c);
+									ImGui.Selectable(c, ref selected);
+									if(selected)
+										tempInjury = c;
+									ImGui.SetItemDefaultFocus();
+								}
+								ImGui.EndCombo();
+							}
+							ImGui.PopID();
+							if(tempInjury == "(condition)")
+							{
+								ImGui.InputText("Condition as Injury", ref tempCustom, 2500);
+							}
+							ImGui.PushID(468);
+							if(ImGui.Button("Add"))
+							{
+								if(tempInjury != "(condition)")
+								{
+									if(currentOutcome.injury[i].injuries != null)
+										currentOutcome.injury[i].injuries.Add(tempInjury);
+									else
+										currentOutcome.injury[i].injuries = [tempInjury];
+								}
+								else
+								{
+									if(currentOutcome.injury[i].injuries != null)
+										currentOutcome.injury[i].injuries.Add(tempCustom);
+									else
+										currentOutcome.injury[i].injuries = [tempCustom];
+								}
+							}
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.PushID(469);
+							if(currentOutcome.injury[i].injuries != null && ImGui.Button("Remove"))
+							{
+								currentOutcome.injury[i].injuries.Remove(tempInjury);
+							}
+							ImGui.PopID();
+							#endregion
+							#region Scars
+							ImGui.SeparatorText("Scars:");
+							if(currentOutcome.injury[i].scars != null)
+							{
+								foreach(string cats in currentOutcome.injury[i].scars)
+								{
+									ImGui.Text(cats);
+								}
+							}
+							ImGui.PushID(476);
+							ImGui.InputText("Scar", ref tempScar, 2500);
+							ImGui.PopID();
+							ImGui.PushID(470);
+							if(ImGui.Button("Add"))
+							{
+								if(currentOutcome.injury[i].scars != null)
+									currentOutcome.injury[i].scars.Add(tempScar);
+								else
+								{
+									currentOutcome.injury[i].scars = [tempScar];
+								}
+							}
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.PushID(471);
+							if(currentOutcome.injury[i].scars != null && ImGui.Button("Remove")) { currentOutcome.injury[i].scars.Remove(tempScar); }
+							ImGui.PopID();
+							#endregion
+							ImGui.Checkbox("Appears on history text", ref currentOutcome.injury[i].no_results);
+							ImGui.EndTabItem();
+						}
+					}
+					ImGui.EndTabBar();
+				}
+			}
+			else
+			{
+				ImGui.Text("No injuries for this outcome");
+			}
+			if(ImGui.Button("Add Injury"))
+			{
+				currentOutcome.injury ??= new List<Injury>();
+				currentOutcome.injury.Add(new Injury { cats = new List<string>(), injuries = new List<string>(), scars = new List<string>(), no_results = false });
 			}
 		}
 
