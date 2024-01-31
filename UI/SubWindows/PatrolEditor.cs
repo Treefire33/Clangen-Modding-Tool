@@ -555,130 +555,135 @@ namespace ClanGenModTool.UI.SubWindows
 					if(currentOutcome.text != null && ImGui.InputText("Outcome Text", ref currentOutcome.text, 2600)) { }
 					if(ImGui.InputInt("Experience Gained", ref currentOutcome.exp)) { }
 					if(ImGui.InputInt("Weight", ref currentOutcome.weight)) { }
-					if(ImGui.BeginChildFrame(55, new(ImGui.GetWindowSize().X, 80)))
+					if(ImGui.CollapsingHeader("Cat Editing"))
 					{
-						#region Can Have Stat Editing
-						ImGui.Text("Stat Cat Candidates:");
-						if(currentOutcome.can_have_stat != null)
+						if(ImGui.BeginChildFrame(55, new(ImGui.GetWindowSize().X, 80)))
 						{
-							foreach(string cats in currentOutcome.can_have_stat)
-							{
-								ImGui.Text(cats);
-							}
-						}
-						if(ImGui.BeginCombo("Cats", tempCanHave))
-						{
-							foreach(string c in new string[] { "p_l", "r_c", "app1", "app2", "not_pl_rc", "any", "adult", "app", "healer" })
-							{
-								bool selected = tempCanHave.Equals(c);
-								ImGui.Selectable(c, ref selected);
-								if(selected)
-									tempCanHave = c;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-						if(ImGui.Button("Add"))
-						{
+							#region Can Have Stat Editing
+							ImGui.Text("Stat Cat Candidates:");
 							if(currentOutcome.can_have_stat != null)
-								currentOutcome.can_have_stat.Add(tempCanHave);
-							else
 							{
-								currentOutcome.can_have_stat = [tempCanHave];
+								foreach(string cats in currentOutcome.can_have_stat)
+								{
+									ImGui.Text(cats);
+								}
 							}
-						}
-						ImGui.SameLine();
-						if(currentOutcome.can_have_stat != null && ImGui.Button("Remove")) { currentOutcome.can_have_stat.Remove(tempCanHave); }
-						#endregion
-						ImGui.EndChildFrame();
-					}
-					if(ImGui.BeginChildFrame(56, new(ImGui.GetWindowSize().X, 80)))
-					{
-						#region Lost Cats Editing
-						ImGui.Text("Lost Cats:");
-						if(currentOutcome.lost_cats != null)
-						{
-							foreach(string cats in currentOutcome.lost_cats)
+							if(ImGui.BeginCombo("Cats", tempCanHave))
 							{
-								ImGui.Text(cats);
+								foreach(string c in new string[] { "p_l", "r_c", "app1", "app2", "not_pl_rc", "any", "adult", "app", "healer" })
+								{
+									bool selected = tempCanHave.Equals(c);
+									ImGui.Selectable(c, ref selected);
+									if(selected)
+										tempCanHave = c;
+									ImGui.SetItemDefaultFocus();
+								}
+								ImGui.EndCombo();
 							}
-						}
-						ImGui.PushID(71);
-						if(ImGui.BeginCombo("Cats", tempLostCat))
-						{
-							foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+							if(ImGui.Button("Add"))
 							{
-								bool selected = tempLostCat.Equals(c);
-								ImGui.Selectable(c, ref selected);
-								if(selected)
-									tempLostCat = c;
-								ImGui.SetItemDefaultFocus();
+								if(currentOutcome.can_have_stat != null)
+									currentOutcome.can_have_stat.Add(tempCanHave);
+								else
+								{
+									currentOutcome.can_have_stat = [tempCanHave];
+								}
 							}
-							ImGui.EndCombo();
+							ImGui.SameLine();
+							if(currentOutcome.can_have_stat != null && ImGui.Button("Remove")) { currentOutcome.can_have_stat.Remove(tempCanHave); }
+							#endregion
+							ImGui.EndChildFrame();
 						}
-						ImGui.PopID();
-						ImGui.PushID(72);
-						if(ImGui.Button("Add"))
+						if(ImGui.BeginChildFrame(56, new(ImGui.GetWindowSize().X, 80)))
 						{
+							#region Lost Cats Editing
+							ImGui.Text("Lost Cats:");
 							if(currentOutcome.lost_cats != null)
-								currentOutcome.lost_cats.Add(tempLostCat);
-							else
 							{
-								currentOutcome.lost_cats = [tempLostCat];
+								foreach(string cats in currentOutcome.lost_cats)
+								{
+									ImGui.Text(cats);
+								}
 							}
-						}
-						ImGui.PopID();
-						ImGui.SameLine();
-						ImGui.PushID(73);
-						if(currentOutcome.lost_cats != null && ImGui.Button("Remove")) { currentOutcome.lost_cats.Remove(tempLostCat); }
-						ImGui.PopID();
-						#endregion
-						ImGui.EndChildFrame();
-					}
-					if(ImGui.BeginChildFrame(57, new(ImGui.GetWindowSize().X, 80)))
-					{
-						#region Dead Cats Editing
-						ImGui.Text("Dead Cats:");
-						if(currentOutcome.dead_cats != null)
-						{
-							foreach(string cats in currentOutcome.dead_cats)
+							ImGui.PushID(71);
+							if(ImGui.BeginCombo("Cats", tempLostCat))
 							{
-								ImGui.Text(cats);
+								foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+								{
+									bool selected = tempLostCat.Equals(c);
+									ImGui.Selectable(c, ref selected);
+									if(selected)
+										tempLostCat = c;
+									ImGui.SetItemDefaultFocus();
+								}
+								ImGui.EndCombo();
 							}
-						}
-						ImGui.PushID(74);
-						if(ImGui.BeginCombo("Cats", tempDeadCat))
-						{
-							foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+							ImGui.PopID();
+							ImGui.PushID(72);
+							if(ImGui.Button("Add"))
 							{
-								bool selected = tempDeadCat.Equals(c);
-								ImGui.Selectable(c, ref selected);
-								if(selected)
-									tempDeadCat = c;
-								ImGui.SetItemDefaultFocus();
+								if(currentOutcome.lost_cats != null)
+									currentOutcome.lost_cats.Add(tempLostCat);
+								else
+								{
+									currentOutcome.lost_cats = [tempLostCat];
+								}
 							}
-							ImGui.EndCombo();
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.PushID(73);
+							if(currentOutcome.lost_cats != null && ImGui.Button("Remove")) { currentOutcome.lost_cats.Remove(tempLostCat); }
+							ImGui.PopID();
+							#endregion
+							ImGui.EndChildFrame();
 						}
-						ImGui.PopID();
-						ImGui.PushID(75);
-						if(ImGui.Button("Add"))
+						if(ImGui.BeginChildFrame(57, new(ImGui.GetWindowSize().X, 80)))
 						{
+							#region Dead Cats Editing
+							ImGui.Text("Dead Cats:");
 							if(currentOutcome.dead_cats != null)
-								currentOutcome.dead_cats.Add(tempDeadCat);
-							else
 							{
-								currentOutcome.dead_cats = [tempDeadCat];
+								foreach(string cats in currentOutcome.dead_cats)
+								{
+									ImGui.Text(cats);
+								}
 							}
+							ImGui.PushID(74);
+							if(ImGui.BeginCombo("Cats", tempDeadCat))
+							{
+								foreach(string c in new string[] { "p_l", "r_c", "s_c", "app1", "app2", "patrol", "multi" })
+								{
+									bool selected = tempDeadCat.Equals(c);
+									ImGui.Selectable(c, ref selected);
+									if(selected)
+										tempDeadCat = c;
+									ImGui.SetItemDefaultFocus();
+								}
+								ImGui.EndCombo();
+							}
+							ImGui.PopID();
+							ImGui.PushID(75);
+							if(ImGui.Button("Add"))
+							{
+								if(currentOutcome.dead_cats != null)
+									currentOutcome.dead_cats.Add(tempDeadCat);
+								else
+								{
+									currentOutcome.dead_cats = [tempDeadCat];
+								}
+							}
+							ImGui.PopID();
+							ImGui.SameLine();
+							ImGui.PushID(76);
+							if(currentOutcome.dead_cats != null && ImGui.Button("Remove")) { currentOutcome.dead_cats.Remove(tempDeadCat); }
+							ImGui.PopID();
+							#endregion
+							ImGui.EndChildFrame();
 						}
-						ImGui.PopID();
-						ImGui.SameLine();
-						ImGui.PushID(76);
-						if(currentOutcome.dead_cats != null && ImGui.Button("Remove")) { currentOutcome.dead_cats.Remove(tempDeadCat); }
-						ImGui.PopID();
-						#endregion
-						ImGui.EndChildFrame();
 					}
 					LoadInjuryEditor();
+					LoadHistoryTextEditor();
+					LoadRelationshipEditor();
 					if(ImGui.InputInt("Outsider Reputation Effect", ref currentOutcome.outsider_rep)) { }
 					if(ImGui.InputInt("Other Clan Reputation Effect", ref currentOutcome.other_clan_rep)) { }
 					if(currentOutcome.art != null) { if(ImGui.InputText("Art", ref currentOutcome.art, 2600)) { } } else { }
@@ -825,6 +830,13 @@ namespace ClanGenModTool.UI.SubWindows
 							ImGui.PopID();
 							#endregion
 							ImGui.Checkbox("Appears on history text", ref currentOutcome.injury[i].no_results);
+							ImGui.PushID(1100+i);
+							if(ImGui.Button("Remove Current Injury"))
+							{
+								currentOutcome.injury.RemoveAt(i);
+								break;
+							}
+							ImGui.PopID();
 							ImGui.EndTabItem();
 						}
 					}
@@ -840,6 +852,71 @@ namespace ClanGenModTool.UI.SubWindows
 				currentOutcome.injury ??= new List<Injury>();
 				currentOutcome.injury.Add(new Injury { cats = new List<string>(), injuries = new List<string>(), scars = new List<string>(), no_results = false });
 			}
+		}
+		public void LoadHistoryTextEditor()
+		{
+			ImGui.SeparatorText("History Text");
+			if(currentOutcome.history_text != null)
+			{
+				if(currentOutcome.history_text.reg_death != null)
+				{
+					if(ImGui.InputText("Regular Death Text", ref currentOutcome.history_text.reg_death, 2500))
+					{
+
+					}
+				}
+				else
+				{
+					if(ImGui.Button("Add Regular Death Text"))
+					{
+						currentOutcome.history_text.reg_death = "";
+					}
+				}
+				if(currentOutcome.history_text.lead_death != null)
+				{
+					if(ImGui.InputText("Leader Death Text", ref currentOutcome.history_text.reg_death, 2500))
+					{
+
+					}
+				}
+				else
+				{
+					if(ImGui.Button("Add Leader Death Text"))
+					{
+						currentOutcome.history_text.lead_death = "";
+					}
+				}
+				if(currentOutcome.history_text.scar != null)
+				{
+					if(ImGui.InputText("Scar Text", ref currentOutcome.history_text.scar, 2500))
+					{
+
+					}
+				}
+				else
+				{
+					if(ImGui.Button("Add Scar Text"))
+					{
+						currentOutcome.history_text.scar = "";
+					}
+				}
+			}
+			else
+			{
+				if(ImGui.Button("Add History Text"))
+				{
+					currentOutcome.history_text = new HistoryText();
+				}
+				ImGui.SameLine();
+			}
+			if(ImGui.Button("Remove History Text"))
+			{
+				currentOutcome.history_text = null;
+			}
+		}
+		public void LoadRelationshipEditor()
+		{
+			ImGui.Text("Coming soon!");
 		}
 
 		public void Save()
