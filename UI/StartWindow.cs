@@ -1,14 +1,7 @@
 ﻿using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ImGuiNET;
-using System.Numerics;
-using System.Diagnostics;
 using ClanGenModTool.UI.SubWindows;
 using ClanGenModTool.Mod;
 using ClanGenModTool.ObjectTypes;
@@ -43,8 +36,8 @@ namespace ClanGenModTool.UI
 			mWindow.Load += () => WindowManager.RegisterRenderDelegate(mWindow, Render);
 			mWindow.Load += () => {
 				editorConfig = JsonConvert.DeserializeObject<EditorConfig>(File.ReadAllText(configPath))!;
-				Console.WriteLine(editorConfig.patrolPath);
 			};
+			mWindow.Closing += () => { string s = JsonConvert.SerializeObject(editorConfig); File.WriteAllText(configPath, s); };
 			mWindow.Run();
 			mWindow.Dispose();
 		}
@@ -72,51 +65,40 @@ namespace ClanGenModTool.UI
 					{
 						clanEdit.Save();
 					}
+					if(ImGui.BeginMenu("Session History"))
+					{
+						foreach(SessionHistory sh in editorConfig.sessionHistory)
+						{
+							if(ImGui.MenuItem(sh.path))
+							{
+								Editor.publicLoadedPath = sh.path;
+								switch(sh.type)
+								{
+									case "patrol": Editor.LoadSkip(ref mPatrolEditorActive); patrolEdit.LoadEditor(); break;
+									case "thought": Editor.LoadSkip(ref mThoughtEditorActive); thoughtEdit.LoadEditor(); break;
+									case "name": Editor.LoadSkip(ref mNameEditorActive); nameEdit.LoadEditor(); break;
+									case "clan": Editor.LoadSkip(ref mClanEditorActive); clanEdit.LoadEditor(); break;
+									case "cat": CatEditor.LoadSkip(ref mCatEditorActive); clanEdit.catEditor.LoadEditor(); break;
+								}
+								SetAllOtherEditorsInactive(sh.type);
+							}
+						}
+						ImGui.EndMenu();
+					}
 					if(ImGui.MenuItem("Close"))
 					{
 						mWindow.Close();
 					}
 					ImGui.EndMenu();
 				}
-				/*if(ImGui.BeginMenu("Sprite"))
-				{
-					if(ImGui.BeginMenu("Pelt"))
-					{
-						if(ImGui.MenuItem("Select Pelt"))
-						{
-							Console.WriteLine("This feature has not been implemented");
-							mImplementException = true;
-						}
-						if(ImGui.MenuItem("New Pelt Pattern"))
-						{
-							Console.WriteLine("This feature has not been implemented");
-							mImplementException = true;
-						}
-						ImGui.EndMenu();
-					}
-					if(ImGui.BeginMenu("Lineart"))
-					{
-						if(ImGui.MenuItem("Select Lines"))
-						{
-							Console.WriteLine("This feature has not been implemented");
-							mImplementException = true;
-						}
-						ImGui.EndMenu();
-					}
-					ImGui.EndMenu();
-				}*/
 				if(ImGui.BeginMenu("Resource Editing"))
 				{
 					if(ImGui.BeginMenu("Patrol"))
 					{
 						if(ImGui.MenuItem("Select Patrols"))
 						{
-							Editor.Load(ref mPatrolEditorActive);
-							mModCreationMenuActive = false;
-							mThoughtEditorActive = false;
-							mNameEditorActive = false;
-							mClanEditorActive = false;
-							mCatEditorActive = false;
+							Editor.Load(ref mPatrolEditorActive, "patrol");
+							SetAllOtherEditorsInactive("patrol");
 							patrolEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Patrol Editing";
 						}
@@ -126,12 +108,8 @@ namespace ClanGenModTool.UI
 					{
 						if(ImGui.MenuItem("Select Thoughts"))
 						{
-							Editor.Load(ref mThoughtEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mNameEditorActive = false;
-							mClanEditorActive = false;
-							mCatEditorActive = false;
+							Editor.Load(ref mThoughtEditorActive, "thought");
+							SetAllOtherEditorsInactive("thought");
 							thoughtEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Thought List Editing";
 						}
@@ -141,12 +119,8 @@ namespace ClanGenModTool.UI
 					{
 						if(ImGui.MenuItem("Select Names File"))
 						{
-							Editor.Load(ref mNameEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mThoughtEditorActive = false;
-							mClanEditorActive = false;
-							mCatEditorActive = false;
+							Editor.Load(ref mNameEditorActive, "name");
+							SetAllOtherEditorsInactive("name");
 							nameEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Name Editing";
 						}
@@ -160,22 +134,15 @@ namespace ClanGenModTool.UI
 					{
 						if(ImGui.MenuItem("Select Clan File"))
 						{
-							Editor.Load(ref mClanEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mThoughtEditorActive = false;
-							mNameEditorActive = false;
-							mCatEditorActive = false;
+							Editor.Load(ref mClanEditorActive, "clan");
+							SetAllOtherEditorsInactive("clan");
 							clanEdit.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Clan Editing";
 						}
 						if(ImGui.MenuItem("Select Clan Cats File"))
 						{
 							CatEditor.Load(ref mCatEditorActive);
-							mModCreationMenuActive = false;
-							mPatrolEditorActive = false;
-							mThoughtEditorActive = false;
-							mNameEditorActive = false;
+							SetAllOtherEditorsInactive("cat");
 							clanEdit.catEditor.LoadEditor();
 							mWindow.Title = "ClanGen Modding Tool   -   Cat Editing";
 						}
@@ -308,6 +275,47 @@ namespace ClanGenModTool.UI
 
 			/* render our ImGUI controller */
 			controller.Render();
+		}
+
+		public void SetAllOtherEditorsInactive(string type)
+		{
+			switch(type)
+			{
+				case "patrol":
+					mModCreationMenuActive = false;
+					mThoughtEditorActive = false;
+					mNameEditorActive = false;
+					mClanEditorActive = false;
+					mCatEditorActive = false; 
+				break;
+				case "thought":
+					mModCreationMenuActive = false;
+					mPatrolEditorActive = false;
+					mNameEditorActive = false;
+					mClanEditorActive = false;
+					mCatEditorActive = false;
+				break;
+				case "name":
+					mModCreationMenuActive = false;
+					mPatrolEditorActive = false;
+					mThoughtEditorActive = false;
+					mClanEditorActive = false;
+					mCatEditorActive = false;
+				break;
+				case "clan":
+					mModCreationMenuActive = false;
+					mPatrolEditorActive = false;
+					mThoughtEditorActive = false;
+					mNameEditorActive = false;
+					mCatEditorActive = false;
+				break;
+				case "cat":
+					mModCreationMenuActive = false;
+					mPatrolEditorActive = false;
+					mThoughtEditorActive = false;
+					mNameEditorActive = false;
+				break;
+			}
 		}
 	}
 }

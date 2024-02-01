@@ -16,5 +16,12 @@ namespace ClanGenModTool.ObjectTypes
 		public string gameConfigPath;
 		public string settingsPath;
 		public bool backgroundEnabled;
+		public List<SessionHistory> sessionHistory;
+	}
+
+	public class SessionHistory
+	{
+		public string path;
+		public string type;
 	}
 }

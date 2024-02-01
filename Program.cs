@@ -3,7 +3,7 @@ using ClanGenModTool.UI;
 using Newtonsoft.Json;
 using Silk.NET.Windowing;
 
-System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
+Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 if(File.Exists(StartWindow.configPath))
 {
 	Console.WriteLine("Located config file!");
@@ -11,12 +11,15 @@ if(File.Exists(StartWindow.configPath))
 else
 {
 	Console.WriteLine("Creating config file");
-	EditorConfig _cfg = new EditorConfig();
-	_cfg.patrolPath = "";
-	_cfg.clanPath = "";
-	_cfg.thoughtPath = "";
-	_cfg.patrolImagesPath = "";
+	EditorConfig _cfg = new EditorConfig
+	{
+		patrolPath = "",
+		clanPath = "",
+		thoughtPath = "",
+		patrolImagesPath = "",
+		sessionHistory = new List<SessionHistory>()
+	};
 	Directory.CreateDirectory(StartWindow.configPath.Replace("editor.config", null));
 	File.WriteAllText(StartWindow.configPath, JsonConvert.SerializeObject(_cfg));
 }
-StartWindow window = new StartWindow();
+StartWindow _ = new StartWindow();

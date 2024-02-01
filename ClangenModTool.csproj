@@ -33,4 +33,19 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Fonts\NotoSans-Regular.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Images\Bliss.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Images\icon.bmp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Images\tempExpandedIcon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

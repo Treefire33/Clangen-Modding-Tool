@@ -12,6 +12,10 @@ namespace ClanGenModTool.UI.SubWindows
 	{
 		protected static string? loadedJson;
 		protected static string? loadedPath;
+		public static string? publicLoadedPath
+		{
+			get { return loadedPath; } set { loadedPath = value; }
+		}
 
 		public static void Load()
 		{
@@ -20,11 +24,13 @@ namespace ClanGenModTool.UI.SubWindows
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
+				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol"});
 			}
 			if(loadedPath != null && loadedPath != "")
 				loadedJson = File.ReadAllText(loadedPath);
 			else
 				loadedJson = null;
+			
 		}
 
 		public static void Load(ref bool editorActive)
@@ -34,7 +40,33 @@ namespace ClanGenModTool.UI.SubWindows
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
+				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol" });
 			}
+			if(loadedPath != null && loadedPath != "")
+				loadedJson = File.ReadAllText(loadedPath);
+			else
+				loadedJson = null;
+			editorActive = true;
+		}
+
+		public static void Load(ref bool editorActive, string type)
+		{
+			loadedPath = "";
+			var dialog = new FileDialog();
+			if(dialog.ShowDialog("Select Json", "json"))
+			{
+				loadedPath = dialog.SelectedPath;
+				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = type });
+			}
+			if(loadedPath != null && loadedPath != "")
+				loadedJson = File.ReadAllText(loadedPath);
+			else
+				loadedJson = null;
+			editorActive = true;
+		}
+
+		public static void LoadSkip(ref bool editorActive)
+		{
 			if(loadedPath != null && loadedPath != "")
 				loadedJson = File.ReadAllText(loadedPath);
 			else
