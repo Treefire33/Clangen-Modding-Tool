@@ -38,9 +38,6 @@
     <None Update="Resources\Fonts\NotoSans-Regular.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Images\Bliss.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\Images\icon.bmp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

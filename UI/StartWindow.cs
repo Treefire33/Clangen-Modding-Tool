@@ -7,6 +7,7 @@ using ClanGenModTool.Mod;
 using ClanGenModTool.ObjectTypes;
 using Texture = ClanGenModTool.Textures.Texture;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace ClanGenModTool.UI
 {
@@ -217,6 +218,7 @@ namespace ClanGenModTool.UI
 		NameEditor nameEdit = new NameEditor();
 		ClanEditor clanEdit = new ClanEditor();
 
+		bool runOnce = false;
 		public void Render(GL gl, double delta, ImGuiController controller)
 		{
 			gl.Viewport(mWindow.FramebufferSize);
@@ -229,19 +231,9 @@ namespace ClanGenModTool.UI
 			ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 			ImGui.DockSpaceOverViewport();
 
-			/*if(Background == null)
-			{
-				Background = new Texture(gl, "./Resources/Images/Bliss.jpg");
-				Background.Bind(TextureUnit.Texture31);
-			}*/
-
 			DrawMainMenu();
 
-			/*if(editorConfig.backgroundEnabled)
-			{
-				ImGui.GetBackgroundDrawList().AddImage(new IntPtr(Background._handle), new Vector2(12, 12), new Vector2(Background.width, Background.height), new Vector2(0, 1), new Vector2(1, 0));
-			}*/
-
+			
 			if(mPatrolEditorActive)
 			{
 				patrolEdit.BeforeDrawEditor(gl);
