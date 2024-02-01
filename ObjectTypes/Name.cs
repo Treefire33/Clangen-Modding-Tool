@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ClanGenModTool.ObjectTypes
 {
@@ -17,6 +18,33 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> Mountainous;
 		public List<string> Wetlands;
 		public List<string> Desert;
+		public List<List<string>> Enumerate()
+		{
+			return new List<List<string>>
+			{
+				Forest, Beach, Plains, Mountainous, Wetlands, Desert
+			};
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0:
+				return nameof(Forest);
+				case 1:
+				return nameof(Beach);
+				case 2:
+				return nameof(Plains);
+				case 3:
+				return nameof(Mountainous);
+				case 4:
+				return nameof(Wetlands);
+				case 5:
+				return nameof(Desert);
+				default:
+				return "unknown";
+			}
+		}
 	}
 
 	public class BiomeSuffixes
@@ -27,6 +55,33 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> Mountainous;
 		public List<string> Wetlands;
 		public List<string> Desert;
+		public List<List<string>> Enumerate()
+		{
+			return new List<List<string>>
+			{
+				Forest, Beach, Plains, Mountainous, Wetlands, Desert
+			};
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0:
+				return nameof(Forest);
+				case 1:
+				return nameof(Beach);
+				case 2:
+				return nameof(Plains);
+				case 3:
+				return nameof(Mountainous);
+				case 4:
+				return nameof(Wetlands);
+				case 5:
+				return nameof(Desert);
+				default:
+				return "unknown";
+			}
+		}
 	}
 
 	public class ColourPrefixes
@@ -52,6 +107,35 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> DARKBROWN;
 		public List<string> CHOCOLATE;
 		public List<string> BLACK;
+		public List<List<string>> Enumerate()
+		{
+			return [WHITE, PALEGREY, SILVER, GREY,
+					DARKGREY, GHOST, PALEGINGER, GOLDEN,
+					GINGER, DARKGINGER, SIENNA, CREAM,
+					LIGHTBROWN, LILAC, BROWN];
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0: return "White";
+				case 1: return "Pale Grey";
+				case 2: return "Silver";
+				case 3: return "Grey";
+				case 4: return "Dark Grey";
+				case 5: return "Ghost";
+				case 6: return "Pale Ginger";
+				case 7: return "Golden";
+				case 8: return "Ginger";
+				case 9: return "Dark Ginger";
+				case 10: return "Sienna";
+				case 11: return "Cream";
+				case 12: return "Light Brown";
+				case 13: return "Lilac";
+				case 14: return "Brown";
+				default: return "unknown";
+			}
+		}
 	}
 
 	public class EyePrefixes
@@ -75,6 +159,41 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> COBALT;
 		public List<string> SUNLITICE;
 		public List<string> GREENYELLOW;
+		public List<List<string>> Enumerate()
+		{
+			return [YELLOW, AMBER, HAZEL, PALEGREEN,
+					GREEN, BLUE, DARKBLUE, GREY, CYAN, 
+					EMERALD, PALEBLUE, PALEYELLOW, GOLD, 
+					HEATHERBLUE, COPPER, SAGE, COBALT, SUNLITICE, 
+					GREENYELLOW
+			];
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0:return "Yellow";
+				case 1:return "Amber";
+				case 2:return "Hazel";
+				case 3:return "Pale Green";
+				case 4:return "Green";
+				case 5:return "Blue";
+				case 6:return "Dark Blue";
+				case 7:return "Grey";
+				case 8:return "Cyan";
+				case 9:return "Emerald";
+				case 10:return "Pale Blue";
+				case 11:return "Pale Yellow";
+				case 12:return "Gold";
+				case 13:return "Heather Blue";
+				case 14:return "Copper";
+				case 15:return "Sage";
+				case 16:return "Cobalt";
+				case 17:return "Sunlit Ice";
+				case 18:return "Green-Yellow";
+				default:return "unknown";
+			}
+		}
 	}
 
 	public class PeltSuffixes
@@ -189,6 +308,39 @@ namespace ClanGenModTool.ObjectTypes
 		[JsonProperty("mediator apprentice")]
 		public string mediatorapprentice;
 		public string leader;
+
+		public List<string> Enumerate()
+		{
+			return new List<string>
+			{
+				newborn,
+				kitten,
+				apprentice,
+				medicinecatapprentice,
+				mediatorapprentice,
+				leader
+			};
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0:
+				return nameof(newborn);
+				case 1:
+				return nameof(kitten);
+				case 2:
+				return nameof(apprentice);
+				case 3:
+				return nameof(medicinecatapprentice);
+				case 4:
+				return nameof(mediatorapprentice);
+				case 5:
+				return nameof(leader);
+				default:
+				return "unknown";
+			}
+		}
 	}
 
 	public class TortiePeltSuffixes
@@ -206,5 +358,59 @@ namespace ClanGenModTool.ObjectTypes
 		public List<string> sokoke;
 		public List<string> agouti;
 		public List<string> masked;
+		public List<List<string>> Enumerate()
+		{
+			List<List<string>> strings =
+			[
+				solid,
+				tabby,
+				bengal,
+				marbled,
+				ticked,
+				smoke,
+				rosette,
+				speckled,
+				mackerel,
+				classic,
+				sokoke,
+				agouti,
+				masked
+			];
+			return strings;
+		}
+		public string LookUp(int index)
+		{
+			switch(index)
+			{
+				case 0:
+				return nameof(solid);
+				case 1:
+				return nameof(tabby);
+				case 2:
+				return nameof(bengal);
+				case 3:
+				return nameof(marbled);
+				case 4:
+				return nameof(ticked);
+				case 5:
+				return nameof(smoke);
+				case 6:
+				return nameof(rosette);
+				case 7:
+				return nameof(speckled);
+				case 8:
+				return nameof(mackerel);
+				case 9:
+				return nameof(classic);
+				case 10:
+				return nameof(sokoke);
+				case 11:
+				return nameof(agouti);
+				case 12:
+				return nameof(masked);
+				default:
+				return "unknown";
+			}
+		}
 	}
 }

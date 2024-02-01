@@ -1,19 +1,9 @@
-﻿using Silk.NET.OpenGL.Extensions.ImGui;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Silk.NET.OpenGL;
 using ImGuiNET;
 using System.Numerics;
 using Newtonsoft.Json;
-using StbImageSharp;
-using Silk.NET.SDL;
-using System.IO;
-using ClanGenModTool.Textures;
 using ClanGenModTool.ObjectTypes;
 using Texture = ClanGenModTool.Textures.Texture;
-using System.Linq.Expressions;
 
 namespace ClanGenModTool.UI.SubWindows
 {
@@ -916,7 +906,7 @@ namespace ClanGenModTool.UI.SubWindows
 		}
 		public void LoadRelationshipEditor()
 		{
-			ImGui.Text("Coming soon!");
+			ImGui.SeparatorText("Relationship effect editing coming soon!");
 		}
 
 		public void Save()
