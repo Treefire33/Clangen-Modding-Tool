@@ -1,19 +1,9 @@
-﻿using Silk.NET.OpenGL.Extensions.ImGui;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Silk.NET.OpenGL;
 using ImGuiNET;
 using System.Numerics;
 using Newtonsoft.Json;
-using StbImageSharp;
-using Silk.NET.SDL;
-using System.IO;
-using ClanGenModTool.Textures;
 using Texture = ClanGenModTool.Textures.Texture;
 using ClanGenModTool.ObjectTypes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ClanGenModTool.UI.SubWindows
 {
@@ -103,7 +93,7 @@ namespace ClanGenModTool.UI.SubWindows
 							thoughts.RemoveAt(i);
 						}
 					} catch(Exception e) {
-						ErrorBox.Draw("Not a though json!" + e);
+						ErrorBox.Draw("Not a thought json!" + e);
 					}
 				}
 				/*if(ImGui.Button("Add Thought"))
@@ -144,7 +134,22 @@ namespace ClanGenModTool.UI.SubWindows
 				ImGui.TextColored(new(255,0,0,255), "this editor is not complete!");
 				if(loadedThought != null)
 				{
-					ImGui.InputInt("Select thought.", ref currentSelected);
+					if(currentSelected > loadedThought.thoughts.Count)
+						currentSelected = 0;
+					if(ImGui.BeginCombo("Select Thought", loadedThought.thoughts[currentSelected] ?? ""))
+					{
+						foreach(string s in loadedThought.thoughts)
+						{
+							bool selected = loadedThought.thoughts[currentSelected].Equals(s);
+							ImGui.Selectable(s, ref selected);
+							if(selected)
+							{
+								currentSelected = loadedThought.thoughts.IndexOf(s);
+							}
+							ImGui.SetItemDefaultFocus();
+						}
+						ImGui.EndCombo();
+					}
 					ThoughtTextEditor();
 					LoadConstraintEditor();
 				}
@@ -194,6 +199,7 @@ namespace ClanGenModTool.UI.SubWindows
 			else if(currentThought < 0)
 				currentThought = 0;
 			ImGui.InputTextMultiline("Thought Text", ref selectedThoughtText, 2500, new Vector2(350, 200));
+			loadedThought!.thoughts[currentSelected] = selectedThoughtText;
 			if(ImGui.Button("Add Thought"))
 			{
 				loadedThought.thoughts.Add("Thinking about placeholder values");

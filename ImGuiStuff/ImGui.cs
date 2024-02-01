@@ -35,12 +35,22 @@ namespace ClanGenModTool
 			if(text != null || text != "")
 			{
 				float windowWidth = ImGui.GetWindowSize().X;
-				float textWidth = ImGui.CalcTextSize(text).X;
+				float textWidth = 0;
+				try
+				{
+					textWidth = ImGui.CalcTextSize(text).X;
+				}
+				catch { return; }
 
 				xPos = (windowWidth - textWidth) * 0.5f;
 			}
 			ImGui.SetCursorPosX(xPos);
 			ImGui.TextColored(color, text);
+		}
+
+		public static void Combo()
+		{
+
 		}
 	}
 }

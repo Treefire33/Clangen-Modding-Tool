@@ -245,7 +245,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				foreach(string s in suffixes)
 				{
-					bool selected = suffixes.Equals(s);
+					bool selected = suffixes[previewIndex].Equals(s);
 					ImGui.Selectable(s, ref selected);
 					if(selected)
 					{
@@ -289,7 +289,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				foreach(string s in suffixes)
 				{
-					bool selected = suffixes.Equals(s);
+					bool selected = suffixes[previewIndex].Equals(s);
 					ImGui.Selectable(s, ref selected);
 					if(selected)
 					{
@@ -334,7 +334,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				foreach(string s in suffixes)
 				{
-					bool selected = suffixes.Equals(s);
+					bool selected = suffixes[previewIndex].Equals(s);
 					ImGui.Selectable(s, ref selected);
 					if(selected)
 					{
