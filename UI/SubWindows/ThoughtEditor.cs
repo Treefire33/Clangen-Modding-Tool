@@ -1,4 +1,4 @@
-﻿using Silk.NET.OpenGL;
+﻿using OpenTK.Graphics.OpenGL4;
 using ImGuiNET;
 using System.Numerics;
 using Newtonsoft.Json;
@@ -14,8 +14,7 @@ namespace ClanGenModTool.UI.SubWindows
 		Thought? loadedThought = null;
 		int currentThought;
 
-		GL GL;
-		Texture thoughtPreviewImg;
+		public static Texture thoughtPreviewImg;
 
 		public void LoadEditor()
 		{
@@ -36,14 +35,10 @@ namespace ClanGenModTool.UI.SubWindows
 			loadedThought = thoughts[currentThought];
 		}
 
-		public void BeforeDrawEditor(GL gl)
+		public static void BeforeDrawEditor()
 		{
-			if(GL == null)
-			{
-				GL = gl;
-				thoughtPreviewImg = new Texture(GL, "./Resources/Images/thoughtPreview.png");
-				thoughtPreviewImg.Bind(TextureUnit.Texture1);
-			}
+			thoughtPreviewImg = Texture.LoadFromFile("./Resources/Images/thoughtPreview.png");
+			thoughtPreviewImg.Use(TextureUnit.Texture1);
 		}
 
 		public void Draw(ref bool continueDraw)
@@ -116,9 +111,9 @@ namespace ClanGenModTool.UI.SubWindows
 				{
 					previewedText = loadedThought.thoughts[currentSelected];
 				}
-				ImGui.Image(new IntPtr(thoughtPreviewImg._handle), new(600, 500));
+				ImGui.Image(thoughtPreviewImg.Handle, new(600, 500));
 				ImGui.SetCursorPosY(155);
-				ImGUI.CenteredColoredText(new(0,0,0,255), previewedText);
+				ImExtended.CenteredColoredText(new(0,0,0,255), previewedText, new(600,500));
 				ImGui.End();
 			}
 		}

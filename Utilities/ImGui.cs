@@ -1,19 +1,10 @@
 ﻿using ClanGenModTool.ObjectTypes;
 using ImGuiNET;
-using Newtonsoft.Json;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClanGenModTool
 {
-	public static class ImGUI
+	public static class ImExtended
 	{
 		public static void CenteredText(string text) 
 		{
@@ -29,12 +20,45 @@ namespace ClanGenModTool
 			ImGui.Text(text);
 		}
 
+		public static void CenteredText(string text, Vector2 bounds)
+		{
+			float xPos = 0;
+			if(text != null || text != "")
+			{
+				float windowWidth = bounds.X;
+				float textWidth = ImGui.CalcTextSize(text).X;
+
+				xPos = (windowWidth - textWidth) * 0.5f;
+			}
+			ImGui.SetCursorPosX(xPos);
+			ImGui.Text(text);
+		}
+
 		public static void CenteredColoredText(Vector4 color, string text)
 		{
 			float xPos = 0;
 			if(text != null || text != "")
 			{
 				float windowWidth = ImGui.GetWindowSize().X;
+				float textWidth = 0;
+				try
+				{
+					textWidth = ImGui.CalcTextSize(text).X;
+				}
+				catch { return; }
+
+				xPos = (windowWidth - textWidth) * 0.5f;
+			}
+			ImGui.SetCursorPosX(xPos);
+			ImGui.TextColored(color, text);
+		}
+
+		public static void CenteredColoredText(Vector4 color, string text, Vector2 bounds)
+		{
+			float xPos = 0;
+			if(text != null || text != "")
+			{
+				float windowWidth = bounds.X;
 				float textWidth = 0;
 				try
 				{

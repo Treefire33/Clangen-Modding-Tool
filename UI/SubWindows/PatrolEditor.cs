@@ -1,21 +1,20 @@
-﻿using Silk.NET.OpenGL;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Numerics;
 using Newtonsoft.Json;
 using ClanGenModTool.ObjectTypes;
 using Texture = ClanGenModTool.Textures.Texture;
+using OpenTK.Graphics.OpenGL4;
 
 namespace ClanGenModTool.UI.SubWindows
 {
 	public class PatrolEditor : Editor
 	{
-		public GL? GL;
 		Patrol? loadedPatrol;
 		List<Patrol> patrols = new List<Patrol>();
 		int currentPatrol = 0;
 
 		public static bool fileEdited = false;
-		public Texture patrolPreviewImg;
+		public static Texture patrolPreviewImg;
 
 		public void LoadEditor()
 		{
@@ -34,14 +33,9 @@ namespace ClanGenModTool.UI.SubWindows
 			loadedPatrol = patrols[currentPatrol];
 		}
 
-		public void BeforeDrawEditor(GL gl)
+		public static void BeforeDrawEditor()
 		{
-			if(GL == null)
-			{
-				GL = gl;
-				patrolPreviewImg = new Texture(GL, "./Resources/Images/patrolPreview.png");
-				patrolPreviewImg.Bind(TextureUnit.Texture0);
-			}
+			patrolPreviewImg = Texture.LoadFromFile("./Resources/Images/patrolPreview.png");
 		}
 
 		public void Draw(ref bool continueDraw)
@@ -79,15 +73,15 @@ namespace ClanGenModTool.UI.SubWindows
 			ImGui.SetNextWindowSize(new Vector2(615, 600), ImGuiCond.Once);
 			if(ImGui.Begin("Patrol Preview", ImGuiWindowFlags.NoCollapse))
 			{
-				ImGui.Image(new IntPtr(patrolPreviewImg._handle), new(600, 500));
+				ImGui.Image(patrolPreviewImg.Handle, new(600, 500));
 				ImGui.SetCursorPos(new(300, 155));
-				ImGui.BeginChildFrame(3, new(250, 160), ImGuiWindowFlags.NoBackground);
+				ImGui.BeginChild(3, new(250, 160), ImGuiChildFlags.None);
 				ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int)ImGuiCol.NavHighlight]);
 				ImGui.PushTextWrapPos(225);
 				ImGui.TextWrapped(previewedText);
 				ImGui.PopTextWrapPos();
 				ImGui.PopStyleColor();
-				ImGui.EndChildFrame();
+				ImGui.EndChild();
 				ImGui.End();
 			}
 			ImGui.SetNextWindowSize(new(250, 300));
@@ -283,7 +277,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				if(loadedPatrol != null)
 				{
-					if(ImGui.BeginChildFrame(2, new(600, 80)))
+					if(ImGui.BeginChild(2, new(600, 80)))
 					{
 						if(ImGui.BeginTabBar("MinMaxTabs"))
 						{
@@ -397,7 +391,7 @@ namespace ClanGenModTool.UI.SubWindows
 									ImGui.EndTabItem();
 								}
 							}
-							ImGui.EndChildFrame();
+							ImGui.EndChild();
 						}
 					}
 				}
@@ -547,7 +541,7 @@ namespace ClanGenModTool.UI.SubWindows
 					if(ImGui.InputInt("Weight", ref currentOutcome.weight)) { }
 					if(ImGui.CollapsingHeader("Cat Editing"))
 					{
-						if(ImGui.BeginChildFrame(55, new(ImGui.GetWindowSize().X, 80)))
+						if(ImGui.BeginChild(55, new(ImGui.GetWindowSize().X, 80)))
 						{
 							#region Can Have Stat Editing
 							ImGui.Text("Stat Cat Candidates:");
@@ -582,9 +576,9 @@ namespace ClanGenModTool.UI.SubWindows
 							ImGui.SameLine();
 							if(currentOutcome.can_have_stat != null && ImGui.Button("Remove")) { currentOutcome.can_have_stat.Remove(tempCanHave); }
 							#endregion
-							ImGui.EndChildFrame();
+							ImGui.EndChild();
 						}
-						if(ImGui.BeginChildFrame(56, new(ImGui.GetWindowSize().X, 80)))
+						if(ImGui.BeginChild(56, new(ImGui.GetWindowSize().X, 80)))
 						{
 							#region Lost Cats Editing
 							ImGui.Text("Lost Cats:");
@@ -625,9 +619,9 @@ namespace ClanGenModTool.UI.SubWindows
 							if(currentOutcome.lost_cats != null && ImGui.Button("Remove")) { currentOutcome.lost_cats.Remove(tempLostCat); }
 							ImGui.PopID();
 							#endregion
-							ImGui.EndChildFrame();
+							ImGui.EndChild();
 						}
-						if(ImGui.BeginChildFrame(57, new(ImGui.GetWindowSize().X, 80)))
+						if(ImGui.BeginChild(57, new(ImGui.GetWindowSize().X, 80)))
 						{
 							#region Dead Cats Editing
 							ImGui.Text("Dead Cats:");
@@ -668,7 +662,7 @@ namespace ClanGenModTool.UI.SubWindows
 							if(currentOutcome.dead_cats != null && ImGui.Button("Remove")) { currentOutcome.dead_cats.Remove(tempDeadCat); }
 							ImGui.PopID();
 							#endregion
-							ImGui.EndChildFrame();
+							ImGui.EndChild();
 						}
 					}
 					LoadInjuryEditor();
@@ -679,7 +673,6 @@ namespace ClanGenModTool.UI.SubWindows
 					if(currentOutcome.art != null) { if(ImGui.InputText("Art", ref currentOutcome.art, 2600)) { } } else { }
 					if(currentOutcome.art_clean != null) if(ImGui.InputText("Art Clean", ref currentOutcome.art_clean, 2600)) { }
 				}
-				ImGui.EndChildFrame();
 			}
 		}
 
