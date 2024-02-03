@@ -1,8 +1,16 @@
 # ClanGen-Mod-Tool
 Simple mod tool for the Clangen Fan-Edit (https://github.com/ClanGenOfficial/clangen).
 
-This tool is **super** unfinished, and needs heavy revision.
-There are also a lot of features missing.
-But it works for now!
+This tool allows for the editing of many of ClanGen's resource and save files.
 
-[Click here to download](https://github.com/Treefire33/Clangen-Modding-Tool/raw/main/ClangenModTool.zip)
+To install, head [here](https://github.com/Treefire33/Clangen-Modding-Tool/releases/latest) and download the version suited for your OS (Windows/MacOS).
+
+## The Editor Currently Features:
+- An editor for patrol files
+- An editor for thought files
+- An editor for the name file
+- And a save file editor for your clan.
+
+----------------------------
+
+[Click here to download](https://github.com/Treefire33/Clangen-Modding-Tool/releases/latest)
