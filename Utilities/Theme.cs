@@ -1,15 +1,5 @@
-﻿using Silk.NET.OpenGL.Extensions.ImGui;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Numerics;
-using Newtonsoft.Json;
-using StbImageSharp;
-using Silk.NET.SDL;
-using System.IO;
 
 namespace ClanGenModTool
 {

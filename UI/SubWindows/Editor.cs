@@ -24,7 +24,7 @@ namespace ClanGenModTool.UI.SubWindows
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
-				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol"});
+				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol"});
 			}
 			if(loadedPath != null && loadedPath != "")
 				loadedJson = File.ReadAllText(loadedPath);
@@ -40,7 +40,7 @@ namespace ClanGenModTool.UI.SubWindows
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
-				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol" });
+				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol" });
 			}
 			if(loadedPath != null && loadedPath != "")
 				loadedJson = File.ReadAllText(loadedPath);
@@ -56,7 +56,7 @@ namespace ClanGenModTool.UI.SubWindows
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
-				StartWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = type });
+				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = type });
 			}
 			if(loadedPath != null && loadedPath != "")
 				loadedJson = File.ReadAllText(loadedPath);

@@ -1,16 +1,7 @@
 ﻿using ClanGenModTool.ObjectTypes;
 using ImGuiNET;
 using Newtonsoft.Json;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace ClanGenModTool.UI.SubWindows
 {
@@ -36,11 +27,6 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				ErrorBox.Draw("Invalid JSON!\n" + ex);
 			}
-		}
-
-		public void BeforeDrawEditor(GL gl)
-		{
-			throw new NotImplementedException();
 		}
 
 		public void Draw(ref bool continueDraw)
