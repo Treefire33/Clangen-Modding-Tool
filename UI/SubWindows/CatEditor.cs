@@ -63,7 +63,7 @@ namespace ClanGenModTool.UI.SubWindows
 				foreach(Cat cat in loadedCats)
 				{
 					string listName = NameFromStatus(cat);
-					if(ImGui.Button($"{listName}|{cat.ID}"))
+					if(ImGui.Button($"{listName} | {cat.ID}"))
 					{
 						currentCat = cat;
 					}

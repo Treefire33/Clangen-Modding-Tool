@@ -211,35 +211,6 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 		}
 
-		private string CreateWrapping(string wrappedText, int charsToIgnore)
-		{
-			string rendered = "";
-			for(int i = 0; i < wrappedText.Length; i++)
-			{
-				rendered+= wrappedText[i];
-				if(i % charsToIgnore == 0)
-				{
-					rendered.Insert(i, "\n");
-				}
-			}
-			return rendered;
-		}
-		private string RemoveWrapping(string wrappedText)
-		{
-			string rendered = "";
-			for(int i = 0; i < wrappedText.Length; i++)
-			{
-				if(wrappedText[i] == '\n')
-				{
-					wrappedText.Remove(i);
-					continue;
-				}
-				rendered += wrappedText[i];
-				
-			}
-			return rendered;
-		}
-
 		public void Save()
 		{
 			if(loadedPath != null && loadedPath != "")
