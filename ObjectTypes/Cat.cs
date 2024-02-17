@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClanGenModTool.ObjectTypes
 {
-	public class Cat
+	public class Cat : ICloneable
 	{
 		public string ID;
 		public string name_prefix;
@@ -66,6 +66,11 @@ namespace ClanGenModTool.ObjectTypes
 		public int opacity;
 		public bool prevent_fading;
 		public bool favourite;
+
+		public object Clone()
+		{
+			return this.MemberwiseClone();
+		}
 	}
 
 	public class SkillDict

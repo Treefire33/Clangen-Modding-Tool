@@ -7,7 +7,7 @@ namespace ClanGenModTool.UI.SubWindows
 {
 	public class ClanEditor : Editor
 	{
-		Clan loadedClan = null;
+		public static Clan loadedClan = null;
 		bool catEditorOpened = false;
 		public void LoadEditor()
 		{
@@ -55,11 +55,13 @@ namespace ClanGenModTool.UI.SubWindows
 			if(catEditorOpened && catEditor.loadedCats != null)
 			{
 				catEditor.Draw(ref catEditorOpened);
+				CatEditor.openedThroughClanEditor = catEditorOpened;
 			}
 			else if(catEditorOpened)
 			{
 				CatEditor.Load();
 				catEditor.LoadEditor();
+				CatEditor.openedThroughClanEditor = catEditorOpened;
 			}
 		}
 
@@ -93,6 +95,7 @@ namespace ClanGenModTool.UI.SubWindows
 						ImGui.InputText("Temperament: ", ref loadedClan.temperament, 32);
 					}
 				}
+				ImGui.TextWrapped("Clan Cats: " + loadedClan.clan_cats);
 				if(ImGui.Checkbox("Toggle Cat Editor", ref catEditorOpened)) {}
 				ImGui.End();
 			}

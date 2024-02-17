@@ -1,6 +1,7 @@
 ﻿using ClanGenModTool.ObjectTypes;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common.Input;
 using System.Numerics;
 
 namespace ClanGenModTool.UI.SubWindows
@@ -11,6 +12,7 @@ namespace ClanGenModTool.UI.SubWindows
 		Dictionary<string, Cat> catDict = new Dictionary<string, Cat>();
 		Cat currentCat = null;
 		public static string loadedCatPath, loadedCatJson;
+		public static bool openedThroughClanEditor = false;
 
 		public void LoadEditor()
 		{
@@ -60,12 +62,25 @@ namespace ClanGenModTool.UI.SubWindows
 			ImGui.SetNextWindowSize(new Vector2(200, 400), ImGuiCond.Once);
 			if(ImGui.Begin("Cat Select", ImGuiWindowFlags.NoCollapse))
 			{
-				foreach(Cat cat in loadedCats)
+				if(openedThroughClanEditor)
 				{
-					string listName = NameFromStatus(cat);
-					if(ImGui.Button($"{listName} | {cat.ID}"))
+					if(ImGui.Button("Add Cat"))
 					{
-						currentCat = cat;
+						loadedCats.Add((Cat)loadedCats.Last().Clone());
+						loadedCats[loadedCats.Count - 1].ID = (int.Parse(loadedCats[loadedCats.Count - 1].ID) + 1).ToString();
+						ClanEditor.loadedClan.clan_cats += "," + loadedCats[loadedCats.Count - 1].ID;
+					}
+				}
+				else
+				{
+					ImGui.Text("Open Cat Editor through Clan Editor to add and remove cats.");
+				}
+				for(int i = 0; i < loadedCats.Count; i++)
+				{
+					string listName = NameFromStatus(loadedCats[i]);
+					if(ImGui.Button($"{listName} | {loadedCats[i].ID}"))
+					{
+						currentCat = loadedCats[i];
 						whitePatchesEnabled = currentCat.white_patches != null;
 						heterochromiaEnabled = currentCat.eye_colour2 != null;
 						vitiligoEnabled = currentCat.vitiligo != null;
@@ -76,6 +91,16 @@ namespace ClanGenModTool.UI.SubWindows
 						secondaryInterest = currentCat.skill_dict.secondary != null ? int.Parse(currentCat.skill_dict.secondary.Split(',')[1]) : 1;
 						hiddenSkill = currentCat.skill_dict.hidden != null ? currentCat.skill_dict.hidden.Split(',')[0] : "HUNTER";
 						hiddenInterest = currentCat.skill_dict.hidden != null ? int.Parse(currentCat.skill_dict.hidden.Split(',')[1]) : 1;
+					}
+					if(openedThroughClanEditor)
+					{
+						ImGui.SameLine();
+						ImGui.PushID(listName + loadedCats[i].ID);
+						if(ImGui.Button("Del"))
+						{
+							loadedCats.Remove(loadedCats[i]);
+						}
+						ImGui.PopID();
 					}
 				}
 				ImGui.End();
@@ -95,7 +120,7 @@ namespace ClanGenModTool.UI.SubWindows
 			{
 				ImGui.TextColored(new(255, 0, 0, 255), "Edit at your own risk!");
 				ImGui.Text($"ID: {currentCat.ID}");
-				if(ImGui.InputInt("Experience", ref currentCat.experience, 1, 10))
+				if(ImGui.SliderInt("Experience", ref currentCat.experience, 1, 321))
 				{
 					if(currentCat.experience < 0)
 						currentCat.experience = 0;
