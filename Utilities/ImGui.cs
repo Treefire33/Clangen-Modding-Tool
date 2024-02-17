@@ -72,9 +72,20 @@ namespace ClanGenModTool
 			ImGui.TextColored(color, text);
 		}
 
-		public static void Combo()
+		public static void Combo(string title, ref string? field, string[] list)
 		{
-
+			if(ImGui.BeginCombo(title, field))
+			{
+				foreach(string s in list)
+				{
+					bool selected = field != null && field.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						field = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
 		}
 	}
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClanGenModTool.ObjectTypes;
+using ClanGenModTool.Textures;
 using ClanGenModTool.UI.SubWindows;
+using ClanGenModTool.Utilities;
 using ClanGenModTool.Windowing;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -30,6 +32,28 @@ namespace ClanGenModTool.UI
 				editorConfig = JsonConvert.DeserializeObject<EditorConfig>(File.ReadAllText(configPath))!;
 				PatrolEditor.BeforeDrawEditor();
 				ThoughtEditor.BeforeDrawEditor();
+				//FromJsonTo.GenerateDictEntryForFacet(".\\Resources\\ExampleJSONs\\ranges.json");
+				/*foreach(string key in Constants.traitRanges.Keys)
+				{
+					for(int i = 0; i < Constants.traitRanges[key].Count; i++)
+					{
+						Console.WriteLine(Constants.traitRanges[key][i].Item1);
+						Console.WriteLine(Constants.traitRanges[key][i].Item2);
+					}
+				}*/
+
+				foreach(string s in Constants.accessories)
+				{
+					Console.WriteLine($"\"{s}BELL\",");
+				}
+				foreach(string s in Constants.accessories)
+				{
+					Console.WriteLine($"\"{s}BOW\",");
+				}
+				foreach(string s in Constants.accessories)
+				{
+					Console.WriteLine($"\"{s}NYLON\",");
+				}
 			};
 			this.DrawEvent += Render;
 			this.CloseEvent += delegate { };

@@ -4,3 +4,4 @@ obj/
 *.pdn
 Resources/tempExpandedIcon.png
 SrcDebug/clangen/
+Utilities/ImNotify.cs

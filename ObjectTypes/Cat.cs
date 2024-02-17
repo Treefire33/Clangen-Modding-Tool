@@ -41,21 +41,21 @@ namespace ClanGenModTool.ObjectTypes
 		public int sprite_senior;
 		public int sprite_para_adult;
 		public string eye_colour;
-		public object eye_colour2;
+		public string? eye_colour2;
 		public bool reverse;
-		public string white_patches;
-		public string vitiligo;
-		public string points;
+		public string? white_patches;
+		public string? vitiligo;
+		public string? points;
 		public string white_patches_tint;
-		public string pattern;
-		public string tortie_base;
-		public string tortie_color;
-		public string tortie_pattern;
+		public string? pattern;
+		public string? tortie_base;
+		public string? tortie_color;
+		public string? tortie_pattern;
 		public string skin;
 		public string tint;
 		public SkillDict skill_dict;
 		public List<string> scars;
-		public string accessory;
+		public string? accessory;
 		public int experience;
 		public int dead_moons;
 		public List<string> current_apprentice;
@@ -71,73 +71,7 @@ namespace ClanGenModTool.ObjectTypes
 	public class SkillDict
 	{
 		public string primary;
-		public string secondary;
-		public string hidden;
-	}
-
-
-}
-
-namespace ClanGenModTool
-{
-	public static class Background
-	{
-		public static string[] backgrounds = { 
-						"clan_founder",
-						"clanborn",
-						"halfborn1", "halfborn2",
-						"outsider_roots1",
-						"outsider_roots2",
-						"loner1",
-						"loner2",
-						"loner3",
-						"loner4",
-						"kittypet1",
-						"kittypet2",
-						"kittypet3",
-						"kittypet4",
-						"rogue1",
-						"rogue2",
-						"rogue3",
-						"abandoned1",
-						"abandoned2",
-						"abandoned3",
-						"abandoned4",
-						"otherclan1",
-						"otherclan2",
-						"otherclan3",
-						"otherclan4",
-						"disgraced1",
-						"disgraced2",
-						"disgraced3",
-						"retired_leader",
-						"medicine_cat",
-						"ostracized_warrior",
-						"refugee1",
-						"refugee2",
-						"refugee3",
-						"refugee4",
-						"refugee5",
-						"refugee6",
-						"tragedy_survivor1",
-						"tragedy_survivor2",
-						"tragedy_survivor3",
-						"tragedy_survivor4",
-						"wandering_healer1",
-						"wandering_healer2",
-						"guided1",
-						"guided2",
-						"guided3",
-						"guided4",
-						"orphaned1",
-						"orphaned2",
-						"orphaned3",
-						"orphaned4",
-						"orphaned5",
-						"orphaned6",
-						"outsider1",
-						"outsider2",
-						"outsider3"
-		};
+		public string? secondary;
+		public string? hidden;
 	}
 }
