@@ -47,7 +47,7 @@
     "tint": "purple",
     "skill_dict": {
       "primary": "STAR,10,False",
-      "secondary": null,
+      "secondary": "HUNTER,10,False",
       "hidden": null
     },
     "scars": [],

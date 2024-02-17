@@ -109,6 +109,10 @@ namespace ClanGenModTool.UI
 					{
 						clanEdit.Save();
 					}
+					if(mCatEditorActive && ImGui.MenuItem("Save"))
+					{
+						clanEdit.catEditor.Save();
+					}
 					if(ImGui.BeginMenu("Session History"))
 					{
 						foreach(SessionHistory sh in editorConfig.sessionHistory)

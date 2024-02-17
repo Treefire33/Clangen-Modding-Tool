@@ -20,8 +20,8 @@ namespace ClanGenModTool.ObjectTypes
 		public int moons;
 		public string trait;
 		public string facets;
-		public string parent1;
-		public string parent2;
+		public string? parent1;
+		public string? parent2;
 		public List<string> adoptive_parents;
 		public string mentor;
 		public List<string> former_mentor;

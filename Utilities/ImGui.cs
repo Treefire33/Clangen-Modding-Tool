@@ -87,5 +87,23 @@ namespace ClanGenModTool
 				ImGui.EndCombo();
 			}
 		}
+
+		public static void Combo(string title, ref string? field, string[] list, int id)
+		{
+			ImGui.PushID(id);
+			if(ImGui.BeginCombo(title, field))
+			{
+				foreach(string s in list)
+				{
+					bool selected = field != null && field.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						field = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			ImGui.PopID();
+		}
 	}
 }

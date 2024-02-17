@@ -70,6 +70,12 @@ namespace ClanGenModTool.UI.SubWindows
 						heterochromiaEnabled = currentCat.eye_colour2 != null;
 						vitiligoEnabled = currentCat.vitiligo != null;
 						pointsEnabled = currentCat.points != null;
+						primarySkill = currentCat.skill_dict.primary.Split(',')[0];
+						primaryInterest = int.Parse(currentCat.skill_dict.primary.Split(',')[1]);
+						secondarySkill = currentCat.skill_dict.secondary != null ? currentCat.skill_dict.secondary.Split(',')[0] : "HUNTER";
+						secondaryInterest = currentCat.skill_dict.secondary != null ? int.Parse(currentCat.skill_dict.secondary.Split(',')[1]) : 1;
+						hiddenSkill = currentCat.skill_dict.hidden != null ? currentCat.skill_dict.hidden.Split(',')[0] : "HUNTER";
+						hiddenInterest = currentCat.skill_dict.hidden != null ? int.Parse(currentCat.skill_dict.hidden.Split(',')[1]) : 1;
 					}
 				}
 				ImGui.End();
@@ -87,7 +93,7 @@ namespace ClanGenModTool.UI.SubWindows
 			ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
 			if(ImGui.Begin("Cat Editor", ImGuiWindowFlags.NoCollapse))
 			{
-				ImGui.TextColored(new(255, 0, 0, 255), "Certain fields are locked to prevent game breaking bugs from happening.");
+				ImGui.TextColored(new(255, 0, 0, 255), "Edit at your own risk!");
 				ImGui.Text($"ID: {currentCat.ID}");
 				if(ImGui.InputInt("Experience", ref currentCat.experience, 1, 10))
 				{
@@ -121,101 +127,112 @@ namespace ClanGenModTool.UI.SubWindows
 					}
 					ImGui.EndCombo();
 				}
-				if(currentCat.parent1 != null)
+				if(ImGui.CollapsingHeader("Parents"))
 				{
-					ImGui.Text($"Parent 1: ");
-					ImGui.SameLine();
-					ImGui.PushID(90);
-					if(ImGui.BeginCombo("", currentCat.parent1))
+					if(currentCat.parent1 != null)
 					{
-						foreach(string s in NameList())
-						{
-							string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
-							bool selected = currentCat.parent1.Equals(fix);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.parent1 = fix;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					ImGui.PopID();
-					ImGui.SameLine();
-					CatChip(currentCat.parent1);
-				}
-				else
-				{
-					if(ImGui.Button("Add Parent"))
-					{
-						currentCat.parent1 = "1";
-					}
-				}
-				if(currentCat.parent2 != null)
-				{
-					ImGui.Text($"Parent 2:");
-					ImGui.SameLine();
-					ImGui.PushID(91);
-					if(ImGui.BeginCombo("", currentCat.parent2))
-					{
-						foreach(string s in NameList())
-						{
-							string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
-							bool selected = currentCat.parent2.Equals(fix);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.parent2 = fix;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					ImGui.PopID();
-					ImGui.SameLine();
-					CatChip(currentCat.parent2);
-				}
-				else
-				{
-					if(ImGui.Button("Add Second Parent"))
-					{
-						currentCat.parent2 = "1";
-					}
-				}
-				ImGui.Text("Adoptive Parents: ");
-				if(currentCat.adoptive_parents != null)
-				{
-					ImGui.Indent(3);
-					for(int i = 0; i < currentCat.adoptive_parents.Count; i++)
-					{
-						CatChip(currentCat.adoptive_parents[i]);
+						ImGui.Text($"Parent 1: ");
 						ImGui.SameLine();
-						ImGui.PushID(currentCat.adoptive_parents[i]);
-						if(ImGui.Button("Remove"))
+						ImGui.PushID(90);
+						if(ImGui.BeginCombo("", currentCat.parent1))
 						{
-							currentCat.adoptive_parents.Remove(currentCat.adoptive_parents[i]);
+							foreach(string s in NameList())
+							{
+								string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
+								bool selected = currentCat.parent1.Equals(fix);
+								ImGui.Selectable(s, ref selected);
+								if(selected)
+									currentCat.parent1 = fix;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
 						}
 						ImGui.PopID();
+						ImGui.SameLine();
+						CatChip(currentCat.parent1);
+						if(ImGui.Button("Remove Parent"))
+						{
+							currentCat.parent1 = null;
+						}
 					}
-					ImGui.Unindent();
-				}
-				ImGui.PushID(92);
-				if(ImGui.BeginCombo("", toAdd))
-				{
-					foreach(string s in NameList())
+					else
 					{
-						string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
-						bool selected = toAdd.Equals(fix);
-						ImGui.Selectable(s, ref selected);
-						if(selected)
-							toAdd = fix;
-						ImGui.SetItemDefaultFocus();
+						if(ImGui.Button("Add Parent"))
+						{
+							currentCat.parent1 = "1";
+						}
 					}
-					ImGui.EndCombo();
-				}
-				ImGui.PopID();
-				ImGui.SameLine();
-				if(ImGui.Button("Add Adoptive Parent"))
-				{
-					currentCat.adoptive_parents ??= new List<string>();
-					currentCat.adoptive_parents.Add(toAdd);
+					if(currentCat.parent2 != null)
+					{
+						ImGui.Text($"Parent 2:");
+						ImGui.SameLine();
+						ImGui.PushID(91);
+						if(ImGui.BeginCombo("", currentCat.parent2))
+						{
+							foreach(string s in NameList())
+							{
+								string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
+								bool selected = currentCat.parent2.Equals(fix);
+								ImGui.Selectable(s, ref selected);
+								if(selected)
+									currentCat.parent2 = fix;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
+						}
+						ImGui.PopID();
+						ImGui.SameLine();
+						CatChip(currentCat.parent2);
+						if(ImGui.Button("Remove Parent 2"))
+						{
+							currentCat.parent2 = null;
+						}
+					}
+					else
+					{
+						if(ImGui.Button("Add Second Parent"))
+						{
+							currentCat.parent2 = "1";
+						}
+					}
+					ImGui.Text("Adoptive Parents: ");
+					if(currentCat.adoptive_parents != null)
+					{
+						ImGui.Indent(3);
+						for(int i = 0; i < currentCat.adoptive_parents.Count; i++)
+						{
+							CatChip(currentCat.adoptive_parents[i]);
+							ImGui.SameLine();
+							ImGui.PushID(currentCat.adoptive_parents[i]);
+							if(ImGui.Button("Remove"))
+							{
+								currentCat.adoptive_parents.Remove(currentCat.adoptive_parents[i]);
+							}
+							ImGui.PopID();
+						}
+						ImGui.Unindent();
+					}
+					ImGui.PushID(92);
+					if(ImGui.BeginCombo("", toAdd))
+					{
+						foreach(string s in NameList())
+						{
+							string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
+							bool selected = toAdd.Equals(fix);
+							ImGui.Selectable(s, ref selected);
+							if(selected)
+								toAdd = fix;
+							ImGui.SetItemDefaultFocus();
+						}
+						ImGui.EndCombo();
+					}
+					ImGui.PopID();
+					ImGui.SameLine();
+					if(ImGui.Button("Add Adoptive Parent"))
+					{
+						currentCat.adoptive_parents ??= new List<string>();
+						currentCat.adoptive_parents.Add(toAdd);
+					}
 				}
 				if(ImGui.InputInt("Age (Moons): ", ref currentCat.moons)) { }
 				ImGui.Indent(); ImGui.Text($"Dead For: {currentCat.dead_moons} moons"); ImGui.Unindent();
@@ -245,33 +262,52 @@ namespace ClanGenModTool.UI.SubWindows
 					}
 					ImGui.EndCombo();
 				}
-				if(currentCat.mentor is not null && currentCat.status.Contains("apprentice"))
+				if(ImGui.CollapsingHeader("Mentors"))
 				{
-					ImGui.Text("Mentor:");
-					ImGui.SameLine();
-					if(ImGui.BeginCombo("", currentCat.mentor))
+					if(currentCat.mentor is not null && currentCat.status.Contains("apprentice"))
 					{
-						foreach(string s in NameList())
+						ImGui.Text("Mentor:");
+						ImGui.SameLine();
+						ImGui.PushID("mentor_combo");
+						if(ImGui.BeginCombo("", currentCat.mentor))
 						{
-							string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
-							bool selected = currentCat.mentor.Equals(fix);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.mentor = fix;
-							ImGui.SetItemDefaultFocus();
+							foreach(string s in NameList())
+							{
+								string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
+								bool selected = currentCat.mentor.Equals(fix);
+								ImGui.Selectable(s, ref selected);
+								if(selected)
+									currentCat.mentor = fix;
+								ImGui.SetItemDefaultFocus();
+							}
+							ImGui.EndCombo();
 						}
-						ImGui.EndCombo();
+						ImGui.PopID();
+						ImGui.SameLine();
+						CatChip(currentCat.mentor);
 					}
-					ImGui.SameLine();
-					CatChip(currentCat.mentor);
-				}
-				if(currentCat.former_mentor is not null)
-				{
-					ImGui.Text("Former Mentors:");
-					foreach(string mentor in currentCat.former_mentor)
+					else if(currentCat.status.Contains("apprentice"))
 					{
-						CatChip(mentor);
+						if(ImGui.Button("Add Mentor"))
+						{
+							currentCat.mentor = loadedCats[0].ID;
+						}
 					}
+					else
+					{
+						ImGui.Text("Cat needs to be apprentice to have mentor");
+					}
+					CatListSelect(["Former Mentors: ", "Add Former Mentor"], ref currentCat.former_mentor, "former_mentor_combo");
+				}
+				if(ImGui.CollapsingHeader("Mates"))
+				{
+					CatListSelect(["Mates: ", "Add Mate"], ref currentCat.mate, "mate_combo");
+					CatListSelect(["Previous Mates: ", "Add Prev Mate"], ref currentCat.previous_mates, "former_mate_combo");
+				}
+				if(ImGui.CollapsingHeader("Apprentices"))
+				{
+					CatListSelect(["Current Apprentices: ", "Add Apprentice"], ref currentCat.current_apprentice, "appr_combo");
+					CatListSelect(["Previous Apprentices: ", "Add Prev Apprentice"], ref currentCat.former_apprentices, "prev_appr_combo");
 				}
 				ImGui.Text("Current Facets: " + currentCat.facets);
 				if(ImGui.BeginCombo("Trait", currentCat.trait))
@@ -295,179 +331,290 @@ namespace ClanGenModTool.UI.SubWindows
 				if(ImGui.Checkbox("Paralyzed", ref currentCat.paralyzed)) { }
 				if(ImGui.Checkbox("No Kits", ref currentCat.no_kits)) { }
 				if(ImGui.Checkbox("Exiled", ref currentCat.exiled)) { }
+				if(ImGui.Checkbox("Dark Forest", ref currentCat.df)) { }
+				if(ImGui.Checkbox("Outside", ref currentCat.outside)) { }
+				if(ImGui.Checkbox("Prevent Fading", ref currentCat.prevent_fading)) { }
+				if(ImGui.Checkbox("Favourite", ref currentCat.favourite)) { }
+				if(ImGui.SliderInt("Opacity", ref currentCat.opacity, 0, 100)) { }
 				if(ImGui.CollapsingHeader("Sprites"))
-				{
-					if(ImGui.BeginCombo("Pelt Pattern", currentCat.pelt_name))
-					{
-						foreach(string s in Constants.PeltNames)
-						{
-							bool selected = currentCat.pelt_name.Equals(s);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.pelt_name = s;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					if(currentCat.pelt_name == "Tortie" || currentCat.pelt_name == "Calico")
-					{
-						if(ImGui.BeginCombo("Tortie Pattern", currentCat.pattern != null ? currentCat.pattern : ""))
-						{
-							foreach(string s in Constants.TortiePatterns)
-							{
-								bool selected = currentCat.pattern != null ? currentCat.pattern.Equals(s) : false;
-								ImGui.Selectable(s, ref selected);
-								if(selected)
-									currentCat.pattern = s;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-						if(ImGui.BeginCombo("Tortie Base", currentCat.tortie_base ?? ""))
-						{
-							foreach(string s in Constants.TortiePeltNames)
-							{
-								bool selected = currentCat.tortie_base != null && currentCat.tortie_base.Equals(s);
-								ImGui.Selectable(s, ref selected);
-								if(selected)
-									currentCat.tortie_base = s;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-						if(ImGui.BeginCombo("Tortie Colour", currentCat.tortie_color ?? ""))
-						{
-							foreach(string s in Constants.PeltColours)
-							{
-								bool selected = currentCat.tortie_color != null && currentCat.tortie_color.Equals(s);
-								ImGui.Selectable(s, ref selected);
-								if(selected)
-									currentCat.tortie_color = s;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-						if(ImGui.BeginCombo("Pattern", currentCat.tortie_pattern != null ? currentCat.tortie_pattern : ""))
-						{
-							foreach(string s in Constants.TortiePeltNames)
-							{
-								bool selected = currentCat.tortie_pattern != null && currentCat.tortie_pattern.Equals(s);
-								ImGui.Selectable(s, ref selected);
-								if(selected)
-									currentCat.tortie_pattern = s;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-					}
-					else
-					{
-						currentCat.pattern = null;
-						currentCat.tortie_base = null;
-						currentCat.tortie_color = null;
-						currentCat.tortie_pattern = null;
-					}
-					if(ImGui.BeginCombo("Pelt Colour", currentCat.pelt_color))
-					{
-						foreach(string s in Constants.PeltColours)
-						{
-							bool selected = currentCat.pelt_color.Equals(s);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.pelt_color = s;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					if(ImGui.BeginCombo("Pelt Length", currentCat.pelt_length))
-					{
-						foreach(string s in new string[] { "short", "medium", "long" })
-						{
-							bool selected = currentCat.pelt_length.Equals(s);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.pelt_length = s;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					if(ImGui.SliderInt("Sprite (Kit)", ref currentCat.sprite_kitten, 0, 2)) { }
-					if(ImGui.SliderInt("Sprite (Adolescent)", ref currentCat.sprite_adolescent, 3, 5)) { }
-					if(ImGui.SliderInt("Sprite (Adult)", ref currentCat.sprite_adult, currentCat.pelt_length == "long" ? 6 : 9, currentCat.pelt_length == "long" ? 8 : 11)) { }
-					if(ImGui.SliderInt("Sprite (Senior)", ref currentCat.sprite_senior, 12, 14)) { }
-					if(ImGui.SliderInt("Sprite (Paralyzed)", ref currentCat.sprite_para_adult, 15, 17)) { }
-					if(ImGui.BeginCombo("Eye Colour 1", currentCat.eye_colour))
-					{
-						foreach(string s in Constants.EyeColours)
-						{
-							bool selected = currentCat.eye_colour.Equals(s);
-							ImGui.Selectable(s, ref selected);
-							if(selected)
-								currentCat.eye_colour = s;
-							ImGui.SetItemDefaultFocus();
-						}
-						ImGui.EndCombo();
-					}
-					ImGui.Checkbox("Enable Heterochromia", ref heterochromiaEnabled);
-					if(heterochromiaEnabled)
-					{
-						if(ImGui.BeginCombo("Eye Colour 2", currentCat.eye_colour2))
-						{
-							foreach(string s in Constants.EyeColours)
-							{
-								bool selected = currentCat.eye_colour2 != null ? currentCat.eye_colour2.Equals(s) : false;
-								ImGui.Selectable(s, ref selected);
-								if(selected)
-									currentCat.eye_colour2 = s;
-								ImGui.SetItemDefaultFocus();
-							}
-							ImGui.EndCombo();
-						}
-					}
-					else
-					{
-						currentCat.eye_colour2 = null;
-					}
-					if(ImGui.Checkbox("Flipped Sprite", ref currentCat.reverse)) { }
-					ImGui.Checkbox("Have White Patches", ref whitePatchesEnabled);
-					if(whitePatchesEnabled)
-					{
-						ImExtended.Combo("White Patches", ref currentCat.white_patches, Constants.WhitePatches);
-					}
-					else { currentCat.white_patches = null; }
-					ImExtended.Combo("White Patches Tint", ref currentCat.white_patches_tint!, Constants.WhitePatchesTints);
-					ImGui.Checkbox("Have Vitiligo", ref vitiligoEnabled);
-					if(vitiligoEnabled)
-					{
-						ImExtended.Combo("Vitiligo", ref currentCat.vitiligo, Constants.Vitiligo);
-					}
-					else { currentCat.vitiligo = null; }
-					ImGui.Checkbox("Have Points", ref pointsEnabled);
-					if(pointsEnabled)
-					{
-						ImExtended.Combo("Points", ref currentCat.points, Constants.PointMarkings);
-					}
-					else { currentCat.points = null; }
-					ImExtended.Combo("Skin Colour", ref currentCat.skin!, Constants.SkinColours);
-					ImExtended.Combo("Tint", ref currentCat.tint!, Constants.PeltTints);
-					ImExtended.Combo("Accessory", ref currentCat.accessory!, Constants.accessories);
-					ImExtended.Combo("Scars", ref scarToAdd!, Constants.scars);
-					ImGui.SameLine();
-					if(ImGui.Button("Add Selected Scar"))
-					{
-						currentCat.scars.Add(scarToAdd);
-					}
-					ImGui.Text("Current Scars:");
-					if(currentCat.scars.Count > 0)
-						foreach(string scar in currentCat.scars)
-						{
-							ImGui.Text(scar);
-						}
-				}
+					DrawCatSpriteEditor();
+				if(ImGui.CollapsingHeader("Skill Editing"))
+					DrawSkillDictEditor();
 				ImGui.End();
 			}
 		}
 
+		string primarySkill, secondarySkill, hiddenSkill;
+		int primaryInterest, secondaryInterest, hiddenInterest;
+		private void DrawSkillDictEditor()
+		{
+			if(ImGui.BeginTabBar("skillDict"))
+			{
+				if(ImGui.BeginTabItem("Primary"))
+				{
+					ImExtended.Combo("Skill", ref primarySkill!, Constants.skills, 2095);
+					ImGui.PushID(2096);
+					ImGui.SliderInt("Interest", ref primaryInterest!, 1, 29);
+					ImGui.PopID();
+					currentCat.skill_dict.primary = $"{primarySkill},{primaryInterest},{currentCat.status.Contains("apprentice") || currentCat.status.Contains("kit")}";
+					ImGui.Text("Primary: " + currentCat.skill_dict.primary);
+					ImGui.EndTabItem();
+				}
+				if(ImGui.BeginTabItem("Secondary"))
+				{
+					if(currentCat.skill_dict.secondary != null)
+					{
+						ImExtended.Combo("Skill", ref secondarySkill!, Constants.skills, 2097);
+						ImGui.PushID(2098);
+						ImGui.SliderInt("Interest", ref secondaryInterest!, 1, 29);
+						ImGui.PopID();
+						currentCat.skill_dict.secondary = $"{secondarySkill},{secondaryInterest},{currentCat.status.Contains("apprentice") || currentCat.status.Contains("kit")}";
+						ImGui.Text("Secondary: " + currentCat.skill_dict.secondary);
+						ImGui.EndTabItem();
+					}
+					else
+					{
+						if(ImGui.Button("Add Secondary Skill"))
+						{
+							currentCat.skill_dict.secondary = "HUNTER,1,False";
+						}
+					}
+				}
+				if(ImGui.BeginTabItem("Hidden"))
+				{
+					if(currentCat.skill_dict.hidden != null)
+					{
+						ImExtended.Combo("Skill", ref hiddenSkill!, Constants.skills, 2097);
+						ImGui.PushID(2098);
+						ImGui.SliderInt("Interest", ref hiddenInterest!, 1, 29);
+						ImGui.PopID();
+						currentCat.skill_dict.hidden = $"{hiddenSkill},{hiddenInterest},{currentCat.status.Contains("apprentice") || currentCat.status.Contains("kit")}";
+						ImGui.Text("Secondary: " + currentCat.skill_dict.hidden);
+						ImGui.EndTabItem();
+					}
+					else
+					{
+						if(ImGui.Button("Add Hidden Skill"))
+						{
+							currentCat.skill_dict.hidden = "HUNTER,1,False";
+						}
+					}
+				}
+				ImGui.EndTabBar();
+			}
+		}
+		private void DrawCatSpriteEditor()
+		{
+			if(ImGui.BeginCombo("Pelt Pattern", currentCat.pelt_name))
+			{
+				foreach(string s in Constants.PeltNames)
+				{
+					bool selected = currentCat.pelt_name.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						currentCat.pelt_name = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			if(currentCat.pelt_name == "Tortie" || currentCat.pelt_name == "Calico")
+			{
+				if(ImGui.BeginCombo("Tortie Pattern", currentCat.pattern != null ? currentCat.pattern : ""))
+				{
+					foreach(string s in Constants.TortiePatterns)
+					{
+						bool selected = currentCat.pattern != null ? currentCat.pattern.Equals(s) : false;
+						ImGui.Selectable(s, ref selected);
+						if(selected)
+							currentCat.pattern = s;
+						ImGui.SetItemDefaultFocus();
+					}
+					ImGui.EndCombo();
+				}
+				if(ImGui.BeginCombo("Tortie Base", currentCat.tortie_base ?? ""))
+				{
+					foreach(string s in Constants.TortiePeltNames)
+					{
+						bool selected = currentCat.tortie_base != null && currentCat.tortie_base.Equals(s);
+						ImGui.Selectable(s, ref selected);
+						if(selected)
+							currentCat.tortie_base = s;
+						ImGui.SetItemDefaultFocus();
+					}
+					ImGui.EndCombo();
+				}
+				if(ImGui.BeginCombo("Tortie Colour", currentCat.tortie_color ?? ""))
+				{
+					foreach(string s in Constants.PeltColours)
+					{
+						bool selected = currentCat.tortie_color != null && currentCat.tortie_color.Equals(s);
+						ImGui.Selectable(s, ref selected);
+						if(selected)
+							currentCat.tortie_color = s;
+						ImGui.SetItemDefaultFocus();
+					}
+					ImGui.EndCombo();
+				}
+				if(ImGui.BeginCombo("Pattern", currentCat.tortie_pattern != null ? currentCat.tortie_pattern : ""))
+				{
+					foreach(string s in Constants.TortiePeltNames)
+					{
+						bool selected = currentCat.tortie_pattern != null && currentCat.tortie_pattern.Equals(s);
+						ImGui.Selectable(s, ref selected);
+						if(selected)
+							currentCat.tortie_pattern = s;
+						ImGui.SetItemDefaultFocus();
+					}
+					ImGui.EndCombo();
+				}
+			}
+			else
+			{
+				currentCat.pattern = null;
+				currentCat.tortie_base = null;
+				currentCat.tortie_color = null;
+				currentCat.tortie_pattern = null;
+			}
+			if(ImGui.BeginCombo("Pelt Colour", currentCat.pelt_color))
+			{
+				foreach(string s in Constants.PeltColours)
+				{
+					bool selected = currentCat.pelt_color.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						currentCat.pelt_color = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			if(ImGui.BeginCombo("Pelt Length", currentCat.pelt_length))
+			{
+				foreach(string s in new string[] { "short", "medium", "long" })
+				{
+					bool selected = currentCat.pelt_length.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						currentCat.pelt_length = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			if(ImGui.SliderInt("Sprite (Kit)", ref currentCat.sprite_kitten, 0, 2)) { }
+			if(ImGui.SliderInt("Sprite (Adolescent)", ref currentCat.sprite_adolescent, 3, 5)) { }
+			if(ImGui.SliderInt("Sprite (Adult)", ref currentCat.sprite_adult, currentCat.pelt_length == "long" ? 6 : 9, currentCat.pelt_length == "long" ? 8 : 11)) { }
+			if(ImGui.SliderInt("Sprite (Senior)", ref currentCat.sprite_senior, 12, 14)) { }
+			if(ImGui.SliderInt("Sprite (Paralyzed)", ref currentCat.sprite_para_adult, 15, 17)) { }
+			if(ImGui.BeginCombo("Eye Colour 1", currentCat.eye_colour))
+			{
+				foreach(string s in Constants.EyeColours)
+				{
+					bool selected = currentCat.eye_colour.Equals(s);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						currentCat.eye_colour = s;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			ImGui.Checkbox("Enable Heterochromia", ref heterochromiaEnabled);
+			if(heterochromiaEnabled)
+			{
+				if(ImGui.BeginCombo("Eye Colour 2", currentCat.eye_colour2))
+				{
+					foreach(string s in Constants.EyeColours)
+					{
+						bool selected = currentCat.eye_colour2 != null ? currentCat.eye_colour2.Equals(s) : false;
+						ImGui.Selectable(s, ref selected);
+						if(selected)
+							currentCat.eye_colour2 = s;
+						ImGui.SetItemDefaultFocus();
+					}
+					ImGui.EndCombo();
+				}
+			}
+			else
+			{
+				currentCat.eye_colour2 = null;
+			}
+			if(ImGui.Checkbox("Flipped Sprite", ref currentCat.reverse)) { }
+			ImGui.Checkbox("Have White Patches", ref whitePatchesEnabled);
+			if(whitePatchesEnabled)
+			{
+				ImExtended.Combo("White Patches", ref currentCat.white_patches, Constants.WhitePatches);
+			}
+			else { currentCat.white_patches = null; }
+			ImExtended.Combo("White Patches Tint", ref currentCat.white_patches_tint!, Constants.WhitePatchesTints);
+			ImGui.Checkbox("Have Vitiligo", ref vitiligoEnabled);
+			if(vitiligoEnabled)
+			{
+				ImExtended.Combo("Vitiligo", ref currentCat.vitiligo, Constants.Vitiligo);
+			}
+			else { currentCat.vitiligo = null; }
+			ImGui.Checkbox("Have Points", ref pointsEnabled);
+			if(pointsEnabled)
+			{
+				ImExtended.Combo("Points", ref currentCat.points, Constants.PointMarkings);
+			}
+			else { currentCat.points = null; }
+			ImExtended.Combo("Skin Colour", ref currentCat.skin!, Constants.SkinColours);
+			ImExtended.Combo("Tint", ref currentCat.tint!, Constants.PeltTints);
+			ImExtended.Combo("Accessory", ref currentCat.accessory!, Constants.accessories);
+			ImExtended.Combo("Scars", ref scarToAdd!, Constants.scars);
+			ImGui.SameLine();
+			if(ImGui.Button("Add Selected Scar"))
+			{
+				currentCat.scars.Add(scarToAdd);
+			}
+			ImGui.Text("Current Scars:");
+			if(currentCat.scars.Count > 0)
+				foreach(string scar in currentCat.scars)
+				{
+					ImGui.Text(scar);
+				}
+		}
+
+		private void CatListSelect(string[] titles, ref List<string> list, string id)
+		{
+			ImGui.Text(titles[0]);
+			if(list != null)
+			{
+				ImGui.Indent(3);
+				for(int i = 0; i < list.Count; i++)
+				{
+					CatChip(list[i]);
+					ImGui.SameLine();
+					ImGui.PushID(list[i]);
+					if(ImGui.Button("Remove"))
+					{
+						list.Remove(list[i]);
+					}
+					ImGui.PopID();
+				}
+				ImGui.Unindent();
+			}
+			ImGui.PushID(id);
+			if(ImGui.BeginCombo("", toAdd))
+			{
+				foreach(string s in NameList())
+				{
+					string fix = catDict.FirstOrDefault(x => NameFromStatus(x.Value) == s).Key;
+					bool selected = toAdd.Equals(fix);
+					ImGui.Selectable(s, ref selected);
+					if(selected)
+						toAdd = fix;
+					ImGui.SetItemDefaultFocus();
+				}
+				ImGui.EndCombo();
+			}
+			ImGui.PopID();
+			ImGui.SameLine();
+			if(ImGui.Button(titles[1]))
+			{
+				list ??= new List<string>();
+				list.Add(toAdd);
+			}
+		}
+		
 		private string GenerateFacetsFromTrait(string traitName)
 		{
 			if(!Constants.traits.Contains(traitName))
