@@ -92,7 +92,9 @@ namespace ClanGenModTool.UI.SubWindows
 						hiddenSkill = currentCat.skill_dict.hidden != null ? currentCat.skill_dict.hidden.Split(',')[0] : "HUNTER";
 						hiddenInterest = currentCat.skill_dict.hidden != null ? int.Parse(currentCat.skill_dict.hidden.Split(',')[1]) : 1;
 					}
-					if(openedThroughClanEditor)
+					//This is buggy and I hate it
+					////TODO: this
+					/*if(openedThroughClanEditor)
 					{
 						ImGui.SameLine();
 						ImGui.PushID(listName + loadedCats[i].ID);
@@ -101,7 +103,7 @@ namespace ClanGenModTool.UI.SubWindows
 							loadedCats.Remove(loadedCats[i]);
 						}
 						ImGui.PopID();
-					}
+					}*/
 				}
 				ImGui.End();
 			}
