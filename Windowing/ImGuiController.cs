@@ -364,7 +364,7 @@ namespace ClanGenModTool.Windowing
 					GL.BufferData(BufferTarget.ArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 					_vertexBufferSize = newSize;
 
-					Console.WriteLine($"Resized dear imgui vertex buffer to new size {_vertexBufferSize}");
+					//Console.WriteLine($"Resized dear imgui vertex buffer to new size {_vertexBufferSize}");
 				}
 
 				int indexSize = cmd_list.IdxBuffer.Size * sizeof(ushort);
@@ -374,7 +374,7 @@ namespace ClanGenModTool.Windowing
 					GL.BufferData(BufferTarget.ElementArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 					_indexBufferSize = newSize;
 
-					Console.WriteLine($"Resized dear imgui index buffer to new size {_indexBufferSize}");
+					//Console.WriteLine($"Resized dear imgui index buffer to new size {_indexBufferSize}");
 				}
 			}
 

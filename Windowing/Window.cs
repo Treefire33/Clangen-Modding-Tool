@@ -30,7 +30,7 @@ namespace ClanGenModTool.Windowing
 			VSync = VSyncMode.Adaptive;
 			LoadEvent.Invoke();
 
-			Title += WindowTitle;
+			//Title = WindowTitle;
 
 			_controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 		}

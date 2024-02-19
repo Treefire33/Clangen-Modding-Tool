@@ -59,7 +59,16 @@ namespace ClanGenModTool.UI.SubWindows
 			}
 			else if(catEditorOpened)
 			{
-				CatEditor.Load();
+				//Console.WriteLine(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json");
+				if(File.Exists(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json"))
+				{
+					
+					CatEditor.Load(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json");
+				}
+				else
+				{
+					CatEditor.Load();
+				}
 				catEditor.LoadEditor();
 				CatEditor.openedThroughClanEditor = catEditorOpened;
 			}

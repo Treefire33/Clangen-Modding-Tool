@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClanGenModTool.ObjectTypes;
-using ClanGenModTool.Textures;
+﻿using ClanGenModTool.ObjectTypes;
 using ClanGenModTool.UI.SubWindows;
-using ClanGenModTool.Utilities;
 using ClanGenModTool.Windowing;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Graphics.OpenGL4;
 
 namespace ClanGenModTool.UI
 {
@@ -32,31 +24,10 @@ namespace ClanGenModTool.UI
 				editorConfig = JsonConvert.DeserializeObject<EditorConfig>(File.ReadAllText(configPath))!;
 				PatrolEditor.BeforeDrawEditor();
 				ThoughtEditor.BeforeDrawEditor();
-				//FromJsonTo.GenerateDictEntryForFacet(".\\Resources\\ExampleJSONs\\ranges.json");
-				/*foreach(string key in Constants.traitRanges.Keys)
-				{
-					for(int i = 0; i < Constants.traitRanges[key].Count; i++)
-					{
-						Console.WriteLine(Constants.traitRanges[key][i].Item1);
-						Console.WriteLine(Constants.traitRanges[key][i].Item2);
-					}
-				}*/
-
-				foreach(string s in Constants.accessories)
-				{
-					Console.WriteLine($"\"{s}BELL\",");
-				}
-				foreach(string s in Constants.accessories)
-				{
-					Console.WriteLine($"\"{s}BOW\",");
-				}
-				foreach(string s in Constants.accessories)
-				{
-					Console.WriteLine($"\"{s}NYLON\",");
-				}
+				Title = "ClanGen Mod Tool";
 			};
 			this.DrawEvent += Render;
-			this.CloseEvent += delegate { };
+			this.CloseEvent += () => { string s = JsonConvert.SerializeObject(editorConfig); File.WriteAllText(configPath, s); };
 		}
 
 		public void Render()
@@ -196,6 +167,11 @@ namespace ClanGenModTool.UI
 						}
 						ImGui.EndMenu();
 					}
+					ImGui.EndMenu();
+				}
+				if(ImGui.IsKeyDown(ImGuiKey.RightCtrl) && ImGui.BeginMenu("Credits"))
+				{
+					ImGui.Text("Treefire33");
 					ImGui.EndMenu();
 				}
 				ImGui.EndMenuBar();

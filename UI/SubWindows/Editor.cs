@@ -16,11 +16,11 @@ namespace ClanGenModTool.UI.SubWindows
 		{
 			get { return loadedPath; } set { loadedPath = value; }
 		}
+		protected static FileDialog dialog = new FileDialog();
 
 		public static void Load()
 		{
 			loadedPath = "";
-			var dialog = new FileDialog();
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
@@ -36,7 +36,6 @@ namespace ClanGenModTool.UI.SubWindows
 		public static void Load(ref bool editorActive)
 		{
 			loadedPath = "";
-			var dialog = new FileDialog();
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;
@@ -52,7 +51,6 @@ namespace ClanGenModTool.UI.SubWindows
 		public static void Load(ref bool editorActive, string type)
 		{
 			loadedPath = "";
-			var dialog = new FileDialog();
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedPath = dialog.SelectedPath;

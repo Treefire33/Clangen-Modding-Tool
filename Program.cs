@@ -17,10 +17,6 @@ else
 	Console.WriteLine("Creating config file");
 	EditorConfig _cfg = new EditorConfig
 	{
-		patrolPath = "",
-		clanPath = "",
-		thoughtPath = "",
-		patrolImagesPath = "",
 		sessionHistory = new List<SessionHistory>()
 	};
 	Directory.CreateDirectory(MainWindow.configPath.Replace("editor.config", null));

@@ -18,7 +18,7 @@ namespace ClanGenModTool.UI.SubWindows
 		{
 			try
 			{
-				loadedCats = JsonConvert.DeserializeObject<List<Cat>>(loadedJson!)!;
+				loadedCats = JsonConvert.DeserializeObject<List<Cat>>(loadedCatJson!)!;
 				currentCat = loadedCats[0];
 				foreach(Cat cat in loadedCats)
 				{
@@ -66,8 +66,16 @@ namespace ClanGenModTool.UI.SubWindows
 				{
 					if(ImGui.Button("Add Cat"))
 					{
-						loadedCats.Add((Cat)loadedCats.Last().Clone());
-						loadedCats[loadedCats.Count - 1].ID = (int.Parse(loadedCats[loadedCats.Count - 1].ID) + 1).ToString();
+						string neededID = (int.Parse(loadedCats.Last().ID) + 1).ToString();
+						//loadedCats.Add((Cat)loadedCats.Last().Clone());
+						loadedCats.Add(Cat.Default(neededID));
+						ClanEditor.loadedClan.clan_cats += "," + loadedCats[loadedCats.Count - 1].ID;
+					}
+					if(ImGui.Button("Add Random Cat"))
+					{
+						string neededID = (int.Parse(loadedCats.Last().ID) + 1).ToString();
+						//loadedCats.Add((Cat)loadedCats.Last().Clone());
+						loadedCats.Add(Cat.Random(neededID));
 						ClanEditor.loadedClan.clan_cats += "," + loadedCats[loadedCats.Count - 1].ID;
 					}
 				}
@@ -92,18 +100,17 @@ namespace ClanGenModTool.UI.SubWindows
 						hiddenSkill = currentCat.skill_dict.hidden != null ? currentCat.skill_dict.hidden.Split(',')[0] : "HUNTER";
 						hiddenInterest = currentCat.skill_dict.hidden != null ? int.Parse(currentCat.skill_dict.hidden.Split(',')[1]) : 1;
 					}
-					//This is buggy and I hate it
-					////TODO: this
-					/*if(openedThroughClanEditor)
+					if(openedThroughClanEditor)
 					{
 						ImGui.SameLine();
 						ImGui.PushID(listName + loadedCats[i].ID);
 						if(ImGui.Button("Del"))
 						{
+							ClanEditor.loadedClan.clan_cats = ClanEditor.loadedClan.clan_cats.Replace("," + loadedCats[i].ID, null);
 							loadedCats.Remove(loadedCats[i]);
 						}
 						ImGui.PopID();
-					}*/
+					}
 				}
 				ImGui.End();
 			}
@@ -718,13 +725,21 @@ namespace ClanGenModTool.UI.SubWindows
 		public static void Load()
 		{
 			loadedCatPath = "";
-			var dialog = new FileDialog();
 			if(dialog.ShowDialog("Select Json", "json"))
 			{
 				loadedCatPath = dialog.SelectedPath;
 			}
 			if(loadedCatPath != null && loadedCatPath != "")
-				loadedJson = File.ReadAllText(loadedCatPath);
+				loadedCatJson = File.ReadAllText(loadedCatPath);
+			else
+				loadedCatJson = null;
+		}
+
+		public static void Load(string forcedPath)
+		{
+			loadedCatPath = forcedPath;
+			if(loadedCatPath != null && loadedCatPath != "")
+				loadedCatJson = File.ReadAllText(loadedCatPath);
 			else
 				loadedCatJson = null;
 		}
