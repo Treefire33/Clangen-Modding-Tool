@@ -5,3 +5,6 @@ obj/
 Resources/tempExpandedIcon.png
 SrcDebug/clangen/
 Utilities/ImNotify.cs
+ClanGenModTool.csproj.user
+Properties/PublishProfiles/FolderProfile.pubxml
+Properties/PublishProfiles/FolderProfile.pubxml.user

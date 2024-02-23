@@ -18,8 +18,8 @@ namespace ClanGenModTool.Windowing
 	{
 		ImGuiController _controller;
 
-		public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900), APIVersion = new Version(3, 3), MaximumClientSize = new Vector2i(1980, 1080), MinimumClientSize = new Vector2i(1600, 900)})
-		{ }
+		public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {ClientSize = new Vector2i(1600, 900), Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3)/* MaximumClientSize = new Vector2i(1980, 1080), MinimumClientSize = new Vector2i(1600, 900)*/})
+		{ _controller = new ImGuiController(1600, 900); }
 
 		public string WindowTitle;
 		public Action LoadEvent, DrawEvent, CloseEvent;
@@ -29,10 +29,7 @@ namespace ClanGenModTool.Windowing
 			base.OnLoad();
 			VSync = VSyncMode.Adaptive;
 			LoadEvent.Invoke();
-
 			//Title = WindowTitle;
-
-			_controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 		}
 
 		protected override void OnResize(ResizeEventArgs e)
@@ -43,7 +40,23 @@ namespace ClanGenModTool.Windowing
 			GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
 
 			// Tell ImGui of the new size
-			_controller.WindowResized(ClientSize.X, ClientSize.Y);
+			try
+			{
+				Console.WriteLine("ClientSize attempt");
+				_controller.WindowResized(ClientSize.X, ClientSize.Y);
+			} 
+			catch
+			{
+				try
+				{
+					Console.WriteLine("Size attempt");
+					_controller.WindowResized(Size.X, Size.Y);
+				}
+				catch
+				{
+					Console.WriteLine("Failure on all accounts.\ntry not to resize the window.");
+				}
+			}
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs e)
