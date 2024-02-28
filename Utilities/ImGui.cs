@@ -2,108 +2,107 @@
 using ImGuiNET;
 using System.Numerics;
 
-namespace ClanGenModTool
+namespace ClanGenModTool;
+
+public static class ImExtended
 {
-	public static class ImExtended
+	public static void CenteredText(string text) 
 	{
-		public static void CenteredText(string text) 
+		float xPos = 0;
+		if(text != "")
 		{
-			float xPos = 0;
-			if(text != null || text != "")
+			float windowWidth = ImGui.GetWindowSize().X;
+			float textWidth = ImGui.CalcTextSize(text).X;
+
+			xPos = (windowWidth - textWidth) * 0.5f;
+		}
+		ImGui.SetCursorPosX(xPos);
+		ImGui.Text(text);
+	} 
+
+	public static void CenteredText(string text, Vector2 bounds)
+	{
+		float xPos = 0;
+		if(text != "")
+		{
+			float windowWidth = bounds.X;
+			float textWidth = ImGui.CalcTextSize(text).X;
+
+			xPos = (windowWidth - textWidth) * 0.5f;
+		}
+		ImGui.SetCursorPosX(xPos);
+		ImGui.Text(text);
+	}
+
+	public static void CenteredColoredText(Vector4 color, string text)
+	{
+		float xPos = 0;
+		if(text != "")
+		{
+			float windowWidth = ImGui.GetWindowSize().X;
+			float textWidth = 0;
+			try
 			{
-				float windowWidth = ImGui.GetWindowSize().X;
-				float textWidth = ImGui.CalcTextSize(text).X;
+				textWidth = ImGui.CalcTextSize(text).X;
+			}
+			catch { return; }
 
 				xPos = (windowWidth - textWidth) * 0.5f;
-			}
-			ImGui.SetCursorPosX(xPos);
-			ImGui.Text(text);
 		}
+		ImGui.SetCursorPosX(xPos);
+		ImGui.TextColored(color, text);
+	}
 
-		public static void CenteredText(string text, Vector2 bounds)
+	public static void CenteredColoredText(Vector4 color, string text, Vector2 bounds)
+	{
+		float xPos = 0;
+		if(text != "")
 		{
-			float xPos = 0;
-			if(text != null || text != "")
+			float windowWidth = bounds.X;
+			float textWidth = 0;
+			try
 			{
-				float windowWidth = bounds.X;
-				float textWidth = ImGui.CalcTextSize(text).X;
-
-				xPos = (windowWidth - textWidth) * 0.5f;
+				textWidth = ImGui.CalcTextSize(text).X;
 			}
-			ImGui.SetCursorPosX(xPos);
-			ImGui.Text(text);
-		}
+			catch { return; }
 
-		public static void CenteredColoredText(Vector4 color, string text)
+			xPos = (windowWidth - textWidth) * 0.5f;
+		}
+		ImGui.SetCursorPosX(xPos);
+		ImGui.TextColored(color, text);
+	}
+
+	public static void Combo(string title, ref string? field, string[] list)
+	{
+		if(ImGui.BeginCombo(title, field))
 		{
-			float xPos = 0;
-			if(text != null || text != "")
+			foreach(string s in list)
 			{
-				float windowWidth = ImGui.GetWindowSize().X;
-				float textWidth = 0;
-				try
-				{
-					textWidth = ImGui.CalcTextSize(text).X;
-				}
-				catch { return; }
-
-				xPos = (windowWidth - textWidth) * 0.5f;
+				bool selected = field != null && field.Equals(s);
+				ImGui.Selectable(s, ref selected); 
+				if(selected) 
+					field = s; 
+				ImGui.SetItemDefaultFocus();
 			}
-			ImGui.SetCursorPosX(xPos);
-			ImGui.TextColored(color, text);
+			ImGui.EndCombo();
 		}
+	}
 
-		public static void CenteredColoredText(Vector4 color, string text, Vector2 bounds)
+	public static void Combo(string title, ref string? field, string[] list, int id)
+	{
+		ImGui.PushID(id);
+		if(ImGui.BeginCombo(title, field))
 		{
-			float xPos = 0;
-			if(text != null || text != "")
+			foreach(string s in list)
 			{
-				float windowWidth = bounds.X;
-				float textWidth = 0;
-				try
-				{
-					textWidth = ImGui.CalcTextSize(text).X;
-				}
-				catch { return; }
-
-				xPos = (windowWidth - textWidth) * 0.5f;
+				bool selected = field != null && field.Equals(s);
+				ImGui.Selectable(s, ref selected);
+				if(selected)
+					field = s;
+				ImGui.SetItemDefaultFocus();
 			}
-			ImGui.SetCursorPosX(xPos);
-			ImGui.TextColored(color, text);
+			ImGui.EndCombo();
 		}
-
-		public static void Combo(string title, ref string? field, string[] list)
-		{
-			if(ImGui.BeginCombo(title, field))
-			{
-				foreach(string s in list)
-				{
-					bool selected = field != null && field.Equals(s);
-					ImGui.Selectable(s, ref selected);
-					if(selected)
-						field = s;
-					ImGui.SetItemDefaultFocus();
-				}
-				ImGui.EndCombo();
-			}
-		}
-
-		public static void Combo(string title, ref string? field, string[] list, int id)
-		{
-			ImGui.PushID(id);
-			if(ImGui.BeginCombo(title, field))
-			{
-				foreach(string s in list)
-				{
-					bool selected = field != null && field.Equals(s);
-					ImGui.Selectable(s, ref selected);
-					if(selected)
-						field = s;
-					ImGui.SetItemDefaultFocus();
-				}
-				ImGui.EndCombo();
-			}
-			ImGui.PopID();
-		}
+		ImGui.PopID();
 	}
 }

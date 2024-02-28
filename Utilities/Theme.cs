@@ -1,12 +1,12 @@
 ﻿using ImGuiNET;
 using System.Numerics;
 
-namespace ClanGenModTool
+namespace ClanGenModTool;
+
+public class Theme
 {
-	public class Theme
+	public static void SetImGuiTheme(ImGuiStylePtr style)
 	{
-		public static void SetImGuiTheme(ImGuiStylePtr style)
-		{
 			style.Alpha = 1.0f;
 			style.DisabledAlpha = 0.1000000014901161f;
 			style.WindowPadding = new Vector2(8.0f, 8.0f);
@@ -92,5 +92,4 @@ namespace ClanGenModTool
 			style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new Vector4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.2000000029802322f);
 			style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new Vector4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 		}
-	}
 }

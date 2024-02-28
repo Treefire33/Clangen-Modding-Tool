@@ -7,23 +7,22 @@ using System.Threading.Tasks;
 using NativeFileDialogSharp;
 using System.IO;
 
-namespace ClanGenModTool.UI
-{
-	public class FileDialog
-	{
-		public string SelectedPath { get; set; } = "";
+namespace ClanGenModTool.UI;
 
-		public bool ShowDialog(string title = "File Select", string filters = "")
-		{
-			DialogResult dialogResult = Dialog.FileOpen(filters);
-			SelectedPath = dialogResult.Path;
-			return dialogResult.IsOk;
-		}
-		public bool ShowFolderDialog(string title = "File Select")
-		{
-			DialogResult dialogResult = Dialog.FolderPicker();
-			SelectedPath = dialogResult.Path;
-			return dialogResult.IsOk;
-		}
+public class FileDialog
+{
+	public string SelectedPath { get; set; } = "";
+
+	public bool ShowDialog(string title = "File Select", string filters = "")
+	{
+		DialogResult dialogResult = Dialog.FileOpen(filters);
+		SelectedPath = dialogResult.Path;
+		return dialogResult.IsOk;
+	}
+	public bool ShowFolderDialog(string title = "File Select")
+	{
+		DialogResult dialogResult = Dialog.FolderPicker();
+		SelectedPath = dialogResult.Path;
+		return dialogResult.IsOk;
 	}
 }

@@ -1,28 +1,22 @@
 ﻿using ClanGenModTool.ObjectTypes;
 using ClanGenModTool.UI;
 using Newtonsoft.Json;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
-using ImGuiNET;
 
 Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-if(File.Exists(MainWindow.configPath))
+if(File.Exists(MainWindow.ConfigPath))
 {
 	Console.WriteLine("Located config file!");
 }
 else
 {
 	Console.WriteLine("Creating config file");
-	EditorConfig _cfg = new EditorConfig
+	EditorConfig cfg = new EditorConfig
 	{
-		sessionHistory = new List<SessionHistory>()
+		SessionHistory = []
 	};
-	Directory.CreateDirectory(MainWindow.configPath.Replace("editor.config", null));
-	File.WriteAllText(MainWindow.configPath, JsonConvert.SerializeObject(_cfg));
+	Directory.CreateDirectory(MainWindow.ConfigPath.Replace("editor.config", null));
+	File.WriteAllText(MainWindow.ConfigPath, JsonConvert.SerializeObject(cfg));
 }
-using(MainWindow _ = new MainWindow())
-{
-	_.Run();
-}
+
+using MainWindow _ = new();
+_.Run();

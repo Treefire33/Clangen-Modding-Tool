@@ -6,70 +6,58 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClanGenModTool.UI.SubWindows
+namespace ClanGenModTool.UI.SubWindows;
+
+public class Editor
 {
-	public class Editor
+	protected static string? LoadedJson;
+	protected static string? LoadedPath;
+	public static string? PublicLoadedPath
 	{
-		protected static string? loadedJson;
-		protected static string? loadedPath;
-		public static string? publicLoadedPath
-		{
-			get { return loadedPath; } set { loadedPath = value; }
-		}
-		protected static FileDialog dialog = new FileDialog();
+		get => LoadedPath;
+		set => LoadedPath = value;
+	}
+	protected static FileDialog Dialog = new();
 
-		public static void Load()
+	public static void Load()
+	{
+		LoadedPath = "";
+		if(Dialog.ShowDialog("Select Json", "json"))
 		{
-			loadedPath = "";
-			if(dialog.ShowDialog("Select Json", "json"))
-			{
-				loadedPath = dialog.SelectedPath;
-				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol"});
-			}
-			if(loadedPath != null && loadedPath != "")
-				loadedJson = File.ReadAllText(loadedPath);
-			else
-				loadedJson = null;
-			
+			LoadedPath = Dialog.SelectedPath;
+			MainWindow.EditorConfig.SessionHistory.Add(new SessionHistory { Path = LoadedPath, Type = "patrol"});
 		}
 
-		public static void Load(ref bool editorActive)
-		{
-			loadedPath = "";
-			if(dialog.ShowDialog("Select Json", "json"))
-			{
-				loadedPath = dialog.SelectedPath;
-				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = "patrol" });
-			}
-			if(loadedPath != null && loadedPath != "")
-				loadedJson = File.ReadAllText(loadedPath);
-			else
-				loadedJson = null;
-			editorActive = true;
-		}
+		LoadedJson = !string.IsNullOrEmpty(LoadedPath) ? File.ReadAllText(LoadedPath) : null;
+	}
 
-		public static void Load(ref bool editorActive, string type)
+	public static void Load(ref bool editorActive)
+	{
+		LoadedPath = "";
+		if(Dialog.ShowDialog("Select Json", "json"))
 		{
-			loadedPath = "";
-			if(dialog.ShowDialog("Select Json", "json"))
-			{
-				loadedPath = dialog.SelectedPath;
-				MainWindow.editorConfig.sessionHistory.Add(new SessionHistory { path = loadedPath, type = type });
-			}
-			if(loadedPath != null && loadedPath != "")
-				loadedJson = File.ReadAllText(loadedPath);
-			else
-				loadedJson = null;
-			editorActive = true;
+			LoadedPath = Dialog.SelectedPath;
+			MainWindow.EditorConfig.SessionHistory.Add(new SessionHistory { Path = LoadedPath, Type = "patrol" });
 		}
+		LoadedJson = !string.IsNullOrEmpty(LoadedPath) ? File.ReadAllText(LoadedPath) : null;
+		editorActive = true;
+	}
 
-		public static void LoadSkip(ref bool editorActive)
+	public static void Load(ref bool editorActive, string type)
+	{
+		LoadedPath = "";
+		if(Dialog.ShowDialog("Select Json", "json"))
 		{
-			if(loadedPath != null && loadedPath != "")
-				loadedJson = File.ReadAllText(loadedPath);
-			else
-				loadedJson = null;
-			editorActive = true;
+			LoadedPath = Dialog.SelectedPath;
+			MainWindow.EditorConfig.SessionHistory.Add(new SessionHistory { Path = LoadedPath, Type = type });
 		}
+		LoadedJson = !string.IsNullOrEmpty(LoadedPath) ? File.ReadAllText(LoadedPath) : null;
+		editorActive = true;
+	}
+
+	public static void LoadSkip(ref bool editorActive)
+	{
+		LoadedJson = !string.IsNullOrEmpty(LoadedPath) ? File.ReadAllText(LoadedPath) : null;
+		editorActive = true;
 	}
 }

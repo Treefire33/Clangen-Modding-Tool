@@ -3,14 +3,14 @@ using System.Numerics;
 using StbImageSharp;
 using OpenTK.Graphics.OpenGL4;
 
-namespace ClanGenModTool.Textures
-{
-	public class Texture
-	{
-		public readonly int Handle;
+namespace ClanGenModTool.Textures;
 
-		public static Texture LoadFromFile(string path)
-		{
+public class Texture
+{
+	public readonly int Handle;
+
+	public static Texture LoadFromFile(string path)
+	{
 			int handle = GL.GenTexture();
 
 			GL.ActiveTexture(TextureUnit.Texture0);
@@ -31,15 +31,14 @@ namespace ClanGenModTool.Textures
 			return new Texture(handle);
 		}
 
-		public Texture(int glHandle)
-		{
+	public Texture(int glHandle)
+	{
 			Handle = glHandle;
 		}
 
-		public void Use(TextureUnit unit)
-		{
+	public void Use(TextureUnit unit)
+	{
 			GL.ActiveTexture(unit);
 			GL.BindTexture(TextureTarget.Texture2D, Handle);
 		}
-	}
 }

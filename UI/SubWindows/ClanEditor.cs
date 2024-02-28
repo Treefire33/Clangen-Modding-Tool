@@ -3,121 +3,109 @@ using ImGuiNET;
 using Newtonsoft.Json;
 using System.Numerics;
 
-namespace ClanGenModTool.UI.SubWindows
+namespace ClanGenModTool.UI.SubWindows;
+
+public class ClanEditor : Editor
 {
-	public class ClanEditor : Editor
+	public static Clan LoadedClan;
+	private bool catEditorOpened = false;
+	public void LoadEditor()
 	{
-		public static Clan loadedClan = null;
-		bool catEditorOpened = false;
-		public void LoadEditor()
+		try
 		{
-			try
-			{
-				loadedClan = JsonConvert.DeserializeObject<Clan>(loadedJson!)!;
-			}
-			catch(Exception ex)
-			{
-				ErrorBox.Draw("Invalid JSON!\n" + ex);
-			}
+			LoadedClan = JsonConvert.DeserializeObject<Clan>(LoadedJson!)!;
 		}
-
-		public void BeforeDrawEditor()
+		catch(Exception ex)
 		{
-			
+			ErrorBox.Draw("Invalid JSON!\n" + ex);
 		}
+	}
 
-		public CatEditor catEditor = new CatEditor();
+	public CatEditor CatEditor = new();
 
-		public void Draw(ref bool continueDraw)
+	public void Draw(ref bool continueDraw)
+	{
+		if(LoadedJson == null)
 		{
-			if(loadedJson == null)
+			ImGui.SetNextWindowSize(new Vector2(500, 350), ImGuiCond.Once);
+			ImGui.SetNextWindowPos(new Vector2(0, 19));
+			if(ImGui.Begin("Select Clan JSON First!", ImGuiWindowFlags.Popup))
 			{
-				ImGui.SetNextWindowSize(new Vector2(500, 350), ImGuiCond.Once);
-				ImGui.SetNextWindowPos(new Vector2(0, 19));
-				if(ImGui.Begin("Select Clan JSON First!", ImGuiWindowFlags.Popup))
+				if(ImGui.Button("Select"))
 				{
-					if(ImGui.Button("Select"))
-					{
-						Load();
-					}
-
-					ImGui.End();
+					Load();
 				}
 
-				return;
+				ImGui.End();
 			}
 
-			if(continueDraw)
+			return;
+		}
+
+		if(continueDraw)
+		{
+			DrawAttributesWindow();
+		}
+		switch (catEditorOpened)
+		{
+			case true when CatEditor.LoadedCats != null:
 			{
-				//DrawSelectThought();
-				DrawAttributesWindow();
+				CatEditor.Draw(ref catEditorOpened);
+				CatEditor.OpenedThroughClanEditor = catEditorOpened;
+				break;
 			}
-			if(catEditorOpened && catEditor.loadedCats != null)
+			case true:
 			{
-				catEditor.Draw(ref catEditorOpened);
-				CatEditor.openedThroughClanEditor = catEditorOpened;
-			}
-			else if(catEditorOpened)
-			{
-				//Console.WriteLine(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json");
-				if(File.Exists(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json"))
+				if(File.Exists(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" + "clan_cats.json"))
 				{
 					
-					CatEditor.Load(loadedPath.Replace(loadedPath.Split('\\').Last(), null) + loadedClan.clanname + "\\" + "clan_cats.json");
+					CatEditor.Load(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" + "clan_cats.json");
 				}
 				else
 				{
 					CatEditor.Load();
 				}
-				catEditor.LoadEditor();
-				CatEditor.openedThroughClanEditor = catEditorOpened;
+				CatEditor.LoadEditor();
+				CatEditor.OpenedThroughClanEditor = catEditorOpened;
+				break;
 			}
 		}
+	}
 
-		private void DrawSelectThought()
+	private void DrawAttributesWindow()
+	{
+		ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
+		if(ImGui.Begin("Clan Attributes Editor", ImGuiWindowFlags.NoCollapse))
 		{
-			ImGui.SetNextWindowSize(new Vector2(200, 400), ImGuiCond.Once);
-			if(ImGui.Begin("Example Select", ImGuiWindowFlags.NoCollapse))
+			ImGui.TextColored(new Vector4(255, 0, 0, 255), "Edit at your own risk!");
+			if(ImGui.BeginTabBar("clanEdit"))
 			{
-				ImGui.End();
-			}
-		}
-
-		private void DrawAttributesWindow()
-		{
-			ImGui.SetNextWindowSize(new Vector2(600, 600), ImGuiCond.Once);
-			if(ImGui.Begin("Clan Attributes Editor", ImGuiWindowFlags.NoCollapse))
-			{
-				ImGui.TextColored(new(255, 0, 0, 255), "Edit at your own risk!");
-				if(ImGui.BeginTabBar("clanEdit"))
+				if(ImGui.BeginTabItem("General"))
 				{
-					if(ImGui.BeginTabItem("General"))
-					{
-						ImGui.InputText("Clan Name: ", ref loadedClan.clanname, 32);
-						ImGui.InputInt("Clan Age: ", ref loadedClan.clanage, 1, 1);
-						ImGui.InputText("Clan Biome: ", ref loadedClan.biome, 32);
-						ImGui.InputText("Camp Background: ", ref loadedClan.camp_bg, 32);
-						ImGui.InputText("Game Mode: ", ref loadedClan.gamemode, 32);
-						ImGui.InputText("Instructor: ", ref loadedClan.instructor, 32);
-						ImGui.InputInt("Reputation: ", ref loadedClan.reputation, 1, 1);
-						ImGui.InputText("Starting Season: ", ref loadedClan.starting_season, 32);
-						ImGui.InputText("Temperament: ", ref loadedClan.temperament, 32);
-					}
+					ImGui.InputText("Clan Name: ", ref LoadedClan.clanname, 32);
+					ImGui.InputInt("Clan Age: ", ref LoadedClan.clanage, 1, 1);
+					ImGui.InputText("Clan Biome: ", ref LoadedClan.biome, 32);
+					ImGui.InputText("Camp Background: ", ref LoadedClan.camp_bg, 32);
+					ImGui.InputText("Game Mode: ", ref LoadedClan.gamemode, 32);
+					ImGui.InputText("Instructor: ", ref LoadedClan.instructor, 32);
+					ImGui.InputInt("Reputation: ", ref LoadedClan.reputation, 1, 1);
+					ImGui.InputText("Starting Season: ", ref LoadedClan.starting_season, 32);
+					ImGui.InputText("Temperament: ", ref LoadedClan.temperament, 32);
 				}
-				ImGui.TextWrapped("Clan Cats: " + loadedClan.clan_cats);
-				if(ImGui.Checkbox("Toggle Cat Editor", ref catEditorOpened)) {}
-				ImGui.End();
 			}
+			ImGui.TextWrapped("Clan Cats: " + LoadedClan.clan_cats);
+			if(ImGui.Checkbox("Toggle Cat Editor", ref catEditorOpened)) {}
+			ImGui.End();
 		}
+	}
 
-		public void Save()
+	public void Save()
+	{
+		if(!string.IsNullOrEmpty(LoadedPath))
 		{
-			if(loadedPath != null && loadedPath != "")
-			{
-				string newJson = JsonConvert.SerializeObject(loadedClan, Formatting.Indented);
-				File.WriteAllText(loadedPath, newJson);
-			}
-			catEditor.Save();
+			string newJson = JsonConvert.SerializeObject(LoadedClan, Formatting.Indented);
+			File.WriteAllText(LoadedPath, newJson);
 		}
+		CatEditor.Save();
 	}
 }
