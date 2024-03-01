@@ -17,6 +17,6 @@ else
 	Directory.CreateDirectory(MainWindow.ConfigPath.Replace("editor.config", null));
 	File.WriteAllText(MainWindow.ConfigPath, JsonConvert.SerializeObject(cfg));
 }
-
 using MainWindow _ = new();
+Console.WriteLine("Editor Started!");
 _.Run();
