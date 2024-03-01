@@ -14,6 +14,8 @@ public class ClanEditor : Editor
 		try
 		{
 			LoadedClan = JsonConvert.DeserializeObject<Clan>(LoadedJson!)!;
+			catEditorOpened = false;
+			CatEditor.LoadedCats = null;
 		}
 		catch(Exception ex)
 		{
@@ -46,30 +48,41 @@ public class ClanEditor : Editor
 		{
 			DrawAttributesWindow();
 		}
-		switch (catEditorOpened)
+		CatEditor.Draw(ref catEditorOpened);
+		if (CatEditor.LoadedCats == null)
 		{
-			case true when CatEditor.LoadedCats != null:
+			if (File.Exists(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" +
+			                "clan_cats.json"))
 			{
-				CatEditor.Draw(ref catEditorOpened);
-				CatEditor.OpenedThroughClanEditor = catEditorOpened;
-				break;
+
+				CatEditor.Load(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" +
+				               "clan_cats.json");
+				CatEditor.CurrentRelationships = LoadRelationshipsFromFolder(
+					LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname +
+					"\\relationships\\");
+				CatEditor.RelationshipDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
+				                                  LoadedClan.clanname + "\\relationships\\";
 			}
-			case true:
+			else
 			{
-				if(File.Exists(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" + "clan_cats.json"))
-				{
-					
-					CatEditor.Load(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" + "clan_cats.json");
-				}
-				else
-				{
-					CatEditor.Load();
-				}
-				CatEditor.LoadEditor();
-				CatEditor.OpenedThroughClanEditor = catEditorOpened;
-				break;
+				CatEditor.Load();
 			}
+
+			CatEditor.LoadEditor();
 		}
+	}
+
+	private Dictionary<string, List<Relationship>> LoadRelationshipsFromFolder(string directory)
+	{
+		Dictionary<string, List<Relationship>> temp = new();
+		foreach (string relationships in Directory.EnumerateFiles(directory))
+		{
+			string id = Path.GetFileName(relationships).Split("_")[0];
+			List<Relationship> temprel =
+				JsonConvert.DeserializeObject<List<Relationship>>(File.ReadAllText(relationships))!;
+			temp.Add(id, temprel);
+		}
+		return temp;
 	}
 
 	private void DrawAttributesWindow()
@@ -95,6 +108,7 @@ public class ClanEditor : Editor
 			}
 			ImGui.TextWrapped("Clan Cats: " + LoadedClan.clan_cats);
 			if(ImGui.Checkbox("Toggle Cat Editor", ref catEditorOpened)) {}
+			ImGui.Text("(When opening the cat editor, the clan_cats.json must be selected.)");
 			ImGui.End();
 		}
 	}

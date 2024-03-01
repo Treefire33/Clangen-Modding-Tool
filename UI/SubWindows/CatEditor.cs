@@ -2,18 +2,23 @@
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common.Input;
+using System.Collections.Generic;
 using System.Numerics;
+using ClanGenModTool.Util;
+
 // ReSharper disable All
 
 namespace ClanGenModTool.UI.SubWindows;
 
 public class CatEditor : Editor
 {
-	public List<Cat> LoadedCats;
+	public List<Cat>? LoadedCats = null;
 	private readonly Dictionary<string, Cat> catDict = [];
 	private Cat currentCat;
 	public static string LoadedCatPath, LoadedCatJson;
-	public static bool OpenedThroughClanEditor = false;
+	public Dictionary<string, List<Relationship>> CurrentRelationships; // This works, but it also kinda sucks.
+	private int currentRelationship = 0;								// Maybe you could help fix it?
+	public string RelationshipDirectory;								// That'd be cool.
 
 	public void LoadEditor()
 	{
@@ -53,36 +58,33 @@ public class CatEditor : Editor
 
 		if(continueDraw)
 		{
-			DrawSelectThought();
+			DrawSelectCat();
 			DrawAttributesWindow();
+			if(CurrentRelationships != null)
+			{
+				DrawRelationshipEditor();
+			}
 		}
 	}
 
-	private void DrawSelectThought()
+	private void DrawSelectCat()
 	{
 		ImGui.SetNextWindowSize(new Vector2(200, 400), ImGuiCond.Once);
 		if(ImGui.Begin("Cat Select", ImGuiWindowFlags.NoCollapse))
 		{
-			if(OpenedThroughClanEditor)
+			if(ImGui.Button("Add Cat"))
 			{
-				if(ImGui.Button("Add Cat"))
-				{
-					string neededID = (int.Parse(LoadedCats.Last().ID) + 1).ToString();
-					//loadedCats.Add((Cat)loadedCats.Last().Clone());
-					LoadedCats.Add(Cat.Default(neededID));
-					ClanEditor.LoadedClan.clan_cats += "," + LoadedCats[LoadedCats.Count - 1].ID;
-				}
-				if(ImGui.Button("Add Random Cat"))
-				{
-					string neededID = (int.Parse(LoadedCats.Last().ID) + 1).ToString();
-					//loadedCats.Add((Cat)loadedCats.Last().Clone());
-					LoadedCats.Add(Cat.Random(neededID));
-					ClanEditor.LoadedClan.clan_cats += "," + LoadedCats[LoadedCats.Count - 1].ID;
-				}
+				string neededID = (int.Parse(LoadedCats.Last().ID) + 1).ToString();
+				//loadedCats.Add((Cat)loadedCats.Last().Clone());
+				LoadedCats.Add(Cat.Default(neededID));
+				ClanEditor.LoadedClan.clan_cats += "," + LoadedCats[LoadedCats.Count - 1].ID;
 			}
-			else
+			if(ImGui.Button("Add Random Cat"))
 			{
-				ImGui.Text("Open Cat Editor through Clan Editor to add and remove cats.");
+				string neededID = (int.Parse(LoadedCats.Last().ID) + 1).ToString();
+				//loadedCats.Add((Cat)loadedCats.Last().Clone());
+				LoadedCats.Add(Cat.Random(neededID));
+				ClanEditor.LoadedClan.clan_cats += "," + LoadedCats[LoadedCats.Count - 1].ID;
 			}
 			for(int i = 0; i < LoadedCats.Count; i++)
 			{
@@ -101,17 +103,14 @@ public class CatEditor : Editor
 					hiddenSkill = currentCat.skill_dict.hidden != null ? currentCat.skill_dict.hidden.Split(',')[0] : "HUNTER";
 					hiddenInterest = currentCat.skill_dict.hidden != null ? int.Parse(currentCat.skill_dict.hidden.Split(',')[1]) : 1;
 				}
-				if(OpenedThroughClanEditor)
+				ImGui.SameLine();
+				ImGui.PushID(listName + LoadedCats[i].ID);
+				if(ImGui.Button("Del"))
 				{
-					ImGui.SameLine();
-					ImGui.PushID(listName + LoadedCats[i].ID);
-					if(ImGui.Button("Del"))
-					{
-						ClanEditor.LoadedClan.clan_cats = ClanEditor.LoadedClan.clan_cats.Replace("," + LoadedCats[i].ID, null);
-						LoadedCats.Remove(LoadedCats[i]);
-					}
-					ImGui.PopID();
+					ClanEditor.LoadedClan.clan_cats = ClanEditor.LoadedClan.clan_cats.Replace("," + LoadedCats[i].ID, null);
+					LoadedCats.Remove(LoadedCats[i]);
 				}
+				ImGui.PopID();
 			}
 			ImGui.End();
 		}
@@ -608,6 +607,75 @@ public class CatEditor : Editor
 			}
 	}
 
+	private void DrawRelationshipEditor()
+	{
+		if(ImGui.Begin("Cat Relationships", ImGuiWindowFlags.None))
+		{
+			try
+			{
+				if (ImGui.SliderInt("Select Relationship", ref currentRelationship, 0, CurrentRelationships.Count - 1))
+				{
+				}
+
+				ImGui.Text("Cat To: " + CurrentRelationships[currentCat.ID][currentRelationship].cat_to_id);
+				if (ImGui.Checkbox("Mates", ref CurrentRelationships[currentCat.ID][currentRelationship].mates))
+				{
+					if (CurrentRelationships[currentCat.ID][currentRelationship].family)
+					{
+						CurrentRelationships[currentCat.ID][currentRelationship].mates = false;
+					}
+				}
+
+				if (ImGui.Checkbox("Family", ref CurrentRelationships[currentCat.ID][currentRelationship].family))
+				{
+					if (CurrentRelationships[currentCat.ID][currentRelationship].mates)
+					{
+						CurrentRelationships[currentCat.ID][currentRelationship].family = false;
+					}
+				}
+
+				if (!CurrentRelationships[currentCat.ID][currentRelationship].family && ImGui.SliderInt("Romantic Love",
+					    ref CurrentRelationships[currentCat.ID][currentRelationship].romantic_love, 0, 100))
+				{
+				}
+
+				if (ImGui.SliderInt("Platonic Love",
+					    ref CurrentRelationships[currentCat.ID][currentRelationship].platonic_like, 0, 100))
+				{
+				}
+
+				if (ImGui.SliderInt("Dislike", ref CurrentRelationships[currentCat.ID][currentRelationship].dislike, 0,
+					    100))
+				{
+				}
+
+				if (ImGui.SliderInt("Admiration",
+					    ref CurrentRelationships[currentCat.ID][currentRelationship].admiration, 0, 100))
+				{
+				}
+
+				if (ImGui.SliderInt("Comfort in Other",
+					    ref CurrentRelationships[currentCat.ID][currentRelationship].comfortable, 0, 100))
+				{
+				}
+
+				if (ImGui.SliderInt("Jealousy", ref CurrentRelationships[currentCat.ID][currentRelationship].jealousy,
+					    0, 100))
+				{
+				}
+
+				if (ImGui.SliderInt("Trust", ref CurrentRelationships[currentCat.ID][currentRelationship].trust, 0,
+					    100))
+				{
+				}
+			}
+			catch
+			{
+				ImGui.Text("Cat is missing relationship file.");
+			}
+		}
+	}
+
 	private void CatListSelect(string[] titles, ref List<string> list, string id)
 	{
 		ImGui.Text(titles[0]);
@@ -649,7 +717,7 @@ public class CatEditor : Editor
 			list.Add(toAdd);
 		}
 	}
-		
+
 	private string GenerateFacetsFromTrait(string traitName)
 	{
 		if(!Constants.Traits.Contains(traitName))
@@ -747,10 +815,18 @@ public class CatEditor : Editor
 
 	public void Save()
 	{
-		if(LoadedCatPath != null && LoadedCatPath != "")
+		if (LoadedCatPath != null && LoadedCatPath != "")
 		{
 			string newJson = JsonConvert.SerializeObject(LoadedCats, Formatting.Indented);
 			File.WriteAllText(LoadedCatPath, newJson);
+		}
+		if(RelationshipDirectory != "")
+		{
+			foreach (List<Relationship> rel in CurrentRelationships.Values)
+			{
+				string newJson = JsonConvert.SerializeObject(rel, Formatting.Indented);
+				File.WriteAllText(RelationshipDirectory + "\\" + CurrentRelationships.KeyByValue(rel) + "_relations.json", newJson);
+			}
 		}
 	}
 }

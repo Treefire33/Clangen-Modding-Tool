@@ -28,7 +28,7 @@ public class Outcome
 	[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 	public int other_clan_rep;
 	[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-	public List<Injury> injury;
+	public List<PatrolInjury> injury;
 	[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 	public HistoryText history_text;
 	[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -48,7 +48,7 @@ public class HistoryText
 	public string lead_death;
 }
 
-public class Injury
+public class PatrolInjury
 {
 	public List<string> cats;
 	public List<string> injuries;
@@ -56,7 +56,7 @@ public class Injury
 	public List<string> scars;
 }
 
-public class Relationship
+public class PatrolRelationship
 {
 	public List<string> cats_to;
 	public List<string> cats_from;

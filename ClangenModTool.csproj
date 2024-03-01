@@ -34,6 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\DiscordPingList.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Fonts\NotoSans-Regular.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

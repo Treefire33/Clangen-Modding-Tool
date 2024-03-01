@@ -822,8 +822,8 @@ public class PatrolEditor : Editor
 		}
 		if(ImGui.Button("Add Injury"))
 		{
-			currentOutcome.injury ??= new List<Injury>();
-			currentOutcome.injury.Add(new Injury { cats = new List<string>(), injuries = new List<string>(), scars = new List<string>(), no_results = false });
+			currentOutcome.injury ??= new List<PatrolInjury>();
+			currentOutcome.injury.Add(new PatrolInjury { cats = new List<string>(), injuries = new List<string>(), scars = new List<string>(), no_results = false });
 		}
 	}
 	public void LoadHistoryTextEditor()
