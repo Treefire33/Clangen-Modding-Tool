@@ -1,9 +1,7 @@
-name: Build ClanGen Modding Tool For Release
+name: Build ClanGen Modding Tool Nightly
 
-# build release
-on:
-  release:
-    types: [published]
+# build nightly
+on: [push]
 
 jobs:
   build:
@@ -29,7 +27,8 @@ jobs:
       - name: Bundle project
         run: tar -czvf ClanGenModTool-${{ matrix.os-target }}.tar.gz bin/${{ matrix.os-target }}
 
-      - name: Upload result to release
-        run: gh release upload ${{ github.event.release.tag_name }} ClanGenModTool-${{ matrix.os-target }}.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ClanGenModTool-${{ matrix.os-target }}
+          path: bin/ClanGenModTool-${{ matrix.os-target }}.tar.gz
