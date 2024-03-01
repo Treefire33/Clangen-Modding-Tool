@@ -25,7 +25,7 @@ jobs:
         run: dotnet publish ClanGenModTool.sln -r ${{ matrix.os-target }} -c Release -o bin/${{ matrix.os-target }}
 
       - name: Bundle project
-        run: tar -czvf ClanGenModTool-${{ matrix.os-target }}.tar.gz bin/${{ matrix.os-target }}
+        run: tar -czvf ClanGenModTool-${{ matrix.os-target }}-${{ github.sha }}.tar.gz bin/${{ matrix.os-target }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
