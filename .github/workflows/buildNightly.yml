@@ -31,4 +31,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ClanGenModTool-${{ matrix.os-target }}
-          path: bin/${{ matrix.os-target }}/ClanGenModTool-${{ matrix.os-target }}.tar.gz
+          path: ClanGenModTool-${{ matrix.os-target }}.tar.gz
