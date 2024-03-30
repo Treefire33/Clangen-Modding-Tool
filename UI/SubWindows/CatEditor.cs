@@ -785,7 +785,7 @@ public class CatEditor : Editor
 							{
 								CurrentConditions[currentCat.ID].permanentConditions = new();
 							}
-							CurrentConditions[currentCat.ID].permanentConditions.Add(injuryToAdd,
+							CurrentConditions[currentCat.ID].permanentConditions.Add(permToAdd,
 								PresetPermConditions.PermPresetDict[permToAdd]);
 						}
 						ImGui.EndTabItem();
