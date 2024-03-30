@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using ClanGenModTool.ObjectTypes;
 using ClanGenModTool.UI.SubWindows;
-using ClanGenModTool.Utilities;
 using ClanGenModTool.Windowing;
 using ImGuiNET;
 using Newtonsoft.Json;
