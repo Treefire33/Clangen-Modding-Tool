@@ -9,3 +9,5 @@ ClanGenModTool.csproj.user
 Properties/PublishProfiles/FolderProfile.pubxml
 Properties/PublishProfiles/FolderProfile.pubxml.user
 /Resources/DiscordPingList.txt
+/Resources/illnessDict.json
+/Utilities/FromJsonTo.cs

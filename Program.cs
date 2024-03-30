@@ -1,6 +1,7 @@
 ﻿using ClanGenModTool.ObjectTypes;
 using ClanGenModTool.UI;
 using Newtonsoft.Json;
+using System;
 
 Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 if(File.Exists(MainWindow.ConfigPath))

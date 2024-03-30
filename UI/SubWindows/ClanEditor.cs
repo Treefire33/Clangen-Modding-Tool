@@ -62,6 +62,14 @@ public class ClanEditor : Editor
 					"\\relationships\\");
 				CatEditor.RelationshipDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
 				                                  LoadedClan.clanname + "\\relationships\\";
+				if (LoadedClan.gamemode == "expanded")
+				{
+					CatEditor.CurrentConditions = LoadConditionsFromFolder(
+						LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname +
+						"\\conditions\\");
+					CatEditor.ConditionsDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
+					                                  LoadedClan.clanname + "\\conditions\\";
+				}
 			}
 			else
 			{
@@ -80,6 +88,19 @@ public class ClanEditor : Editor
 			string id = Path.GetFileName(relationships).Split("_")[0];
 			List<Relationship> temprel =
 				JsonConvert.DeserializeObject<List<Relationship>>(File.ReadAllText(relationships))!;
+			temp.Add(id, temprel);
+		}
+		return temp;
+	}
+
+	private Dictionary<string, Condition> LoadConditionsFromFolder(string directory)
+	{
+		Dictionary<string, Condition> temp = new();
+		foreach(string relationships in Directory.EnumerateFiles(directory))
+		{
+			string id = Path.GetFileName(relationships).Split("_")[0];
+			Condition temprel =
+				JsonConvert.DeserializeObject<Condition>(File.ReadAllText(relationships))!;
 			temp.Add(id, temprel);
 		}
 		return temp;

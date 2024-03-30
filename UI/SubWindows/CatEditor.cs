@@ -16,9 +16,12 @@ public class CatEditor : Editor
 	private readonly Dictionary<string, Cat> catDict = [];
 	private Cat currentCat;
 	public static string LoadedCatPath, LoadedCatJson;
-	public Dictionary<string, List<Relationship>> CurrentRelationships; // This works, but it also kinda sucks.
-	private int currentRelationship = 0;								// Maybe you could help fix it?
-	public string RelationshipDirectory;								// That'd be cool.
+	public Dictionary<string, List<Relationship>> CurrentRelationships; // 
+	private int currentRelationship = 0;								// 
+	public string RelationshipDirectory;                                // 
+	public Dictionary<string, Condition> CurrentConditions;				//	
+	private int currentCondition = 0;									// 
+	public string ConditionsDirectory;									// 
 
 	public void LoadEditor()
 	{
@@ -63,6 +66,10 @@ public class CatEditor : Editor
 			if(CurrentRelationships != null)
 			{
 				DrawRelationshipEditor();
+			}
+			if(CurrentConditions != null)
+			{
+				DrawConditionsEditor();
 			}
 		}
 	}
@@ -676,6 +683,127 @@ public class CatEditor : Editor
 		}
 	}
 
+	private string illnessToAdd = "greencough", injuryToAdd = "claw-wound", permToAdd = "crooked jaw";
+	private void DrawConditionsEditor()
+	{
+		if(ImGui.Begin("Cat Conditions", ImGuiWindowFlags.None))
+		{
+			try
+			{
+				if (ImGui.BeginTabBar("Condition"))
+				{
+					if (ImGui.BeginTabItem("Illnesses"))
+					{
+						//what if I hid an easter egg in the code?
+						//(this is the easter egg, ping me on the ClanGen discord and say "I found the thing").
+						//(what do you get? the feeling of accomplishment.)
+						if (CurrentConditions[currentCat.ID].illnesses != null)
+						{
+							foreach (KeyValuePair<string, Illness> illness in
+							         CurrentConditions[currentCat.ID].illnesses)
+							{
+								ImGui.Text(illness.Key);
+								ImGui.SameLine();
+								ImGui.PushID(illness.Key);
+								if (ImGui.Button("Remove"))
+								{
+									CurrentConditions[currentCat.ID].illnesses.Remove(illness.Key);
+									continue;
+								}
+
+								ImGui.PopID();
+							}
+						}
+						ImGui.Separator();
+						ImExtended.Combo("Illnesses", ref illnessToAdd, PresetIllnesses.IllnessPresetDict.Keys.ToArray());
+						if(ImGui.Button("Add Illness"))
+						{
+							if (CurrentConditions[currentCat.ID].illnesses == null)
+							{
+								CurrentConditions[currentCat.ID].illnesses = new();
+							}
+							CurrentConditions[currentCat.ID].illnesses.Add(illnessToAdd, PresetIllnesses.IllnessPresetDict[illnessToAdd]);
+						}
+						ImGui.EndTabItem();
+					}
+					if(ImGui.BeginTabItem("Injuries"))
+					{
+						if (CurrentConditions[currentCat.ID].injuries != null)
+						{
+							foreach (KeyValuePair<string, Injury> injuries in CurrentConditions[currentCat.ID].injuries)
+							{
+								ImGui.Text(injuries.Key);
+								ImGui.SameLine();
+								ImGui.PushID(injuries.Key);
+								if (ImGui.Button("Remove"))
+								{
+									CurrentConditions[currentCat.ID].injuries.Remove(injuries.Key);
+									continue;
+								}
+
+								ImGui.PopID();
+							}
+						}
+						ImGui.Separator();
+						ImExtended.Combo("Injuries", ref injuryToAdd,
+							PresetInjuries.InjuryPresetDict.Keys.ToArray());
+						if(ImGui.Button("Add Injuries"))
+						{
+							if (CurrentConditions[currentCat.ID].injuries == null)
+							{
+								CurrentConditions[currentCat.ID].injuries = new();
+							}
+							CurrentConditions[currentCat.ID].injuries.Add(injuryToAdd,
+								PresetInjuries.InjuryPresetDict[injuryToAdd]);
+						}
+						ImGui.EndTabItem();
+					}
+					if(ImGui.BeginTabItem("Perm Conditions"))
+					{
+						if(CurrentConditions[currentCat.ID].permanentConditions != null)
+						{
+							foreach(KeyValuePair<string, PermCondition> conditions in CurrentConditions[currentCat.ID].permanentConditions)
+							{
+								ImGui.Text(conditions.Key);
+								ImGui.SameLine();
+								ImGui.PushID(conditions.Key);
+								if(ImGui.Button("Remove"))
+								{
+									CurrentConditions[currentCat.ID].permanentConditions.Remove(conditions.Key);
+									continue;
+								}
+
+								ImGui.PopID();
+							}
+						}
+						ImGui.Separator();
+						ImExtended.Combo("Perm Conditions", ref permToAdd,
+							PresetPermConditions.PermPresetDict.Keys.ToArray());
+						if(ImGui.Button("Add Perm Condition"))
+						{
+							if(CurrentConditions[currentCat.ID].permanentConditions == null)
+							{
+								CurrentConditions[currentCat.ID].permanentConditions = new();
+							}
+							CurrentConditions[currentCat.ID].permanentConditions.Add(injuryToAdd,
+								PresetPermConditions.PermPresetDict[permToAdd]);
+						}
+						ImGui.EndTabItem();
+					}
+					ImGui.EndTabBar();
+				}
+			}
+			catch
+			{
+				ImGui.Text("Cat does not have conditions file.\n(in other words, your cat is perfectly healthy!)");
+				if (ImGui.Button("Create Conditions File for Cat"))
+				{
+					CurrentConditions.Add(currentCat.ID, new Condition());
+				}
+			}
+		}
+	}
+
 	private void CatListSelect(string[] titles, ref List<string> list, string id)
 	{
 		ImGui.Text(titles[0]);
@@ -826,6 +954,14 @@ public class CatEditor : Editor
 			{
 				string newJson = JsonConvert.SerializeObject(rel, Formatting.Indented);
 				File.WriteAllText(RelationshipDirectory + "\\" + CurrentRelationships.KeyByValue(rel) + "_relations.json", newJson);
+			}
+		}
+		if(ConditionsDirectory != "")
+		{
+			foreach(Condition rel in CurrentConditions.Values)
+			{
+				string newJson = JsonConvert.SerializeObject(rel, Formatting.Indented);
+				File.WriteAllText(ConditionsDirectory + "\\" + CurrentConditions.KeyByValue(rel) + "_conditions.json", newJson);
 			}
 		}
 	}
