@@ -21,7 +21,10 @@ public class CatEditor : Editor
 	public string RelationshipDirectory;                                // 
 	public Dictionary<string, Condition> CurrentConditions;				//	
 	private int currentCondition = 0;									// 
-	public string ConditionsDirectory;									// 
+	public string ConditionsDirectory;                                  //
+	public Dictionary<string, History> CurrentHistories;				//	
+	private int currentHistory = 0;										// 
+	public string HistoriesDirectory;									//
 
 	public void LoadEditor()
 	{
@@ -71,6 +74,10 @@ public class CatEditor : Editor
 			{
 				DrawConditionsEditor();
 			}
+			/*if(CurrentHistories != null)
+			{
+				DrawHistoriesEditor();
+			}*/
 		}
 	}
 
@@ -680,6 +687,7 @@ public class CatEditor : Editor
 			{
 				ImGui.Text("Cat is missing relationship file.");
 			}
+			ImGui.End();
 		}
 	}
 
@@ -801,7 +809,82 @@ public class CatEditor : Editor
 					CurrentConditions.Add(currentCat.ID, new Condition());
 				}
 			}
+			ImGui.End();
 		}
+	}
+
+	string mentorToAdd = "";
+	private void DrawHistoriesEditor()
+	{
+		if(ImGui.Begin("Cat History", ImGuiWindowFlags.None))
+		{
+			try
+			{
+				if(ImGui.BeginTabBar("History"))
+				{
+					if(ImGui.BeginTabItem("Beginning"))
+					{
+						ImGui.EndTabItem();
+					}
+					if(ImGui.BeginTabItem("Mentor Influence"))
+					{
+						if(ImGui.CollapsingHeader("Traits"))
+						{
+							Dictionary<string, Influence> traits = CurrentHistories[currentCat.ID].mentor_influence.trait;
+							if(traits.Count > 0)
+							{
+								if(ImGui.BeginTabBar("TraitBar"))
+								{
+									foreach(var trait in traits)
+									{
+										if(ImGui.BeginTabItem(trait.Key))
+										{
+											ImExtended.Combo("Facet", ref trait.Value.facet, ["lawfulness", "sociability", "aggression", "stability"]);
+											if(ImGui.DragInt("Change", ref trait.Value.change, 1, -1, 1))
+											{
+												if(trait.Value.change == 0)
+												{
+													trait.Value.change = 1;
+												}
+											}
+											ImGui.Separator();
+											ImGui.EndTabItem();
+										}
+									}
+									ImGui.EndTabItem();
+								}
+							}
+							ImGui.Separator();
+							if(mentorToAdd == "")
+							{
+								mentorToAdd = currentCat.ID;
+							}
+							ImExtended.Combo("Select Cat", ref mentorToAdd, IDList().ToArray());
+							if(ImGui.Button("Add Influence on Trait"))
+							{
+								if(traits.ContainsKey(mentorToAdd))
+								{
+									Console.WriteLine("Cannot add an influence from same mentor, may be changed later.");
+									return;
+								}
+								traits.Add(mentorToAdd, new Influence() { change = 1, facet = "lawfulness", strings = new List<string>()});
+							}
+						}
+						if(ImGui.CollapsingHeader("Skills"))
+						{
+							Dictionary<string, Influence> skills = CurrentHistories[currentCat.ID].mentor_influence.skill;
+						}
+						ImGui.EndTabItem();
+					}
+					ImGui.EndTabBar();
+				}
+			}
+			catch 
+			{
+				ImGui.Text("Your cat doesn't have a history file. That is not supposed to happen.");
+			}
+			ImGui.End();
+		} 
 	}
 
 	private void CatListSelect(string[] titles, ref List<string> list, string id)
@@ -882,6 +965,17 @@ public class CatEditor : Editor
 		return names;
 	}
 
+	private List<string> IDList()
+	{
+		List<string> IDs = new List<string>();
+		foreach(Cat cat in catDict.Values)
+		{
+			string listName = cat.ID;
+			IDs.Add(listName);
+		}
+		return IDs;
+	}
+
 	private string NameFromStatus(Cat cat)
 	{
 		string listName = "";
@@ -956,6 +1050,14 @@ public class CatEditor : Editor
 				File.WriteAllText(RelationshipDirectory + "\\" + CurrentRelationships.KeyByValue(rel) + "_relations.json", newJson);
 			}
 		}
+		/*if(HistoriesDirectory != "")
+		{
+			foreach(History rel in CurrentHistories.Values)
+			{
+				string newJson = JsonConvert.SerializeObject(rel, Formatting.Indented);
+				File.WriteAllText(HistoriesDirectory + "\\" + CurrentHistories.KeyByValue(rel) + "_history.json", newJson);
+			}
+		}*/
 		if(ConditionsDirectory != "")
 		{
 			foreach(Condition rel in CurrentConditions.Values)

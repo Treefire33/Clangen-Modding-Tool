@@ -57,14 +57,19 @@ public class ClanEditor : Editor
 
 				CatEditor.Load(LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname + "\\" +
 				               "clan_cats.json");
-				CatEditor.CurrentRelationships = LoadRelationshipsFromFolder(
+				CatEditor.CurrentRelationships = LoadFromFolder<List<Relationship>>(
 					LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname +
 					"\\relationships\\");
 				CatEditor.RelationshipDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
 				                                  LoadedClan.clanname + "\\relationships\\";
+				/*CatEditor.CurrentHistories = LoadFromFolder<History>(
+					LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname +
+					"\\history\\");
+				CatEditor.HistoriesDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
+												  LoadedClan.clanname + "\\history\\";*/
 				if (LoadedClan.gamemode == "expanded")
 				{
-					CatEditor.CurrentConditions = LoadConditionsFromFolder(
+					CatEditor.CurrentConditions = LoadFromFolder<Condition>(
 						LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) + LoadedClan.clanname +
 						"\\conditions\\");
 					CatEditor.ConditionsDirectory = LoadedPath.Replace(LoadedPath.Split('\\').Last(), null) +
@@ -80,27 +85,14 @@ public class ClanEditor : Editor
 		}
 	}
 
-	private Dictionary<string, List<Relationship>> LoadRelationshipsFromFolder(string directory)
+	private Dictionary<string, T> LoadFromFolder<T>(string directory)
 	{
-		Dictionary<string, List<Relationship>> temp = new();
-		foreach (string relationships in Directory.EnumerateFiles(directory))
-		{
-			string id = Path.GetFileName(relationships).Split("_")[0];
-			List<Relationship> temprel =
-				JsonConvert.DeserializeObject<List<Relationship>>(File.ReadAllText(relationships))!;
-			temp.Add(id, temprel);
-		}
-		return temp;
-	}
-
-	private Dictionary<string, Condition> LoadConditionsFromFolder(string directory)
-	{
-		Dictionary<string, Condition> temp = new();
+		Dictionary<string, T> temp = new();
 		foreach(string relationships in Directory.EnumerateFiles(directory))
 		{
 			string id = Path.GetFileName(relationships).Split("_")[0];
-			Condition temprel =
-				JsonConvert.DeserializeObject<Condition>(File.ReadAllText(relationships))!;
+			T temprel =
+				JsonConvert.DeserializeObject<T>(File.ReadAllText(relationships))!;
 			temp.Add(id, temprel);
 		}
 		return temp;

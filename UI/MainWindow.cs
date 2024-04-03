@@ -26,9 +26,18 @@ public class MainWindow : Window
 			PatrolEditor.BeforeDrawEditor();
 			ThoughtEditor.BeforeDrawEditor();
 			Title = "ClanGen Mod Tool - Menu";
+			TestHistoryFile();
 		};
 		DrawEvent += Render;
 		CloseEvent += () => { string s = JsonConvert.SerializeObject(EditorConfig); File.WriteAllText(ConfigPath, s); };
+	}
+
+	public void TestHistoryFile()
+	{
+		//History history = JsonConvert.DeserializeObject<History>(File.ReadAllText("E:\\ClangenModTool\\SrcDebug\\clangen\\saves\\expanded\\history\\24_history.json"));
+		//Console.WriteLine(history.mentor_influence.trait.First().Value.trait.First().Value);
+		//dynamic history = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("E:\\ClangenModTool\\SrcDebug\\clangen\\saves\\expanded\\history\\24_history.json"));
+		//Console.WriteLine(history.mentor_influence.trait["6"].sociability.GetType());
 	}
 
 	public void Render()
